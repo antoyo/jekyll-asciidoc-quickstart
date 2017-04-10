@@ -719,3 +719,5 @@ footer {
 
 /* Literal.Number.Integer.Long */
 /*- Custom style -*/
+pre.pygments.highlight {
+  padding: 10px; }

@@ -131,8 +131,8 @@
 <h2 id="introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Relm provides a way to combine futures/tokio with GTK+ in an elegant way, to easily write asynchronous GUI application.
-This library is inspired by the <a href="http://elm-lang.org/">elm programming language</a> in that it uses <a href="https://guide.elm-lang.org/architecture/">The Elm Architecture</a>, but adapted to both Rust a desktop GUI application.</p>
+<p>Relm provides a way to combine futures/tokio with GTK+ in an elegant way, to easily write asynchronous GUI applications.
+This library is inspired by the <a href="http://elm-lang.org/">elm programming language</a> in that it uses <a href="https://guide.elm-lang.org/architecture/">The Elm Architecture</a>, but adapted to both Rust and desktop applications.</p>
 </div>
 </div>
 </div>
@@ -146,8 +146,8 @@ These pain points are detailed below.</p>
 <div class="sect2">
 <h3 id="state_mutation">State mutation</h3>
 <div class="paragraph">
-<p>It is common practise to associate some data (called a model) with a widget and mutate it when the user does an action like clicking on a button.
-With gtk-rs, it is not possible to directly mutate a state in reaction to an event.
+<p>It is common practise to associate some data (called model) with a widget and mutate it when the user does an action like clicking on a button.
+With <code>gtk-rs</code>, it is not possible to directly mutate a state in reaction to an event.
 To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 </div>
 <div class="listingblock">
@@ -164,9 +164,18 @@ To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 </div>
 </div>
 <div class="sect2">
+<h3 id="asynchronous_ui">Asynchronous UI</h3>
+<div class="paragraph">
+<p>This issue is more related to GTK+ in general.
+Sometimes, one wants to be able to wait after an HTTP request to finish or a timeout to happen and then update the UI accordingly, without freezing the UI.
+GTK+ supports this feature.
+However, I believe that having an abstraction to simplify asynchronous programming can make it easier to write GUI that don&#8217;t block the UI.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="cannot_easily_create_new_widgets">Cannot easily create new widgets</h3>
 <div class="paragraph">
-<p>In Vala, it is easy to create a new widget. All you need is to create a new class inheriting from a widget:</p>
+<p>In Vala (and other object-oriented languages), it is easy to create a new widget. All you need is to create a new class inheriting from a widget:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -183,52 +192,465 @@ To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 <span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-n">widget</span><span class="tok-p">);</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>It is not as easy to do in Rust because it does not support subclassing.</p>
 </div>
-<div class="sect2">
-<h3 id="asynchronous">Asynchronous</h3>
+<div class="paragraph">
+<p>One workaround is to add a <code>Deref</code> implementation for your widget:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-k">struct</span> <span class="tok-nc">MyWidget</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">drawing_area</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">DrawingArea</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
 
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Deref</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">MyWidget</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">type</span> <span class="tok-nc">Target</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">DrawingArea</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">deref</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">DrawingArea</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">drawing_area</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>but then, you need to manually dereference the variable to use the widget:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;*</span><span class="tok-n">widget</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once again, it is not ergonomic and, while other solutions are available, it is currently not the way to go in <code>gtk-rs</code>.</p>
+</div>
+<div class="paragraph">
+<p>For all these reasons, I decided to write <a href="https://github.com/antoyo/relm">relm</a>, employing <a href="https://github.com/alexcrichton/futures-rs">futures</a> and <a href="https://github.com/tokio-rs">tokio</a>.
+This allows the users of <code>relm</code> to do an <a href="https://github.com/antoyo/relm/blob/master/examples/http.rs">HTTP request with tokio</a> without freezing the UI.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="inspiration_by_elm">Inspiration by Elm.</h2>
+<h2 id="inspiration_by_elm">Inspiration by Elm</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p><code>Relm</code> took its inspiration from the Elm programming language.
+Having used this language a bit, I found out it provides a good solution to do MVC.
+To create a program in Elm, you only need to provide a model, an <code>update</code> function to transform the model when some event happens and a <code>view</code> function to create the view in a declarative way.
+The view communicate with the <code>update</code> function through message passing.
+In <code>relm</code>, it is very similar, but I adapted the pattern to Rust.
+For instance, <code>update</code> and <code>view</code> are methods of the <code>Widget</code> trait.
+Also, mutation is used when it makes sense (Elm being purely functional, mutation is not used in this language).</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="overview_showing_the_widget_attribute">Overview showing the #[widget] attribute.</h2>
+<h2 id="example_using_the_code_widget_code_attribute">Example using the <code>#[widget]</code> attribute</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s look at an example to see how to create a GUI application using <code>relm</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-c1">// Import statements ommited.</span>
 
+<span class="tok-c1">// Define the structure of the model.</span>
+<span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
+<span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kt">i32</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-c1">// The messages that can be sent to the update function.</span>
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// The initial model.</span>
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-c1">// Update the model according to the message received.</span>
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Decrement</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Increment</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-c1">// Set the orientation property of the Box.</span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-c1">// Create a Button inside the Box.</span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-c1">// Send the message Increment when the button is clicked.</span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Relm</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-o">::&lt;</span><span class="tok-n">Win</span><span class="tok-o">&gt;</span><span class="tok-p">().</span><span class="tok-n">unwrap</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(This example is truncated, look at the complete file <a href="https://github.com/antoyo/relm/blob/master/examples/buttons-attribute.rs">here</a>.)</p>
+</div>
+<div class="paragraph">
+<p>Those of you that used Elm can find the similarity between it and <code>relm</code>.
+A lot of magic happens in the <code>#[widget]</code> attribute.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>The <code>view!</code> macro allows to write the view in a declarative way.
+One can connect a GTK+ signal to send a message using the fat arrow syntax.
+For instance, the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>means that the message <code>Increment</code> will be sent to the <code>update</code> function when the button is clicked.</p>
+</div>
+<div class="paragraph">
+<p>The attribute also changes the <code>update</code> function to insert the calls to <code>gtk::Label::set_text()</code> when the <code>counter</code> field of the <code>model</code> is updated.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="example_without_the_attribute_with_explanations">Example without the attribute with explanations.</h2>
+<h2 id="example_without_the_attribute">Example without the attribute</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>If it is not possible for you to depend on Rust nightly, it is possible to avoid using the <code>#[widget]</code> attribute.
+However, it requires a bit of boilerplate code.
+Here is the same example without the attribute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
+<span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kt">i32</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
 
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-c1">// Create the structure that holds the widgets used in the view.</span>
+<span class="tok-k">struct</span> <span class="tok-nc">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">counter_label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Label</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">window</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Window</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// Specify the type of the outer widget.</span>
+<span class="tok-w">    </span><span class="tok-k">type</span> <span class="tok-nc">Container</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Window</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// Specify the model used for this widget.</span>
+<span class="tok-w">    </span><span class="tok-k">type</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-c1">// Return the outer widget.</span>
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">container</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">Self</span><span class="tok-o">::</span><span class="tok-n">Container</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">window</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">label</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">counter_label</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Decrement</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-c1">// Manually update the view.</span>
+<span class="tok-w">                </span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Increment</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">view</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">RemoteRelm</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_model</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">Self</span><span class="tok-o">::</span><span class="tok-n">Model</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Self</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-c1">// Create the view using the normal GTK+ method calls.</span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">vbox</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Button</span><span class="tok-o">::</span><span class="tok-n">new_with_label</span><span class="tok-p">(</span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">vbox</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">plus_button</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">counter_label</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Label</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-s">&quot;0&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">vbox</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">counter_label</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">minus_button</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Button</span><span class="tok-o">::</span><span class="tok-n">new_with_label</span><span class="tok-p">(</span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">vbox</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">minus_button</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">window</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Window</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">WindowType</span><span class="tok-o">::</span><span class="tok-n">Toplevel</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">vbox</span><span class="tok-p">);</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">show_all</span><span class="tok-p">();</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-c1">// Send the message Increment when the button is clicked.</span>
+<span class="tok-w">        </span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">minus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Decrement</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">window</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)));</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">counter_label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">counter_label</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">window</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">window</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Relm</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-o">::&lt;</span><span class="tok-n">Win</span><span class="tok-o">&gt;</span><span class="tok-p">().</span><span class="tok-n">unwrap</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(This example is truncated, look at the complete file <a href="https://github.com/antoyo/relm/blob/master/examples/buttons.rs">here</a>.)</p>
+</div>
+<div class="paragraph">
+<p>You can see some similarity with the previous example, but you now need to create the widgets the same way you would do when using <code>gtk-rs</code> directly, i.e. by calling constructors like <code>Button::new_with_label()</code>.
+Moreover, you need to update the view manually in the <code>update</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You also need to create the <code>container</code> function, the types <code>Container</code> and <code>Model</code> and the <code>struct Win</code> that are automatically created by the <code>#[widget]</code> attribute.</p>
+</div>
+<div class="paragraph">
+<p>One difference with <code>gtk-rs</code> is how you connect signals:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the equivalent of:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>that was used in the previous example.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="show_example_using_futures_tokio">Show example using futures/tokio.</h2>
+<h2 id="example_using_tokio">Example using tokio</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>That was a basic example.
+Now let&#8217;s look at a more involved example actually using <code>tokio</code> to send messages to a websockets server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span class="tok-k">type</span> <span class="tok-nc">WSService</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ClientService</span><span class="tok-o">&lt;</span><span class="tok-n">TcpStream</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WebSocketProtocol</span><span class="tok-o">&gt;</span><span class="tok-p">;</span><span class="tok-w"></span>
 
+<span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
+<span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// The message to be sent.</span>
+<span class="tok-w">    </span><span class="tok-n">message</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">service</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">Option</span><span class="tok-o">&lt;</span><span class="tok-n">WSService</span><span class="tok-o">&gt;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// This contains all the messages received from the websockets server.</span>
+<span class="tok-w">    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// The user changed the message to be sent.</span>
+<span class="tok-w">    </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-nb">String</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// Connection to the server successful.</span>
+<span class="tok-w">    </span><span class="tok-n">Connected</span><span class="tok-p">(</span><span class="tok-n">WSService</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// A message received from the server.</span>
+<span class="tok-w">    </span><span class="tok-n">Message</span><span class="tok-p">(</span><span class="tok-nb">String</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// Send a message to the server.</span>
+<span class="tok-w">    </span><span class="tok-nb">Send</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">message</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">service</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">None</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">subscriptions</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">Relm</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-c1">// Connect to the websocket server.</span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">handshake_future</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ws_handshake</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">.</span><span class="tok-n">handle</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">future</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-p">.</span><span class="tok-n">connect_ignore_err</span><span class="tok-p">(</span><span class="tok-n">handshake_future</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Connected</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">relm</span><span class="tok-p">.</span><span class="tok-n">exec</span><span class="tok-p">(</span><span class="tok-n">future</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-n">message</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">message</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">message</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Connected</span><span class="tok-p">(</span><span class="tok-n">service</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">service</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-n">service</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Message</span><span class="tok-p">(</span><span class="tok-n">message</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">text</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">format</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-s">&quot;{}</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">message</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-nb">Send</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">message</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">entry</span><span class="tok-p">.</span><span class="tok-n">grab_focus</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update_command</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">Relm</span><span class="tok-o">&lt;</span><span class="tok-n">Msg</span><span class="tok-o">&gt;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-nb">Send</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-k">ref</span><span class="tok-w"> </span><span class="tok-n">service</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">service</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-c1">// Send the message to the server.</span>
+<span class="tok-w">                </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">send_future</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ws_send</span><span class="tok-p">(</span><span class="tok-n">service</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">message</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">relm</span><span class="tok-p">.</span><span class="tok-n">connect_exec_ignore_err</span><span class="tok-p">(</span><span class="tok-n">send_future</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Message</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">text</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-c1">// Give a name to this widget, so that we can use it in the update function.</span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;entry&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Entry</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">activate</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-nb">Send</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">changed</span><span class="tok-p">(</span><span class="tok-n">entry</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-n">entry</span><span class="tok-p">.</span><span class="tok-n">get_text</span><span class="tok-p">().</span><span class="tok-n">unwrap_or_else</span><span class="tok-p">(</span><span class="tok-nb">String</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">message</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-nb">Send</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;Send&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two new methods in this example: <code>subscriptions</code> and <code>update_command</code>.</p>
+</div>
+<div class="paragraph">
+<p>The former is to execute futures when the application starts.
+In this case, we initiate the websockets connection and connect the future to send the <code>Connected</code> message.
+This example ignores the possible errors, but it is also possible to handle the case where the future resolves to an error.</p>
+</div>
+<div class="paragraph">
+<p>The <code>update_command</code> method is used in <code>relm</code> to execute futures when a message is received.
+This example sends the message <code>Message(message)</code> where <code>message</code> is the response from the websockets server.
+Relm executes the <code>update_command</code> method in another thread, where the tokio event loop runs: this is why we cannot execute the futures in the <code>update</code> method.</p>
+</div>
+<div class="paragraph">
+<p>As you can see, events from GTK+ widgets and events from futures are managed in the same way.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="warning_about_api_unstability_still_in_development">Warning about API unstability/still in development.</h2>
+<h2 id="warning_about_api_instability">Warning about API instability</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>It is to be noted that <code>relm</code> is under heavy development and has not been thoroughly tested.
+Moreover, the API is currently unstable and will be updated in the next releases.
+For instance, the <code>update_command</code> method will be removed (and merge with the <code>update</code> method) when this crate will switch to using <a href="https://github.com/antoyo/futures-glib-rs">futures-glib</a> instead of using another thread to run the tokio event loop.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>That was a short introduction to <code>relm</code>.
+Look at the <a href="https://github.com/antoyo/relm/tree/master/examples">examples</a> if you want to learn more.
+The <a href="https://github.com/antoyo/relm#relm">readme</a> and the <a href="https://docs.rs/relm/">documentation</a> also provides details about how to use this crate.</p>
+</div>
+<div class="paragraph">
 <p>Comments on HackerNews or Reddit.</p>
 </div>
 <div class="paragraph">
-<p>Open issues on GitHub.</p>
+<p>If you find any issue, please open an <a href="https://github.com/antoyo/relm/issues">issue on GitHub</a>.</p>
 </div>
+<div class="sect2">
+<h3 id="future_of_relm">Future of relm</h3>
+<div class="paragraph">
+<p>Here are some improvements I&#8217;ll do in the next weeks and months:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Develop a GUI functional testing crate.</p>
+</li>
+<li>
+<p>Improve the <code>#[widget]</code> attribute.</p>
+</li>
+<li>
+<p>Add a more complex example.</p>
+</li>
+<li>
+<p>Improve tests and documentation.</p>
+</li>
+<li>
+<p>Switch to <code>futures-glib</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And, of course, I&#8217;ll use <code>relm</code> for my own projects <a href="https://github.com/antoyo/mg">mg</a> and <a href="https://github.com/antoyo/titanium">titanium</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnote_1">
+<a href="#_footnoteref_1">1</a>. Attributes currently requires a nightly compiler.
 </div>
 </div>
 
@@ -245,7 +667,7 @@ To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
       </div>
 
         <!-- Footer -->
-        <footer><span>@2017 - Antoni Boucher</span></footer>
+        <footer><span>© 2017 - Antoni Boucher</span></footer>
 
 
         <!-- Script -->
