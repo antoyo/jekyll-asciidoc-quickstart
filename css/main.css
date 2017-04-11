@@ -721,3 +721,6 @@ footer {
 /*- Custom style -*/
 pre.pygments.highlight {
   padding: 10px; }
+
+li > p {
+  margin-bottom: 0; }

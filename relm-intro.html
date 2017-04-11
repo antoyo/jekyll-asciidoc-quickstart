@@ -299,6 +299,7 @@ Also, mutation is used when it makes sense (Elm being purely functional, mutatio
 <span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-c1">// Bind the text property of the label to the counter attribute of the model.</span>
 <span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
@@ -320,9 +321,9 @@ Also, mutation is used when it makes sense (Elm being purely functional, mutatio
 <p>(This example is truncated, look at the complete file <a href="https://github.com/antoyo/relm/blob/master/examples/buttons-attribute.rs">here</a>.)</p>
 </div>
 <div class="paragraph">
-<p>Those of you that used Elm can find the similarity between it and <code>relm</code>.
+<p>Those of you that used Elm can notice the similarity between it and <code>relm</code>.
 A lot of magic happens in the <code>#[widget]</code> attribute.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>
-For example, this attribute generate the <code>struct Win</code> that contains the GTK+ and relm widgets.</p>
+For example, this attribute generates the <code>struct Win</code> that contains the GTK+ and relm widgets.</p>
 </div>
 <div class="paragraph">
 <p>The <code>view!</code> macro allows to write the view in a declarative way.
@@ -577,6 +578,9 @@ Now let&#8217;s look at a more involved example actually using <code>tokio</code
 </div>
 </div>
 <div class="paragraph">
+<p>(You can see the complete example <a href="https://github.com/antoyo/relm/blob/master/examples/websockets-attribute.rs">here</a>.)</p>
+</div>
+<div class="paragraph">
 <p>There are two new methods in this example: <code>subscriptions</code> and <code>update_command</code>.</p>
 </div>
 <div class="paragraph">
@@ -610,13 +614,13 @@ For instance, the <code>update_command</code> method will be removed (and merge 
 <div class="paragraph">
 <p>That was a short introduction to <code>relm</code>.
 Look at the <a href="https://github.com/antoyo/relm/tree/master/examples">examples</a> if you want to learn more.
-The <a href="https://github.com/antoyo/relm#relm">readme</a> and the <a href="https://docs.rs/relm/">documentation</a> also provides details about how to use this crate.</p>
+The <a href="https://github.com/antoyo/relm#relm">readme</a> and the <a href="https://docs.rs/relm/">documentation</a> also provide details about how to use this crate.</p>
 </div>
 <div class="paragraph">
 <p>Comments on HackerNews or Reddit.</p>
 </div>
 <div class="paragraph">
-<p>If you find any issue, please open an <a href="https://github.com/antoyo/relm/issues">issue on GitHub</a>.</p>
+<p>If you find any issue while using this library, please open an <a href="https://github.com/antoyo/relm/issues">issue on GitHub</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="future_of_relm">Future of relm</h3>
