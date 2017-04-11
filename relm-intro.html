@@ -146,7 +146,7 @@ These pain points are detailed below.</p>
 <div class="sect2">
 <h3 id="state_mutation">State mutation</h3>
 <div class="paragraph">
-<p>It is common practise to associate some data (called model) with a widget and mutate it when the user does an action like clicking on a button.
+<p>It is common practice to associate some data (called a model) with a widget and mutate it when the user does an action like clicking on a button.
 With <code>gtk-rs</code>, it is not possible to directly mutate a state in reaction to an event.
 To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 </div>
@@ -169,7 +169,7 @@ To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 <p>This issue is more related to GTK+ in general.
 Sometimes, one wants to be able to wait after an HTTP request to finish or a timeout to happen and then update the UI accordingly, without freezing the UI.
 GTK+ supports this feature.
-However, I believe that having an abstraction to simplify asynchronous programming can make it easier to write GUI that don&#8217;t block the UI.</p>
+However, I believe that having an abstraction to simplify asynchronous programming can make it easier to write GUI that doesn&#8217;t block the UI.</p>
 </div>
 </div>
 <div class="sect2">
@@ -321,7 +321,8 @@ Also, mutation is used when it makes sense (Elm being purely functional, mutatio
 </div>
 <div class="paragraph">
 <p>Those of you that used Elm can find the similarity between it and <code>relm</code>.
-A lot of magic happens in the <code>#[widget]</code> attribute.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup></p>
+A lot of magic happens in the <code>#[widget]</code> attribute.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>
+For example, this attribute generate the <code>struct Win</code> that contains the GTK+ and relm widgets.</p>
 </div>
 <div class="paragraph">
 <p>The <code>view!</code> macro allows to write the view in a declarative way.
