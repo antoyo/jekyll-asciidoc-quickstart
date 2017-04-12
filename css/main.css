@@ -720,7 +720,8 @@ footer {
 /* Literal.Number.Integer.Long */
 /*- Custom style -*/
 pre.pygments.highlight {
-  padding: 10px; }
+  padding: 10px;
+  overflow: auto; }
 
 li > p {
   margin-bottom: 0; }
