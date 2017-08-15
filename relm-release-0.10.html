@@ -241,7 +241,7 @@ If you use relm, consider posting the link to your project <a href="https://gith
 <p><a href="https://github.com/antoyo/relm/commit/26e351385d85f10feb39a14c879143c4b502f40c">Add a stream lock to have a way to avoid infinite event emission.</a></p>
 </li>
 <li>
-<p><a href="https://github.com/antoyo/relm/commit/263bfb020d3b01e1ed490bedd7c8d5b15edd939f">Allow adding custom methods in the trait annotated by the <code>#[widget</a></code> attribute: this is useful to have other methods than <code>update</code> that modify the model, thus automatically updating the view.]</p>
+<p><a href="https://github.com/antoyo/relm/commit/263bfb020d3b01e1ed490bedd7c8d5b15edd939f">Allow adding custom methods in the trait annotated by the widget attribute: this is useful to have other methods than <code>update</code> that modify the model, thus automatically updating the view.</a></p>
 </li>
 <li>
 <p><a href="https://github.com/antoyo/relm/commit/29a85685dad3a5fb70fc989c7be2be50eab8b954">The model is not a parameter anymore, it is now part of the widget struct.</a></p>
@@ -259,10 +259,10 @@ If you use relm, consider posting the link to your project <a href="https://gith
 <p><a href="https://github.com/antoyo/relm/commit/911c14b39018a8f751c6ac0c3d71cceef7cf0df0">Add support for gtk+ child properties.</a></p>
 </li>
 <li>
-<p><a href="https://github.com/antoyo/relm/commit/092ab0606020ae2b0349156e00d29af6b44d5546">Add <code>init_view()</code> on the <code>Widget</code> trait to be able to execute arbitrary code to update the view when a widget is created: this is useful when using the <code>view!</code> macro usable within the <code>#[widget</a></code> attribute.]</p>
+<p><a href="https://github.com/antoyo/relm/commit/092ab0606020ae2b0349156e00d29af6b44d5546">Add <code>init_view()</code> on the <code>Widget</code> trait to be able to execute arbitrary code to update the view when a widget is created: this is useful when using the <code>view!</code> macro usable within the widget attribute.</a></p>
 </li>
 <li>
-<p>No more <code>Send</code> bound for the Model and fewer <code>Clone</code> bound required.</p>
+<p>No more <code>Send</code> bound for the Model and fewer <code>Clone</code> bounds required.</p>
 </li>
 <li>
 <p>Many fixes.</p>
