@@ -134,8 +134,10 @@ The journey has not been without pitfalls and some convenient features of relm w
 </div>
 </div>
 <div class="sect1">
-<h2 id="shared_model">Shared model</h2>
+<h2 id="removed_features">Removed features</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="shared_model">Shared model</h3>
 <div class="paragraph">
 <p>The model is no longer a shared.
 In the previous versions of relm, it was a <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code> for convenience:
@@ -145,10 +147,8 @@ Now, there&#8217;s a single owner to a widget&#8217;s model and the only way to 
 if we want to update the model from another widget, we need to send a message to the other widget.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="synchronous_callbacks">Synchronous callbacks</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="synchronous_callbacks">Synchronous callbacks</h3>
 <div class="paragraph">
 <p>Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
 While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
@@ -157,18 +157,17 @@ So, if the event was triggered twice, it could be possible to have two <code>&am
 That&#8217;s a pretty bad thing that Rust prevents us from doing.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="networking_examples">Networking examples</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="networking_examples">Networking examples</h3>
 <div class="paragraph">
 <p>This release took a long time to be release.
 The reason is that I was waiting for tokio issues to be fixed.
 Since I&#8217;ve been waiting for months and they are still not resolved, I decided to release a version without the examples relying on tokio (the http and websockets examples).
-And they&#8217;re not likely to be fixed soon since <code>tokio-proto</code> is likely to be <a href="https://www.reddit.com/r/rust/comments/6s4axu/asynchronous_rust_complaints_suggestions/">de-emphasize</a> and it&#8217;s used both by <code>hyper</code> and <code>twist</code> (the websockets crate).
+And they&#8217;re not likely to be fixed soon since <code>tokio-proto</code> is likely to be <a href="https://www.reddit.com/r/rust/comments/6s4axu/asynchronous_rust_complaints_suggestions/dlawxao/">de-emphasize</a> and it&#8217;s used both by <code>hyper</code> and <code>twist</code> (the websockets crate).
 That doesn&#8217;t mean it&#8217;s not possible to use tokio:
 titanium uses tokio, but it needs a special version of the tokio-based crate so that the futures can be spawned on the glib event loop.
 In order to be able to use tokio-based crates with relm, they need to be updated to use the new <a href="https://docs.rs/futures/newest/futures/executor/trait.Executor.html">Executor trait</a> instead of relying on the tokio-core <code>Handle</code>.</p>
+</div>
 </div>
 </div>
 </div>
