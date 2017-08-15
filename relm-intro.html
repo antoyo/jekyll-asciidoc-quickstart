@@ -152,7 +152,7 @@ To do so, one needs to use <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Rc</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">RefCell</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"> </span><span class="tok-n">count</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-w"> </span><span class="tok-p">}));</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">model</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">Rc</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">RefCell</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"> </span><span class="tok-n">count</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-w"> </span><span class="tok-p">}));</span><span class="tok-w"></span>
 <span class="tok-n">button</span><span class="tok-p">.</span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-k">move</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-n">_</span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">  </span><span class="tok-p">(</span><span class="tok-o">*</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">borrow_mut</span><span class="tok-p">()).</span><span class="tok-n">count</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
 <span class="tok-w">  </span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">format</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-s">&quot;{}&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">*</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">borrow</span><span class="tok-p">()).</span><span class="tok-n">count</span><span class="tok-p">));</span><span class="tok-w"></span>
@@ -179,7 +179,7 @@ However, I believe that having an abstraction to simplify asynchronous programmi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="vala"><span class="tok-kd">class</span> <span class="tok-nc">MyWidget</span> <span class="tok-o">:</span> <span class="tok-n">DrawingArea</span> <span class="tok-p">{</span>
+<pre class="pygments highlight"><code data-lang="vala"><span></span><span class="tok-kd">class</span> <span class="tok-nc">MyWidget</span> <span class="tok-o">:</span> <span class="tok-n">DrawingArea</span> <span class="tok-p">{</span>
 <span class="tok-p">}</span></code></pre>
 </div>
 </div>
@@ -188,7 +188,7 @@ However, I believe that having an abstraction to simplify asynchronous programmi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="vala"><span class="tok-kd">var</span> <span class="tok-n">widget</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">MyWidget</span><span class="tok-p">();</span>
+<pre class="pygments highlight"><code data-lang="vala"><span></span><span class="tok-kd">var</span> <span class="tok-n">widget</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-n">MyWidget</span><span class="tok-p">();</span>
 <span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-n">widget</span><span class="tok-p">);</span></code></pre>
 </div>
 </div>
@@ -200,7 +200,7 @@ However, I believe that having an abstraction to simplify asynchronous programmi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-k">struct</span> <span class="tok-nc">MyWidget</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">struct</span> <span class="tok-nc">MyWidget</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">    </span><span class="tok-n">drawing_area</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">DrawingArea</span><span class="tok-p">,</span><span class="tok-w"></span>
 <span class="tok-p">}</span><span class="tok-w"></span>
 
@@ -218,7 +218,7 @@ However, I believe that having an abstraction to simplify asynchronous programmi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;*</span><span class="tok-n">widget</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">window</span><span class="tok-p">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-o">&amp;*</span><span class="tok-n">widget</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -253,7 +253,7 @@ Also, mutation is used when it makes sense (Elm being purely functional, mutatio
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-c1">// Import statements ommited.</span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-c1">// Import statements ommited.</span>
 
 <span class="tok-c1">// Define the structure of the model.</span>
 <span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
@@ -332,7 +332,7 @@ For instance, the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
 <span class="tok-p">}</span><span class="tok-w"></span></code></pre>
 </div>
@@ -355,7 +355,7 @@ Here is the same example without the attribute:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
 <span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">    </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kt">i32</span><span class="tok-p">,</span><span class="tok-w"></span>
 <span class="tok-p">}</span><span class="tok-w"></span>
@@ -452,7 +452,7 @@ Moreover, you need to update the view manually in the <code>update</code> method
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span></code></pre>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -463,7 +463,7 @@ Moreover, you need to update the view manually in the <code>update</code> method
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -471,7 +471,7 @@ Moreover, you need to update the view manually in the <code>update</code> method
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-w"></span></code></pre>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-w"></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -488,7 +488,7 @@ Now let&#8217;s look at a more involved example actually using <code>tokio</code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span class="tok-k">type</span> <span class="tok-nc">WSService</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ClientService</span><span class="tok-o">&lt;</span><span class="tok-n">TcpStream</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WebSocketProtocol</span><span class="tok-o">&gt;</span><span class="tok-p">;</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">type</span> <span class="tok-nc">WSService</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ClientService</span><span class="tok-o">&lt;</span><span class="tok-n">TcpStream</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WebSocketProtocol</span><span class="tok-o">&gt;</span><span class="tok-p">;</span><span class="tok-w"></span>
 
 <span class="tok-cp">#[derive(Clone)]</span><span class="tok-w"></span>
 <span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
