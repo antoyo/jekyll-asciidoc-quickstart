@@ -124,7 +124,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio.
-See the /relm-intro[introduction article] for details about why this library was created and how to use it.</p>
+See the <a href="http://relm.ml/relm-intro">introduction article</a> for details about why this library was created and how to use it.</p>
 </div>
 <div class="paragraph">
 <p>This new release is huge: a lot of changes happened under the hood, the API was changed and features that were unsound were removed.
@@ -140,7 +140,7 @@ The journey has not been without pitfalls and some convenient features of relm w
 <p>The model is no longer a shared.
 In the previous versions of relm, it was a <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code> for convenience:
 it was possible to share a model with a gtk+ callback for instance.
-However, when developing titanium, I&#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely /relm-intro#state_mutation[one issue] relm tries to solve.
+However, when developing titanium, I&#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely <a href="http://relm.ml/relm-intro#state_mutation">one issue</a> relm tries to solve.
 Now, there&#8217;s a single owner to a widget&#8217;s model and the only way to mutate the model is through its widget:
 if we want to update the model from another widget, we need to send a message to the other widget.</p>
 </div>
@@ -151,7 +151,7 @@ if we want to update the model from another widget, we need to send a message to
 <div class="sectionbody">
 <div class="paragraph">
 <p>Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
-While this feature was convenient, because it allowed to return a value to a gtk+ callback from within a widget&#8217;s update method, it was removed because it could cause slowdown if abuse and mainly because it was unsound.
+While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
 Remember that the update method takes <code>self</code> by mutable reference, and with this feature, it was possible to block an event handling, while it was waiting for the widget to resolve the value to be returned to the gtk+ callback.
 So, if the event was triggered twice, it could be possible to have two <code>&amp;mut</code> over the model.
 That&#8217;s a pretty bad thing that Rust prevents us from doing.</p>
@@ -221,7 +221,7 @@ If you use relm, consider posting the link to your project <a href="https://gith
 <p><a href="https://github.com/antoyo/relm/commit/aeebe4e8c09affe1f00354a2c2e7fe78828c2edd">Fix to be able to have messages with multiple values.</a></p>
 </li>
 <li>
-<p><a href="https://github.com/antoyo/relm/commit/15204e9b41be8db88cc861a236997bbc56ad4b66">Add the ability to use a message as a property in the view (to be able to update another widget&#8217;s model conveniently, since it is now forbidden to share a widget)</a></p>
+<p><a href="https://github.com/antoyo/relm/commit/15204e9b41be8db88cc861a236997bbc56ad4b66">Add the ability to use a message as a property in the view (to be able to update another widget&#8217;s model conveniently since it is now forbidden to share a widget)</a></p>
 </li>
 <li>
 <p><a href="https://github.com/antoyo/relm/commit/c5461e8233b76db7f2b5e20f0cee67f0ded66027">New shortcut method to emit a message on a widget.</a></p>
@@ -267,37 +267,28 @@ If you use relm, consider posting the link to your project <a href="https://gith
 </li>
 <li>
 <p>Many fixes.</p>
-<div class="literalblock">
-<div class="content">
-<pre>== Need help?</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>If you need help to use relm, there's a https://gitter.im/relm-rs/Lobby[gitter] and I'm also usually on `#gtk-rs`, `#rust-fr` and the GNOME's `#rust` channel.
-You may also open https://github.com/antoyo/relm/issues[an issue on GitHub] to ask questions.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>== Future</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Besides many issues to be fixed and corner cases of gtk+ to support in relm, the most important thing to improve is the error messages.
-Since relm heavily uses code generation, the error message are very bad.
-Relm needs to be updated to use the https://github.com/alexcrichton/proc-macro2[proc-macro2] crate in order to be able to keep the position of the tokens in the generated code.
-This will require a huge refactor because many things changed in the syn crate.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>// Comment on reddit.</pre>
-</div>
-</div>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="need_help">Need help?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need help to use relm, there&#8217;s a <a href="https://gitter.im/relm-rs/Lobby">gitter</a> and I&#8217;m also usually on <code>#gtk-rs</code>, <code>#rust-fr</code> and the GNOME&#8217;s <code>#rust</code> channel.
+You may also open <a href="https://github.com/antoyo/relm/issues">an issue on GitHub</a> to ask questions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="future">Future</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beside many issues to be fixed and corner cases of gtk+ to support in relm, the most important thing to improve is the error messages.
+Since relm heavily uses code generation, the error message are very bad.
+Relm needs to be updated to use the <a href="https://github.com/alexcrichton/proc-macro2">proc-macro2</a> crate in order to be able to keep the position of the tokens in the generated code.
+This will require a huge refactor because many things changed in the syn crate.</p>
 </div>
 </div>
 </div>
