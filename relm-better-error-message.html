@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="generator" content="Jekyll">
+
+    <title>Relm now has better error messages!</title>
+  <meta name="description" content="An asynchronous GUI Rust library, based on GTK+ and futures/tokio">
+
+    <!-- CSS & fonts -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+
+    <!-- RSS -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+
+</head>
+
+
+<body>
+    <div id="wrap">
+
+        <!-- Navigation -->
+        <nav id="nav">
+    <div id="nav-list">
+        <a href="/">Home</a>
+
+        <!-- Nav pages -->
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+
+    <!-- Nav links -->
+      <a href="https://github.com/antoyo/relm">Project on Github</a>
+
+
+    </div>
+
+  <!-- Nav footer -->
+    
+      <footer>
+
+    <span>version 1.0.0</span>
+
+</footer>
+
+    
+
+</nav>
+
+
+    <!-- Icon menu -->
+      <a id="nav-menu">
+        <div id="menu"></div>
+      </a>
+
+      <!-- Header -->
+      
+        <header id="header" class="parent justify-spaceBetween">
+  <div class="inner w100 relative">
+    <span class="f-left">
+      <a href="/">
+        <h1>
+            Relm Blog
+        </h1>
+      </a>
+    </span>
+    <span id="nav-links" class="absolute right bottom">
+      <!-- Nav pages -->
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      <!-- Nav links -->
+        <a href="https://github.com/antoyo/relm">Project on Github</a>
+
+
+    </span>
+  </div>
+</header>
+
+
+
+
+      
+
+    <!-- Main content -->
+      <div id="container">
+
+        <main>
+
+            <article id="post-page">
+    <h2>Relm now has better error messages!</h2>
+    <time datetime="2018-03-03T00:00:00+00:00" class="by-line">03 Mar 2018</time>
+    <div class="content">
+
+        <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
+See the <a href="http://relm.ml/relm-intro">introduction article</a> for details about why this library was created and how to use it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="new_release">New release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;ve just released relm version 0.12!</p>
+</div>
+<div class="paragraph">
+<p>This new release does not provide a bunch of new features, but fix a very important issue:
+the bad error messages.</p>
+</div>
+<div class="paragraph">
+<p>Before this release, the error message were not really helpful:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">error</span><span class="tok-p">[</span><span class="tok-n">E0308</span><span class="tok-p">]</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">mismatched</span><span class="tok-w"> </span><span class="tok-n">types</span><span class="tok-w"></span>
+<span class="tok-w">  </span><span class="tok-o">--&gt;</span><span class="tok-w"> </span><span class="tok-n">examples</span><span class="tok-o">/</span><span class="tok-n">buttons</span><span class="tok-o">-</span><span class="tok-n">attribute</span><span class="tok-p">.</span><span class="tok-n">rs</span><span class="tok-o">:</span><span class="tok-mi">57</span><span class="tok-o">:</span><span class="tok-mi">1</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-mi">57</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-o">^^^^^^^^^</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-n">expected</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-kt">str</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">found</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-err">`</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">string</span><span class="tok-o">::</span><span class="tok-nb">String</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-n">help</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">consider</span><span class="tok-w"> </span><span class="tok-n">borrowing</span><span class="tok-w"> </span><span class="tok-n">here</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-err">`</span><span class="tok-o">&amp;</span><span class="tok-cp">#[widget]</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">note</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">expected</span><span class="tok-w"> </span><span class="tok-k">type</span> <span class="tok-err">`</span><span class="tok-o">&amp;</span><span class="tok-kt">str</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">              </span><span class="tok-n">found</span><span class="tok-w"> </span><span class="tok-k">type</span> <span class="tok-err">`</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">string</span><span class="tok-o">::</span><span class="tok-nb">String</span><span class="tok-err">`</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, the error is shown exactly where it should be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">error</span><span class="tok-p">[</span><span class="tok-n">E0308</span><span class="tok-p">]</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">mismatched</span><span class="tok-w"> </span><span class="tok-n">types</span><span class="tok-w"></span>
+<span class="tok-w">  </span><span class="tok-o">--&gt;</span><span class="tok-w"> </span><span class="tok-n">examples</span><span class="tok-o">/</span><span class="tok-n">buttons</span><span class="tok-o">-</span><span class="tok-n">attribute</span><span class="tok-p">.</span><span class="tok-n">rs</span><span class="tok-o">:</span><span class="tok-mi">89</span><span class="tok-o">:</span><span class="tok-mi">27</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-mi">89</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-w">                     </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w">                           </span><span class="tok-o">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w">                           </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w">                           </span><span class="tok-n">expected</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-kt">str</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">found</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-err">`</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">string</span><span class="tok-o">::</span><span class="tok-nb">String</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w">                           </span><span class="tok-n">help</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">consider</span><span class="tok-w"> </span><span class="tok-n">borrowing</span><span class="tok-w"> </span><span class="tok-n">here</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-err">`</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">()</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">|</span><span class="tok-w"></span>
+<span class="tok-w">   </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">note</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">expected</span><span class="tok-w"> </span><span class="tok-k">type</span> <span class="tok-err">`</span><span class="tok-o">&amp;</span><span class="tok-kt">str</span><span class="tok-err">`</span><span class="tok-w"></span>
+<span class="tok-w">              </span><span class="tok-n">found</span><span class="tok-w"> </span><span class="tok-k">type</span> <span class="tok-err">`</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">string</span><span class="tok-o">::</span><span class="tok-nb">String</span><span class="tok-err">`</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which is now helpful, to say the least.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This only works when using nightly and when using these features:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">features</span><span class="tok-p">]</span>
+<span class="tok-n">default</span> <span class="tok-o">=</span> <span class="tok-p">[</span><span class="tok-s">&quot;relm/unstable&quot;</span><span class="tok-p">,</span> <span class="tok-s">&quot;relm-attributes/unstable&quot;</span><span class="tok-p">,</span> <span class="tok-s">&quot;relm-derive/unstable&quot;</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="other_fix">Other fix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This release also fixes another <a href="https://github.com/antoyo/relm/commit/35c0f28a7647c4637fe33763f0f0a00aec3d54e0">issue</a> where it was impossible to set child properties in some cases.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I hope that the people who didn&#8217;t want to use relm because of the bad error messages will now give it a try.
+As always, your feedback is very much appreciated.
+Also, there are <a href="https://github.com/antoyo/relm/issues">issues</a> that could use some love and many of them are tagged as <a href="https://github.com/antoyo/relm/issues?q=is%3Aopen+is%3Aissue+label%3Aeasy">easy</a> if you wish to start with something simple.
+Don&#8217;t wait to make a difference in the Rust ecosystem!</p>
+</div>
+</div>
+</div>
+
+    </div>
+</article>
+
+
+
+      </main>
+
+          <!-- Pagination links -->
+      
+
+      </div>
+
+        <!-- Footer -->
+        <footer><span>© 2017 - Antoni Boucher</span></footer>
+
+
+        <!-- Script -->
+      <script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
