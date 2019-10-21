@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://relm.ml/assets/xslt/rss.xslt" ?>
+<?xml-stylesheet type="text/css" href="http://relm.ml/assets/css/rss.css" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Relm Blog</title>
+		<description>An asynchronous GUI Rust library, based on GTK+ and futures/tokio</description>
+		<link>http://relm.ml/</link>
+		<atom:link href="http://relm.ml/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>Relm drop support for futures!</title>
+				<link>http://relm.ml/relm-without-futures</link>
+				<pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+				<description>&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un concepteur sait qu’il a atteint la perfection non pas quand il n’y a plus rien à ajouter mais quand il ne reste rien à enlever.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;attribution&quot;&gt;
+&amp;#8212; Antoine de Saint-Exupery
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
+See the &lt;a href=&quot;http://relm.ml/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new_release&quot;&gt;New release&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ve just released relm version 0.14!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This new release, like the previous one, does not provide a bunch of new features, but fix a very important issue:
+it removes the dependency on futures.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The reason for that is to simplify the library.
+Indeed, futures and tokio are generic, abstract libraries that can be quite complex to use.
+Many of the reasons why I decided to drop these crates are explained &lt;a href=&quot;https://theta.eu.org/2017/08/04/async-rust.html&quot;&gt;in this blog article&lt;/a&gt;.
+One point that is not mentioned there is that it is incredibly difficult to write a library for a new protocol implemented on top of tokio.
+Why is that? Simply because there&amp;#8217;s no way to debug issues like why isn&amp;#8217;t this fd polled except using &lt;code&gt;strace&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So, what&amp;#8217;s the alternative?
+If you don&amp;#8217;t need async IO, well, you don&amp;#8217;t need anything and you won&amp;#8217;t have this extra complexity anymore.
+If you need it, you can use the &lt;code&gt;gio&lt;/code&gt; async methods &lt;a href=&quot;https://github.com/antoyo/relm/blob/9b1b527e8b5bdabaa34e37103e6d93e05cb8a8b3/relm-state/src/macros.rs#L129&quot;&gt;with one of the &lt;code&gt;connect_async!&lt;/code&gt; macros&lt;/a&gt;.
+The now working &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/http/src/main.rs#L228-L303&quot;&gt;http example&lt;/a&gt; shows how to do that.
+In the next months, I&amp;#8217;ll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
+The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with &lt;code&gt;tokio&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This new version is the first step in making relm simpler and (as you may have guessed by the quote at the top of this article) you should expect more breaking changes to come that will make this crate even easier to use.
+As always, your feedback is very much appreciated.
+Also, there are &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;issues&lt;/a&gt; that could use some love and many of them are tagged as &lt;a href=&quot;https://github.com/antoyo/relm/issues?q=is%3Aopen+is%3Aissue+label%3Aeasy&quot;&gt;easy&lt;/a&gt; if you wish to start with something simple.
+Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Please comment on &lt;a href=&quot;https://www.reddit.com/r/rust/comments/88op3r/relm_drop_support_for_futures/&quot;&gt;Reddit&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+				<guid isPermaLink="true">http://relm.ml/relm-without-futures</guid>
+			</item>
+		
+			<item>
+				<title>Relm now has better error messages!</title>
+				<link>http://relm.ml/relm-better-error-message</link>
+				<pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+				<description>&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
+See the &lt;a href=&quot;http://relm.ml/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new_release&quot;&gt;New release&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ve just released relm version 0.12!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This new release does not provide a bunch of new features, but fix a very important issue:
+the bad error messages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Before this release, the error message were not really helpful:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;E0308&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;mismatched&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;types&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;--&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;buttons&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;attribute&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;57&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-mi&quot;&gt;57&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;#[widget]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;^^^^^^^^^&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;found&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;consider&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;borrowing&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;here&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;#[widget]&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;              &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;found&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;em&gt;What a funny help message from the compiler!&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now, the error is shown exactly where it should be:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;E0308&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;mismatched&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;types&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;--&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;buttons&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;attribute&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;27&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;                     &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;                           &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;                           &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;                           &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;found&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;                           &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;consider&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;borrowing&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;here&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;              &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;found&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Which is now helpful, to say the least.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;This only works when using nightly and when using these features:&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;toml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;features&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;tok-n&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;tok-p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;relm/unstable&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;tok-s&quot;&gt;&amp;quot;relm-attributes/unstable&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;tok-s&quot;&gt;&amp;quot;relm-derive/unstable&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;other_fix&quot;&gt;Other fix&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release also fixes another &lt;a href=&quot;https://github.com/antoyo/relm/commit/35c0f28a7647c4637fe33763f0f0a00aec3d54e0&quot;&gt;issue&lt;/a&gt; where it was impossible to set child properties in some cases.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I hope that the people who didn&amp;#8217;t want to use relm because of the bad error messages will now give it a try.
+As always, your feedback is very much appreciated.
+Also, there are &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;issues&lt;/a&gt; that could use some love and many of them are tagged as &lt;a href=&quot;https://github.com/antoyo/relm/issues?q=is%3Aopen+is%3Aissue+label%3Aeasy&quot;&gt;easy&lt;/a&gt; if you wish to start with something simple.
+Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Please comment on &lt;a href=&quot;https://www.reddit.com/r/rust/comments/81upg8/relm_the_idiomatic_gui_library_now_has_better/&quot;&gt;Reddit&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+				<guid isPermaLink="true">http://relm.ml/relm-better-error-message</guid>
+			</item>
+		
+			<item>
+				<title>What&amp;#8217;s new in relm 0.10.0?</title>
+				<link>http://relm.ml/relm-release-0.10</link>
+				<pubDate>Mon, 14 Aug 2017 00:00:00 +0000</pubDate>
+				<description>&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio.
+See the &lt;a href=&quot;http://relm.ml/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This new release is huge: a lot of changes happened under the hood, the API was changed and features that were unsound were removed.
+The &lt;a href=&quot;https://github.com/antoyo/titanium&quot;&gt;web browser titanium&lt;/a&gt; has been updated to use this latest version of relm.
+The journey has not been without pitfalls and some convenient features of relm were removed because they caused issues.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;removed_features&quot;&gt;Removed features&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;shared_model&quot;&gt;Shared model&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The model is no longer a shared.
+In the previous versions of relm, it was a &lt;code&gt;Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt;&lt;/code&gt; for convenience:
+it was possible to share a model with a gtk+ callback for instance.
+However, when developing titanium, I&amp;#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely &lt;a href=&quot;http://relm.ml/relm-intro#state_mutation&quot;&gt;one issue&lt;/a&gt; relm tries to solve.
+Now, there&amp;#8217;s a single owner to a widget&amp;#8217;s model and the only way to mutate the model is through its widget:
+if we want to update the model from another widget, we need to send a message to the other widget.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;synchronous_callbacks&quot;&gt;Synchronous callbacks&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
+While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&amp;#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
+Remember that the update method takes &lt;code&gt;self&lt;/code&gt; by mutable reference, and with this feature, it was possible to block an event handling, while it was waiting for the widget to resolve the value to be returned to the gtk+ callback.
+So, if the event was triggered twice, it could be possible to have two &lt;code&gt;&amp;amp;mut&lt;/code&gt; over the model.
+That&amp;#8217;s a pretty bad thing that Rust prevents us from doing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;networking_examples&quot;&gt;Networking examples&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This release took a long time to be release.
+The reason is that I was waiting for tokio issues to be fixed.
+Since I&amp;#8217;ve been waiting for months and they are still not resolved, I decided to release a version without the examples relying on tokio (the http and websockets examples).
+And they&amp;#8217;re not likely to be fixed soon since &lt;code&gt;tokio-proto&lt;/code&gt; is likely to be &lt;a href=&quot;https://www.reddit.com/r/rust/comments/6s4axu/asynchronous_rust_complaints_suggestions/dlawxao/&quot;&gt;de-emphasize&lt;/a&gt; and it&amp;#8217;s used both by &lt;code&gt;hyper&lt;/code&gt; and &lt;code&gt;twist&lt;/code&gt; (the websockets crate).
+That doesn&amp;#8217;t mean it&amp;#8217;s not possible to use tokio:
+titanium uses tokio, but it needs a special version of the tokio-based crate so that the futures can be spawned on the glib event loop.
+In order to be able to use tokio-based crates with relm, they need to be updated to use the new &lt;a href=&quot;https://docs.rs/futures/newest/futures/executor/trait.Executor.html&quot;&gt;Executor trait&lt;/a&gt; instead of relying on the tokio-core &lt;code&gt;Handle&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;switch_to_futures_glib&quot;&gt;Switch to futures-glib&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;During the Rust+GNOME HackFest in Mexico, Alex Crichton and I worked on a way to spawn futures directly on the glib event loop:
+the &lt;a href=&quot;https://github.com/antoyo/futures-glib-rs&quot;&gt;futures-glib crate&lt;/a&gt;.
+Using that, relm now executes only in one thread, which simplify a lot of things while being more efficient.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;is_relm_usable_on_stable_rust&quot;&gt;Is relm usable on stable Rust?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Yes, it is!
+And you can even benefit from the nice syntax by using the &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/buttons-derive/src/main.rs#L49&quot;&gt;&lt;code&gt;relm_widget!&lt;/code&gt; macro&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;projects_using_relm&quot;&gt;Projects using relm&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There&amp;#8217;s already a few &lt;a href=&quot;https://github.com/antoyo/relm#projects-using-relm&quot;&gt;projects using relm&lt;/a&gt;.
+If you use relm, consider posting the link to your project &lt;a href=&quot;https://github.com/antoyo/relm/issues/30&quot;&gt;in this issue&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new_features&quot;&gt;New features&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here&amp;#8217;s other new features of this release, in bulk:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/4356d379cbd7c9aa8d92bb592a5ecd201384f2ec&quot;&gt;New &lt;code&gt;with&lt;/code&gt; syntax to ease sharing a value with a gtk+ callback (to replace the removed synchronous callbacks feature).&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/9b83e1ec9f92bd514edcd92b79fa529e3ab120a1&quot;&gt;Separate the &lt;code&gt;Widget&lt;/code&gt; trait into an &lt;code&gt;Update&lt;/code&gt; trait to be able to use relm in a non-UI context (which in a new relm-state crate).&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/4b086c3ea7bcfb36c11d941f4d335fb85d926009&quot;&gt;New &lt;code&gt;connect_stream!&lt;/code&gt; macro to be used in a non-UI context.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/aeebe4e8c09affe1f00354a2c2e7fe78828c2edd&quot;&gt;Fix to be able to have messages with multiple values.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/15204e9b41be8db88cc861a236997bbc56ad4b66&quot;&gt;Add the ability to use a message as a property in the view (to be able to update another widget&amp;#8217;s model conveniently since it is now forbidden to share a widget)&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/c5461e8233b76db7f2b5e20f0cee67f0ded66027&quot;&gt;New shortcut method to emit a message on a widget.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/a70ccadc97f7d1d304c9623f8dddd10d45bd5015&quot;&gt;Add support for children events.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;New &lt;a href=&quot;https://github.com/antoyo/relm/commit/8068548a6dd04206e2eb76fa1a2b0a103c9ea8e6&quot;&gt;&lt;code&gt;IntoPair&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;https://github.com/antoyo/relm/commit/f4c4a48ee30b8c3aeabdf32a5af949b08416f309&quot;&gt;&lt;code&gt;IntoOption&lt;/code&gt;&lt;/a&gt; traits for more convenience in signal connections.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/39ea6da0bd3649e53344e777e9e6a9ee7c064424&quot;&gt;Add support for construct properties.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/2abbdc775c540cceafc9e3f49745b2a9b6a2f3e1&quot;&gt;Log the generated code to help debugging.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/26e351385d85f10feb39a14c879143c4b502f40c&quot;&gt;Add a stream lock to have a way to avoid infinite event emission.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/263bfb020d3b01e1ed490bedd7c8d5b15edd939f&quot;&gt;Allow adding custom methods in the trait annotated by the widget attribute: this is useful to have other methods than &lt;code&gt;update&lt;/code&gt; that modify the model, thus automatically updating the view.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/29a85685dad3a5fb70fc989c7be2be50eab8b954&quot;&gt;The model is not a parameter anymore, it is now part of the widget struct.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/c94c354a3e23527ccfde8e9dc04704ba045afa90&quot;&gt;New multi-container feature.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/49ca37deec56ed5aeb0f818d2dac6799501bd1a8&quot;&gt;Add a way to specify additional data to initialize the model.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/fbf842c14c84fdeaf703cfced3d2203cb0b8e9af&quot;&gt;Add support for generic widgets.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/911c14b39018a8f751c6ac0c3d71cceef7cf0df0&quot;&gt;Add support for gtk+ child properties.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/relm/commit/092ab0606020ae2b0349156e00d29af6b44d5546&quot;&gt;Add &lt;code&gt;init_view()&lt;/code&gt; on the &lt;code&gt;Widget&lt;/code&gt; trait to be able to execute arbitrary code to update the view when a widget is created: this is useful when using the &lt;code&gt;view!&lt;/code&gt; macro usable within the widget attribute.&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;No more &lt;code&gt;Send&lt;/code&gt; bound for the Model and fewer &lt;code&gt;Clone&lt;/code&gt; bounds required.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Many fixes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;need_help&quot;&gt;Need help?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you need help to use relm, there&amp;#8217;s a &lt;a href=&quot;https://gitter.im/relm-rs/Lobby&quot;&gt;gitter&lt;/a&gt; and I&amp;#8217;m also usually on &lt;code&gt;#gtk-rs&lt;/code&gt;, &lt;code&gt;#rust-fr&lt;/code&gt; and the GNOME&amp;#8217;s &lt;code&gt;#rust&lt;/code&gt; channel.
+You may also open &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;an issue on GitHub&lt;/a&gt; to ask questions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;future&quot;&gt;Future&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Beside many issues to be fixed and corner cases of gtk+ to support in relm, the most important thing to improve is the error messages.
+Since relm heavily uses code generation, the error message are very bad.
+Relm needs to be updated to use the &lt;a href=&quot;https://github.com/alexcrichton/proc-macro2&quot;&gt;proc-macro2&lt;/a&gt; crate in order to be able to keep the position of the tokens in the generated code.
+This will require a huge refactor because many things changed in the syn crate.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comment on &lt;a href=&quot;https://www.reddit.com/r/rust/comments/6ts036/whats_new_in_relm_0100/&quot;&gt;reddit&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+				<guid isPermaLink="true">http://relm.ml/relm-release-0.10</guid>
+			</item>
+		
+			<item>
+				<title>Relm, a GUI library, based on GTK+ and futures, written in Rust</title>
+				<link>http://relm.ml/relm-intro</link>
+				<pubDate>Sun, 09 Apr 2017 00:00:00 +0000</pubDate>
+				<description>&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Relm is a new crate (Rust library) to develop asynchronous GUI applications in Rust.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Relm provides a way to combine futures/tokio with GTK+ in an elegant way, to easily write asynchronous GUI applications.
+This library is inspired by the &lt;a href=&quot;http://elm-lang.org/&quot;&gt;elm programming language&lt;/a&gt; in that it uses &lt;a href=&quot;https://guide.elm-lang.org/architecture/&quot;&gt;The Elm Architecture&lt;/a&gt;, but adapted to both Rust and desktop applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;pain_points_with_using_gtk_in_rust&quot;&gt;Pain points with using GTK+ in Rust&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I created relm because I had some recurrent issues when writing a somewhat complex GTK+ application in Rust.
+These pain points are detailed below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;state_mutation&quot;&gt;State mutation&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is common practice to associate some data (called a model) with a widget and mutate it when the user does an action like clicking on a button.
+With &lt;code&gt;gtk-rs&lt;/code&gt;, it is not possible to directly mutate a state in reaction to an event.
+To do so, one needs to use &lt;code&gt;Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Rc&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;RefCell&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}));&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-n&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_clicked&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;borrow_mut&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;set_text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;{}&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;borrow&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;));&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;});&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Which is not ergonomic and error-prone because you can get an error at run-time instead of compile time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;asynchronous_ui&quot;&gt;Asynchronous UI&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This issue is more related to GTK+ in general.
+Sometimes, one wants to be able to wait after an HTTP request to finish or a timeout to happen and then update the UI accordingly, without freezing the UI.
+GTK+ supports this feature.
+However, I believe that having an abstraction to simplify asynchronous programming can make it easier to write GUI that doesn&amp;#8217;t block the UI.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;cannot_easily_create_new_widgets&quot;&gt;Cannot easily create new widgets&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In Vala (and other object-oriented languages), it is easy to create a new widget. All you need is to create a new class inheriting from a widget:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;vala&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;MyWidget&lt;/span&gt; &lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;tok-n&quot;&gt;DrawingArea&lt;/span&gt; &lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;and you can use this widget like any other:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;vala&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;tok-n&quot;&gt;widget&lt;/span&gt; &lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;tok-k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;tok-n&quot;&gt;MyWidget&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;widget&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is not as easy to do in Rust because it does not support subclassing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;One workaround is to add a &lt;code&gt;Deref&lt;/code&gt; implementation for your widget:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;MyWidget&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drawing_area&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;DrawingArea&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-k&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Deref&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;MyWidget&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Target&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;DrawingArea&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;deref&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;DrawingArea&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drawing_area&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;but then, you need to manually dereference the variable to use the widget:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;*&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;widget&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once again, it is not ergonomic and, while other solutions are available, it is currently not the way to go in &lt;code&gt;gtk-rs&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For all these reasons, I decided to write &lt;a href=&quot;https://github.com/antoyo/relm&quot;&gt;relm&lt;/a&gt;, employing &lt;a href=&quot;https://github.com/alexcrichton/futures-rs&quot;&gt;futures&lt;/a&gt; and &lt;a href=&quot;https://github.com/tokio-rs&quot;&gt;tokio&lt;/a&gt;.
+This allows the users of &lt;code&gt;relm&lt;/code&gt; to do an &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/http.rs&quot;&gt;HTTP request with tokio&lt;/a&gt; without freezing the UI.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;inspiration_by_elm&quot;&gt;Inspiration by Elm&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;Relm&lt;/code&gt; took its inspiration from the Elm programming language.
+Having used this language a bit, I found out it provides a good solution to do MVC.
+To create a program in Elm, you only need to provide a model, an &lt;code&gt;update&lt;/code&gt; function to transform the model when some event happens and a &lt;code&gt;view&lt;/code&gt; function to create the view in a declarative way.
+The view communicate with the &lt;code&gt;update&lt;/code&gt; function through message passing.
+In &lt;code&gt;relm&lt;/code&gt;, it is very similar, but I adapted the pattern to Rust.
+For instance, &lt;code&gt;update&lt;/code&gt; and &lt;code&gt;view&lt;/code&gt; are methods of the &lt;code&gt;Widget&lt;/code&gt; trait.
+Also, mutation is used when it makes sense (Elm being purely functional, mutation is not used in this language).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;example_using_the_widget_attribute&quot;&gt;Example using the &lt;code&gt;#[widget]&lt;/code&gt; attribute&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s look at an example to see how to create a GUI application using &lt;code&gt;relm&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Import statements ommited.&lt;/span&gt;
+
+&lt;span class=&quot;tok-c1&quot;&gt;// Define the structure of the model.&lt;/span&gt;
+&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Clone)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;i32&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-c1&quot;&gt;// The messages that can be sent to the update function.&lt;/span&gt;
+&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Msg)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-cp&quot;&gt;#[widget]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// The initial model.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Update the model according to the message received.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;main_quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Box&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Set the orientation property of the Box.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;orientation&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Vertical&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Create a Button inside the Box.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Send the message Increment when the button is clicked.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;clicked&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;+&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Label&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Bind the text property of the label to the counter attribute of the model.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;clicked&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;-&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;delete_event&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Inhibit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;unwrap&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;(This example is truncated, look at the complete file &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/buttons-attribute.rs&quot;&gt;here&lt;/a&gt;.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Those of you that used Elm can notice the similarity between it and &lt;code&gt;relm&lt;/code&gt;.
+A lot of magic happens in the &lt;code&gt;#[widget]&lt;/code&gt; attribute.&lt;sup class=&quot;footnote&quot;&gt;[&lt;a id=&quot;_footnoteref_1&quot; class=&quot;footnote&quot; href=&quot;#_footnotedef_1&quot; title=&quot;View footnote.&quot;&gt;1&lt;/a&gt;]&lt;/sup&gt;
+For example, this attribute generates the &lt;code&gt;struct Win&lt;/code&gt; that contains the GTK+ and relm widgets.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;view!&lt;/code&gt; macro allows to write the view in a declarative way.
+One can connect a GTK+ signal to send a message using the fat arrow syntax.
+For instance, the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;clicked&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;means that the message &lt;code&gt;Increment&lt;/code&gt; will be sent to the &lt;code&gt;update&lt;/code&gt; function when the button is clicked.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The attribute also changes the &lt;code&gt;update&lt;/code&gt; function to insert the calls to &lt;code&gt;gtk::Label::set_text()&lt;/code&gt; when the &lt;code&gt;counter&lt;/code&gt; field of the &lt;code&gt;model&lt;/code&gt; is updated.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;example_without_the_attribute&quot;&gt;Example without the attribute&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If it is not possible for you to depend on Rust nightly, it is possible to avoid using the &lt;code&gt;#[widget]&lt;/code&gt; attribute.
+However, it requires a bit of boilerplate code.
+Here is the same example without the attribute:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Clone)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kt&quot;&gt;i32&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Msg)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-c1&quot;&gt;// Create the structure that holds the widgets used in the view.&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-k&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Specify the type of the outer widget.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Container&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Specify the model used for this widget.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Return the outer widget.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Self&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Container&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Manually update the view.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;set_text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;());&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;set_text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;());&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;main_quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;RemoteRelm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_model&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Self&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Self&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Create the view using the normal GTK+ method calls.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;vbox&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Box&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Vertical&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;plus_button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new_with_label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;+&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;vbox&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;plus_button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;vbox&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;minus_button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new_with_label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;-&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;vbox&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;minus_button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;WindowType&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Toplevel&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;vbox&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;show_all&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Send the message Increment when the button is clicked.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;plus_button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_clicked&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;minus_button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_clicked&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Decrement&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_delete_event&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Some&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Inhibit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)));&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter_label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;unwrap&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;(This example is truncated, look at the complete file &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/buttons.rs&quot;&gt;here&lt;/a&gt;.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can see some similarity with the previous example, but you now need to create the widgets the same way you would do when using &lt;code&gt;gtk-rs&lt;/code&gt; directly, i.e. by calling constructors like &lt;code&gt;Button::new_with_label()&lt;/code&gt;.
+Moreover, you need to update the view manually in the &lt;code&gt;update&lt;/code&gt; method:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;set_text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;());&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You also need to create the &lt;code&gt;container&lt;/code&gt; function, the types &lt;code&gt;Container&lt;/code&gt; and &lt;code&gt;Model&lt;/code&gt; and the &lt;code&gt;struct Win&lt;/code&gt; that are automatically created by the &lt;code&gt;#[widget]&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;One difference with &lt;code&gt;gtk-rs&lt;/code&gt; is how you connect signals:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;plus_button&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_clicked&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is the equivalent of:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;clicked&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Increment&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;that was used in the previous example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;example_using_tokio&quot;&gt;Example using tokio&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That was a basic example.
+Now let&amp;#8217;s look at a more involved example actually using &lt;code&gt;tokio&lt;/code&gt; to send messages to a websockets server:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;WSService&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;ClientService&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;TcpStream&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;WebSocketProtocol&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Clone)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// The message to be sent.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;WSService&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// This contains all the messages received from the websockets server.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-cp&quot;&gt;#[derive(Msg)]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;tok-nc&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// The user changed the message to be sent.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Change&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Connection to the server successful.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;WSService&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// A message received from the server.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Send a message to the server.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-cp&quot;&gt;#[widget]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-k&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Win&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;subscriptions&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Connect to the websocket server.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;handshake_future&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;ws_handshake&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;handle&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;());&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_ignore_err&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;handshake_future&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Change&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Connected&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Some&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;{}&lt;/span&gt;&lt;span class=&quot;tok-se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;grab_focus&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;main_quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;tok-nf&quot;&gt;update_command&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Relm&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Msg&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;mut&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Some&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-k&quot;&gt;ref&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Send the message to the server.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-kd&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;send_future&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;ws_send&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;relm&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;connect_exec_ignore_err&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;send_future&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Box&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;orientation&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Vertical&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Label&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-c1&quot;&gt;// Give a name to this widget, so that we can use it in the update function.&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;#[name=&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;entry&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Entry&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;changed&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Change&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;get_text&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;unwrap_or_else&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;clicked&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;Send&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;delete_event&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Inhibit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;(You can see the complete example &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/websockets-attribute.rs&quot;&gt;here&lt;/a&gt;.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are two new methods in this example: &lt;code&gt;subscriptions&lt;/code&gt; and &lt;code&gt;update_command&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The former is to execute futures when the application starts.
+In this case, we initiate the websockets connection and connect the future to send the &lt;code&gt;Connected&lt;/code&gt; message.
+This example ignores the possible errors, but it is also possible to handle the case where the future resolves to an error.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;update_command&lt;/code&gt; method is used in &lt;code&gt;relm&lt;/code&gt; to execute futures when a message is received.
+This example sends the message &lt;code&gt;Message(message)&lt;/code&gt; where &lt;code&gt;message&lt;/code&gt; is the response from the websockets server.
+Relm executes the &lt;code&gt;update_command&lt;/code&gt; method in another thread, where the tokio event loop runs: this is why we cannot execute the futures in the &lt;code&gt;update&lt;/code&gt; method.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As you can see, events from GTK+ widgets and events from futures are managed in the same way.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;warning_about_api_instability&quot;&gt;Warning about API instability&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is to be noted that &lt;code&gt;relm&lt;/code&gt; is under heavy development and has not been thoroughly tested.
+Moreover, the API is currently unstable and will be updated in the next releases.
+For instance, the &lt;code&gt;update_command&lt;/code&gt; method will be removed (and merge with the &lt;code&gt;update&lt;/code&gt; method) when this crate will switch to using &lt;a href=&quot;https://github.com/antoyo/futures-glib-rs&quot;&gt;futures-glib&lt;/a&gt; instead of using another thread to run the tokio event loop.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That was a short introduction to &lt;code&gt;relm&lt;/code&gt;.
+Look at the &lt;a href=&quot;https://github.com/antoyo/relm/tree/master/examples&quot;&gt;examples&lt;/a&gt; if you want to learn more.
+The &lt;a href=&quot;https://github.com/antoyo/relm#relm&quot;&gt;readme&lt;/a&gt; and the &lt;a href=&quot;https://docs.rs/relm/&quot;&gt;documentation&lt;/a&gt; also provide details about how to use this crate.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Comment on &lt;a href=&quot;https://www.reddit.com/r/rust/comments/64xmkk/relm_a_gui_library_based_on_gtk_and_futures/&quot;&gt;Reddit&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you find any issue while using this library, please open an &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;issue on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;future_of_relm&quot;&gt;Future of relm&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are some improvements I&amp;#8217;ll do in the next weeks and months:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Develop a GUI functional testing crate.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Improve the &lt;code&gt;#[widget]&lt;/code&gt; attribute.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add a more complex example.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Improve tests and documentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Switch to &lt;code&gt;futures-glib&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And, of course, I&amp;#8217;ll use &lt;code&gt;relm&lt;/code&gt; for my own projects &lt;a href=&quot;https://github.com/antoyo/mg&quot;&gt;mg&lt;/a&gt; and &lt;a href=&quot;https://github.com/antoyo/titanium&quot;&gt;titanium&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;hr&gt;
+&lt;div class=&quot;footnote&quot; id=&quot;_footnotedef_1&quot;&gt;
+&lt;a href=&quot;#_footnoteref_1&quot;&gt;1&lt;/a&gt;. Attributes currently requires a nightly compiler.
+&lt;/div&gt;
+&lt;/div&gt;</description>
+				<guid isPermaLink="true">http://relm.ml/relm-intro</guid>
+			</item>
+		
+	</channel>
+</rss>
