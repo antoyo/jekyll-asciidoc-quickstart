@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="https://antoyo.github.io/jekyll-relm-blog//assets/xslt/rss.xslt" ?>
-<?xml-stylesheet type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/rss.css" ?>
+<?xml-stylesheet type="text/xsl" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/xslt/rss.xslt" ?>
+<?xml-stylesheet type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/css/rss.css" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Relm Blog</title>
 		<description>An asynchronous GUI Rust library, based on GTK+ and futures/tokio</description>
-		<link>https://antoyo.github.io/jekyll-relm-blog//</link>
-		<atom:link href="https://antoyo.github.io/jekyll-relm-blog//feed.xml" rel="self" type="application/rss+xml" />
+		<link>https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/</link>
+		<atom:link href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
 				<title>Relm drop support for futures!</title>
-				<link>https://antoyo.github.io/jekyll-relm-blog//relm-without-futures</link>
+				<link>https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-without-futures</link>
 				<pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
 				<description>&lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
@@ -72,12 +72,12 @@ Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description>
-				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//relm-without-futures</guid>
+				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-without-futures</guid>
 			</item>
 		
 			<item>
 				<title>Relm now has better error messages!</title>
-				<link>https://antoyo.github.io/jekyll-relm-blog//relm-better-error-message</link>
+				<link>https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-better-error-message</link>
 				<pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
 				<description>&lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
@@ -172,12 +172,12 @@ Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description>
-				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//relm-better-error-message</guid>
+				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-better-error-message</guid>
 			</item>
 		
 			<item>
 				<title>What&amp;#8217;s new in relm 0.10.0?</title>
-				<link>https://antoyo.github.io/jekyll-relm-blog//relm-release-0.10</link>
+				<link>https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-release-0.10</link>
 				<pubDate>Mon, 14 Aug 2017 00:00:00 +0000</pubDate>
 				<description>&lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
@@ -353,12 +353,12 @@ This will require a huge refactor because many things changed in the syn crate.&
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description>
-				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//relm-release-0.10</guid>
+				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-release-0.10</guid>
 			</item>
 		
 			<item>
 				<title>Relm, a GUI library, based on GTK+ and futures, written in Rust</title>
-				<link>https://antoyo.github.io/jekyll-relm-blog//relm-intro</link>
+				<link>https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-intro</link>
 				<pubDate>Sun, 09 Apr 2017 00:00:00 +0000</pubDate>
 				<description>&lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
@@ -898,7 +898,7 @@ The &lt;a href=&quot;https://github.com/antoyo/relm#relm&quot;&gt;readme&lt;/a&g
 &lt;a href=&quot;#_footnoteref_1&quot;&gt;1&lt;/a&gt;. Attributes currently requires a nightly compiler.
 &lt;/div&gt;
 &lt;/div&gt;</description>
-				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//relm-intro</guid>
+				<guid isPermaLink="true">https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/relm-intro</guid>
 			</item>
 		
 	</channel>

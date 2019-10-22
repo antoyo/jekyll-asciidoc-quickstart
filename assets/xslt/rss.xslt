@@ -10,16 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Feed (Styled)</title>
 
-    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/styles_feeling_responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/css/styles_feeling_responsive.css">
 
     <!-- Search Engine Optimization -->
     <meta name="description" content="An asynchronous GUI Rust library, based on GTK+ and futures/tokio">
     
-    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//assets/xslt/rss.xslt">
+    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/xslt/rss.xslt">
 
-    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+    <link rel="stylesheet" href="/jekyll-relm-blog/css/asciidoc-pygments.css">
 
-    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//humans.txt">
+    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/humans.txt">
 
     
 
@@ -59,7 +59,7 @@
   <nav class="top-bar" role="navigation" data-topbar>
     <ul class="title-area">
       <li class="name">
-      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog/" class="icon-tree"> Relm Blog</a></h1>
+      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog" class="icon-tree"> Relm Blog</a></h1>
     </li>
        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
       <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
@@ -105,7 +105,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//">Index</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/">Index</a></li>
               <li class="divider"></li>
 
             
@@ -120,7 +120,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/getting-started/">Getting Started</a></li>
               <li class="divider"></li>
 
             
@@ -135,7 +135,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//documentation/">Documentation</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/documentation/">Documentation</a></li>
               <li class="divider"></li>
 
             
@@ -152,14 +152,14 @@
             
 
               <li class="has-dropdown">
-                <a  href="https://antoyo.github.io/jekyll-relm-blog//blog/">Blog</a>
+                <a  href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/blog/">Blog</a>
 
                   <ul class="dropdown">
                     
 
                       
 
-                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog//blog/archive/">Blog Archive</a></li>
+                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/blog/archive/">Blog Archive</a></li>
                     
                   </ul>
 
@@ -179,8 +179,8 @@
 <div id="masthead-no-image-header">
     <div class="row">
         <div class="small-12 columns">
-            <a id="logo" href="https://antoyo.github.io/jekyll-relm-blog//" title="Relm Blog – ">
-                <img src="https://antoyo.github.io/jekyll-relm-blog//assets/img/" alt="Relm Blog – ">
+            <a id="logo" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/" title="Relm Blog – ">
+                <img src="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/img/" alt="Relm Blog – ">
             </a>
         </div><!-- /.small-12.columns -->
     </div><!-- /.row -->
@@ -278,17 +278,17 @@
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog"  title=""></a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog//feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog//atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
                   </li>
               
               </ul>
@@ -310,7 +310,7 @@
             
               
                 <li >
-                  <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
+                  <a href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog"  title=""></a>
                 </li>
             
               
