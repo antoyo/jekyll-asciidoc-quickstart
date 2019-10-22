@@ -83,7 +83,7 @@ Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
-See the /jekyll-relm-blog/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt;
+See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
