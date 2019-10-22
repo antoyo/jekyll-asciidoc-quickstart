@@ -17,7 +17,7 @@
     
     <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/assets/xslt/atom.xslt">
 
-    <link rel="stylesheet" href="/jekyll-relm-blog/css/asciidoc-pygments.css">
+    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/css/asciidoc-pygments.css"">
 
     <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//jekyll-relm-blog/humans.txt">
 
