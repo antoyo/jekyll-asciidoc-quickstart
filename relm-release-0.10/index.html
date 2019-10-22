@@ -1,0 +1,642 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What&amp;#8217;s new in relm 0.10.0?</title>
+
+    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/styles_feeling_responsive.css">
+
+    <!-- Search Engine Optimization -->
+    <meta name="description" content="Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio.
+See the introduction article for details about why this library was created and how to use it.
+
+
+This new release is huge: a lot of changes happened under the hood, the API was changed and features that were unsound were removed.
+The web browser titanium has been updated to use this latest version of relm.
+The journey has not been without pitfalls and some convenient features of relm were removed because they caused issues.
+
+
+
+
+Removed features
+
+
+Shared model
+
+The model is no longer a shared.
+In the previous versions of relm, it was a Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt; for convenience:
+it was possible to share a model with a gtk+ callback for instance.
+However, when developing titanium, I&amp;#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely one issue relm tries to solve.
+Now, there&amp;#8217;s a single owner to a widget&amp;#8217;s model and the only way to mutate the model is through its widget:
+if we want to update the model from another widget, we need to send a message to the other widget.
+
+
+
+Synchronous callbacks
+
+Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
+While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&amp;#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
+Remember that the update method takes self by mutable reference, and with this feature, it was possible to block an event handling, while it was waiting for the widget to resolve the value to be returned to the gtk+ callback.
+So, if the event was triggered twice, it could be possible to have two &amp;amp;mut over the model.
+That&amp;#8217;s a pretty bad thing that Rust prevents us from doing.
+
+
+
+Networking examples
+
+This release took a long time to be release.
+The reason is that I was waiting for tokio issues to be fixed.
+Since I&amp;#8217;ve been waiting for months and they are still not resolved, I decided to release a version without the examples relying on tokio (the http and websockets examples).
+And they&amp;#8217;re not likely to be fixed soon since tokio-proto is likely to be de-emphasize and it&amp;#8217;s used both by hyper and twist (the websockets crate).
+That doesn&amp;#8217;t mean it&amp;#8217;s not possible to use tokio:
+titanium uses tokio, but it needs a special version of the tokio-based crate so that the futures can be spawned on the glib event loop.
+In order to be able to use tokio-based crates with relm, they need to be updated to use the new Executor trait instead of relying on the tokio-core Handle.
+
+
+
+
+
+Switch to futures-glib
+
+
+During the Rust+GNOME HackFest in Mexico, Alex Crichton and I worked on a way to spawn futures directly on the glib event loop:
+the futures-glib crate.
+Using that, relm now executes only in one thread, which simplify a lot of things while being more efficient.
+
+
+
+
+Is relm usable on stable Rust?
+
+
+Yes, it is!
+And you can even benefit from the nice syntax by using the relm_widget! macro.
+
+
+
+
+Projects using relm
+
+
+There&amp;#8217;s already a few projects using relm.
+If you use relm, consider posting the link to your project in this issue.
+
+
+
+
+New features
+
+
+Here&amp;#8217;s other new features of this release, in bulk:
+
+
+
+
+New with syntax to ease sharing a value with a gtk+ callback (to replace the removed synchronous callbacks feature).
+
+
+Separate the Widget trait into an Update trait to be able to use relm in a non-UI context (which in a new relm-state crate).
+
+
+New connect_stream! macro to be used in a non-UI context.
+
+
+Fix to be able to have messages with multiple values.
+
+
+Add the ability to use a message as a property in the view (to be able to update another widget&amp;#8217;s model conveniently since it is now forbidden to share a widget)
+
+
+New shortcut method to emit a message on a widget.
+
+
+Add support for children events.
+
+
+New IntoPair and IntoOption traits for more convenience in signal connections.
+
+
+Add support for construct properties.
+
+
+Log the generated code to help debugging.
+
+
+Add a stream lock to have a way to avoid infinite event emission.
+
+
+Allow adding custom methods in the trait annotated by the widget attribute: this is useful to have other methods than update that modify the model, thus automatically updating the view.
+
+
+The model is not a parameter anymore, it is now part of the widget struct.
+
+
+New multi-container feature.
+
+
+Add a way to specify additional data to initialize the model.
+
+
+Add support for generic widgets.
+
+
+Add support for gtk+ child properties.
+
+
+Add init_view() on the Widget trait to be able to execute arbitrary code to update the view when a widget is created: this is useful when using the view! macro usable within the widget attribute.
+
+
+No more Send bound for the Model and fewer Clone bounds required.
+
+
+Many fixes.
+
+
+
+
+
+
+Need help?
+
+
+If you need help to use relm, there&amp;#8217;s a gitter and I&amp;#8217;m also usually on #gtk-rs, #rust-fr and the GNOME&amp;#8217;s #rust channel.
+You may also open an issue on GitHub to ask questions.
+
+
+
+
+Future
+
+
+Beside many issues to be fixed and corner cases of gtk+ to support in relm, the most important thing to improve is the error messages.
+Since relm heavily uses code generation, the error message are very bad.
+Relm needs to be updated to use the proc-macro2 crate in order to be able to keep the position of the tokens in the generated code.
+This will require a huge refactor because many things changed in the syn crate.
+
+
+Comment on reddit.">
+    
+    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//relm-release-0.10/">
+
+    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog//css/asciidoc-pygments.css">
+
+    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//humans.txt">
+
+    
+
+	<link rel="icon" sizes="32x32" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://antoyo.github.io/jekyll-relm-blog//assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+    
+
+    </head>
+    <body id="top-of-page" class="">
+        
+        
+<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog/" class="icon-tree"> Relm Blog</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+        
+      </ul>
+
+      <ul class="left">
+        
+
+              
+
+          
+          
+
+            
+            
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//">Index</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//documentation/">Documentation</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="https://antoyo.github.io/jekyll-relm-blog//blog/">Blog</a>
+
+                  <ul class="dropdown">
+                    
+
+                      
+
+                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog//blog/archive/">Blog Archive</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+        
+
+        
+
+<div id="masthead-no-image-header">
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="logo" href="https://antoyo.github.io/jekyll-relm-blog//" title="Relm Blog – An easy-to-use ORM from Rust">
+                <img src="https://antoyo.github.io/jekyll-relm-blog//assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
+            </a>
+        </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+        <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio.
+See the <a href="https://antoyo.github.io/jekyll-relm-blog/relm-intro">introduction article</a> for details about why this library was created and how to use it.</p>
+</div>
+<div class="paragraph">
+<p>This new release is huge: a lot of changes happened under the hood, the API was changed and features that were unsound were removed.
+The <a href="https://github.com/antoyo/titanium">web browser titanium</a> has been updated to use this latest version of relm.
+The journey has not been without pitfalls and some convenient features of relm were removed because they caused issues.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="removed-features">Removed features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="shared-model">Shared model</h3>
+<div class="paragraph">
+<p>The model is no longer a shared.
+In the previous versions of relm, it was a <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code> for convenience:
+it was possible to share a model with a gtk+ callback for instance.
+However, when developing titanium, I&#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely <a href="https://antoyo.github.io/jekyll-relm-blog/relm-intro#state_mutation">one issue</a> relm tries to solve.
+Now, there&#8217;s a single owner to a widget&#8217;s model and the only way to mutate the model is through its widget:
+if we want to update the model from another widget, we need to send a message to the other widget.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="synchronous-callbacks">Synchronous callbacks</h3>
+<div class="paragraph">
+<p>Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
+While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
+Remember that the update method takes <code>self</code> by mutable reference, and with this feature, it was possible to block an event handling, while it was waiting for the widget to resolve the value to be returned to the gtk+ callback.
+So, if the event was triggered twice, it could be possible to have two <code>&amp;mut</code> over the model.
+That&#8217;s a pretty bad thing that Rust prevents us from doing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="networking-examples">Networking examples</h3>
+<div class="paragraph">
+<p>This release took a long time to be release.
+The reason is that I was waiting for tokio issues to be fixed.
+Since I&#8217;ve been waiting for months and they are still not resolved, I decided to release a version without the examples relying on tokio (the http and websockets examples).
+And they&#8217;re not likely to be fixed soon since <code>tokio-proto</code> is likely to be <a href="https://www.reddit.com/r/rust/comments/6s4axu/asynchronous_rust_complaints_suggestions/dlawxao/">de-emphasize</a> and it&#8217;s used both by <code>hyper</code> and <code>twist</code> (the websockets crate).
+That doesn&#8217;t mean it&#8217;s not possible to use tokio:
+titanium uses tokio, but it needs a special version of the tokio-based crate so that the futures can be spawned on the glib event loop.
+In order to be able to use tokio-based crates with relm, they need to be updated to use the new <a href="https://docs.rs/futures/newest/futures/executor/trait.Executor.html">Executor trait</a> instead of relying on the tokio-core <code>Handle</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="switch-to-futures-glib">Switch to futures-glib</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>During the Rust+GNOME HackFest in Mexico, Alex Crichton and I worked on a way to spawn futures directly on the glib event loop:
+the <a href="https://github.com/antoyo/futures-glib-rs">futures-glib crate</a>.
+Using that, relm now executes only in one thread, which simplify a lot of things while being more efficient.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="is-relm-usable-on-stable-rust">Is relm usable on stable Rust?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Yes, it is!
+And you can even benefit from the nice syntax by using the <a href="https://github.com/antoyo/relm/blob/master/examples/buttons-derive/src/main.rs#L49"><code>relm_widget!</code> macro</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="projects-using-relm">Projects using relm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There&#8217;s already a few <a href="https://github.com/antoyo/relm#projects-using-relm">projects using relm</a>.
+If you use relm, consider posting the link to your project <a href="https://github.com/antoyo/relm/issues/30">in this issue</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="new-features">New features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here&#8217;s other new features of this release, in bulk:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/4356d379cbd7c9aa8d92bb592a5ecd201384f2ec">New <code>with</code> syntax to ease sharing a value with a gtk+ callback (to replace the removed synchronous callbacks feature).</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/9b83e1ec9f92bd514edcd92b79fa529e3ab120a1">Separate the <code>Widget</code> trait into an <code>Update</code> trait to be able to use relm in a non-UI context (which in a new relm-state crate).</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/4b086c3ea7bcfb36c11d941f4d335fb85d926009">New <code>connect_stream!</code> macro to be used in a non-UI context.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/aeebe4e8c09affe1f00354a2c2e7fe78828c2edd">Fix to be able to have messages with multiple values.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/15204e9b41be8db88cc861a236997bbc56ad4b66">Add the ability to use a message as a property in the view (to be able to update another widget&#8217;s model conveniently since it is now forbidden to share a widget)</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/c5461e8233b76db7f2b5e20f0cee67f0ded66027">New shortcut method to emit a message on a widget.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/a70ccadc97f7d1d304c9623f8dddd10d45bd5015">Add support for children events.</a></p>
+</li>
+<li>
+<p>New <a href="https://github.com/antoyo/relm/commit/8068548a6dd04206e2eb76fa1a2b0a103c9ea8e6"><code>IntoPair</code></a> and <a href="https://github.com/antoyo/relm/commit/f4c4a48ee30b8c3aeabdf32a5af949b08416f309"><code>IntoOption</code></a> traits for more convenience in signal connections.</p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/39ea6da0bd3649e53344e777e9e6a9ee7c064424">Add support for construct properties.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/2abbdc775c540cceafc9e3f49745b2a9b6a2f3e1">Log the generated code to help debugging.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/26e351385d85f10feb39a14c879143c4b502f40c">Add a stream lock to have a way to avoid infinite event emission.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/263bfb020d3b01e1ed490bedd7c8d5b15edd939f">Allow adding custom methods in the trait annotated by the widget attribute: this is useful to have other methods than <code>update</code> that modify the model, thus automatically updating the view.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/29a85685dad3a5fb70fc989c7be2be50eab8b954">The model is not a parameter anymore, it is now part of the widget struct.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/c94c354a3e23527ccfde8e9dc04704ba045afa90">New multi-container feature.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/49ca37deec56ed5aeb0f818d2dac6799501bd1a8">Add a way to specify additional data to initialize the model.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/fbf842c14c84fdeaf703cfced3d2203cb0b8e9af">Add support for generic widgets.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/911c14b39018a8f751c6ac0c3d71cceef7cf0df0">Add support for gtk+ child properties.</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/relm/commit/092ab0606020ae2b0349156e00d29af6b44d5546">Add <code>init_view()</code> on the <code>Widget</code> trait to be able to execute arbitrary code to update the view when a widget is created: this is useful when using the <code>view!</code> macro usable within the widget attribute.</a></p>
+</li>
+<li>
+<p>No more <code>Send</code> bound for the Model and fewer <code>Clone</code> bounds required.</p>
+</li>
+<li>
+<p>Many fixes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="need-help">Need help?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need help to use relm, there&#8217;s a <a href="https://gitter.im/relm-rs/Lobby">gitter</a> and I&#8217;m also usually on <code>#gtk-rs</code>, <code>#rust-fr</code> and the GNOME&#8217;s <code>#rust</code> channel.
+You may also open <a href="https://github.com/antoyo/relm/issues">an issue on GitHub</a> to ask questions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="future">Future</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beside many issues to be fixed and corner cases of gtk+ to support in relm, the most important thing to improve is the error messages.
+Since relm heavily uses code generation, the error message are very bad.
+Relm needs to be updated to use the <a href="https://github.com/alexcrichton/proc-macro2">proc-macro2</a> crate in order to be able to keep the position of the tokens in the generated code.
+This will require a huge refactor because many things changed in the syn crate.</p>
+</div>
+<div class="paragraph">
+<p>Comment on <a href="https://www.reddit.com/r/rust/comments/6ts036/whats_new_in_relm_0100/">reddit</a>.</p>
+</div>
+</div>
+</div>
+
+        
+            <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">About This Site</h5>
+
+            <p class="shadow-black">
+              An asynchronous GUI Rust library, based on GTK+ and futures/tokio
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">News Feed</h5>
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">Links</h5>
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://github.com/antoyo/tql" target="_blank"  title="">GitHub</a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://gitter.im/tql-rs/Lobby" target="_blank"  title="">Gitter</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 text-right columns credits">
+              Contribute on GitHub
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+            <ul class="inline-list social-icons">
+            
+              <li><a href="http://github.com/antoyo/tql" class="icon-github" title="TQL"></a></li>
+            
+            </ul>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+        
+    </body>
+</html>

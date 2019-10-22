@@ -10,42 +10,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atom Feed (Styled)</title>
 
-    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog/assets/css/styles_feeling_responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/styles_feeling_responsive.css">
 
     <!-- Search Engine Optimization -->
     <meta name="description" content="An asynchronous GUI Rust library, based on GTK+ and futures/tokio">
     
-    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog/assets/xslt/atom.xslt">
+    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//assets/xslt/atom.xslt">
 
-    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog/css/asciidoc-pygments.css">
+    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog//css/asciidoc-pygments.css">
 
-    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog/humans.txt">
+    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//humans.txt">
 
     
 
-	
+	<link rel="icon" sizes="32x32" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-114x114-precomposed.png">
 
 	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-76x76-precomposed.png">
 
-	
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-72x72-precomposed.png">
 
-	
+	<link rel="apple-touch-icon-precomposed" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-precomposed.png">	
 
-	
+	<meta name="msapplication-TileImage" content="https://antoyo.github.io/jekyll-relm-blog//assets/img/msapplication_tileimage.png">
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
+	<meta name="msapplication-TileColor" content="#fabb00">
 
 
     
@@ -59,7 +60,7 @@
   <nav class="top-bar" role="navigation" data-topbar>
     <ul class="title-area">
       <li class="name">
-      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog" class="icon-tree"> Relm Blog</a></h1>
+      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog/" class="icon-tree"> Relm Blog</a></h1>
     </li>
        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
       <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
@@ -105,7 +106,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/">Index</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//">Index</a></li>
               <li class="divider"></li>
 
             
@@ -120,7 +121,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/getting-started/">Getting Started</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
               <li class="divider"></li>
 
             
@@ -135,7 +136,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/documentation/">Documentation</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//documentation/">Documentation</a></li>
               <li class="divider"></li>
 
             
@@ -152,14 +153,14 @@
             
 
               <li class="has-dropdown">
-                <a  href="https://antoyo.github.io/jekyll-relm-blog/blog/">Blog</a>
+                <a  href="https://antoyo.github.io/jekyll-relm-blog//blog/">Blog</a>
 
                   <ul class="dropdown">
                     
 
                       
 
-                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog/blog/archive/">Blog Archive</a></li>
+                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog//blog/archive/">Blog Archive</a></li>
                     
                   </ul>
 
@@ -179,8 +180,8 @@
 <div id="masthead-no-image-header">
     <div class="row">
         <div class="small-12 columns">
-            <a id="logo" href="https://antoyo.github.io//jekyll-relm-blog/" title="Relm Blog – ">
-                <img src="https://antoyo.github.io/jekyll-relm-blog/assets/img/" alt="Relm Blog – ">
+            <a id="logo" href="https://antoyo.github.io/jekyll-relm-blog//" title="Relm Blog – An easy-to-use ORM from Rust">
+                <img src="https://antoyo.github.io/jekyll-relm-blog//assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
             </a>
         </div><!-- /.small-12.columns -->
     </div><!-- /.row -->
@@ -278,17 +279,17 @@
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog"  title=""></a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//feed.xml"  title="Subscribe to RSS Feed">RSS</a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//atom.xml"  title="Subscribe to Atom Feed">Atom</a>
                   </li>
               
               </ul>
@@ -310,7 +311,7 @@
             
               
                 <li >
-                  <a href="https://antoyo.github.io/jekyll-relm-blog"  title=""></a>
+                  <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
                 </li>
             
               

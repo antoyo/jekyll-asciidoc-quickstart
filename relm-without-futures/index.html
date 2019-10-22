@@ -3,14 +3,65 @@
     <head>
         <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Getting Started</title>
+    <title>Relm drop support for futures!</title>
 
     <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/styles_feeling_responsive.css">
 
     <!-- Search Engine Optimization -->
-    <meta name="description" content="An asynchronous GUI Rust library, based on GTK+ and futures/tokio">
+    <meta name="description" content="Un concepteur sait qu’il a atteint la perfection non pas quand il n’y a plus rien à ajouter mais quand il ne reste rien à enlever.
+
+
+
+&amp;#8212; Antoine de Saint-Exupery
+
+
+
+
+Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
+See the introduction article for details about why this library was created and how to use it.
+
+
+
+
+New release
+
+
+I&amp;#8217;ve just released relm version 0.14!
+
+
+This new release, like the previous one, does not provide a bunch of new features, but fix a very important issue:
+it removes the dependency on futures.
+
+
+The reason for that is to simplify the library.
+Indeed, futures and tokio are generic, abstract libraries that can be quite complex to use.
+Many of the reasons why I decided to drop these crates are explained in this blog article.
+One point that is not mentioned there is that it is incredibly difficult to write a library for a new protocol implemented on top of tokio.
+Why is that? Simply because there&amp;#8217;s no way to debug issues like why isn&amp;#8217;t this fd polled except using strace.
+
+
+So, what&amp;#8217;s the alternative?
+If you don&amp;#8217;t need async IO, well, you don&amp;#8217;t need anything and you won&amp;#8217;t have this extra complexity anymore.
+If you need it, you can use the gio async methods with one of the connect_async! macros.
+The now working http example shows how to do that.
+In the next months, I&amp;#8217;ll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
+The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with tokio.
+
+
+
+
+Conclusion
+
+
+This new version is the first step in making relm simpler and (as you may have guessed by the quote at the top of this article) you should expect more breaking changes to come that will make this crate even easier to use.
+As always, your feedback is very much appreciated.
+Also, there are issues that could use some love and many of them are tagged as easy if you wish to start with something simple.
+Don&amp;#8217;t wait to make a difference in the Rust ecosystem!
+
+
+Please comment on Reddit.">
     
-    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">
+    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//relm-without-futures/">
 
     <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog//css/asciidoc-pygments.css">
 
@@ -47,7 +98,7 @@
     
 
     </head>
-    <body id="top-of-page" class="page-fullwidth">
+    <body id="top-of-page" class="">
         
         
 <div id="navigation" class="sticky">
@@ -115,7 +166,7 @@
 
             
             
-              <li class="active"><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
               <li class="divider"></li>
 
             
@@ -191,29 +242,66 @@
 
 
 
-        
-
-
-<div class="row t30">
-	<div class="medium-12 columns">
-		<article>
-			<header>
-				
-				<h1>Getting Started</h1>
-			</header>
-
-			
-
-			<div class="paragraph">
-<p>To be done.
-For now, look at the <a href="https://github.com/antoyo/tql#tql">readme</a>.</p>
+        <div id="preamble">
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Un concepteur sait qu’il a atteint la perfection non pas quand il n’y a plus rien à ajouter mais quand il ne reste rien à enlever.</p>
 </div>
-		</article>
-	</div><!-- /.medium-12.columns -->
-</div><!-- /.row -->
-
-
-
+</blockquote>
+<div class="attribution">
+&#8212; Antoine de Saint-Exupery
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p>Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
+See the <a href="https://antoyo.github.io/jekyll-relm-blog/relm-intro">introduction article</a> for details about why this library was created and how to use it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="new-release">New release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;ve just released relm version 0.14!</p>
+</div>
+<div class="paragraph">
+<p>This new release, like the previous one, does not provide a bunch of new features, but fix a very important issue:
+it removes the dependency on futures.</p>
+</div>
+<div class="paragraph">
+<p>The reason for that is to simplify the library.
+Indeed, futures and tokio are generic, abstract libraries that can be quite complex to use.
+Many of the reasons why I decided to drop these crates are explained <a href="https://theta.eu.org/2017/08/04/async-rust.html">in this blog article</a>.
+One point that is not mentioned there is that it is incredibly difficult to write a library for a new protocol implemented on top of tokio.
+Why is that? Simply because there&#8217;s no way to debug issues like why isn&#8217;t this fd polled except using <code>strace</code>.</p>
+</div>
+<div class="paragraph">
+<p>So, what&#8217;s the alternative?
+If you don&#8217;t need async IO, well, you don&#8217;t need anything and you won&#8217;t have this extra complexity anymore.
+If you need it, you can use the <code>gio</code> async methods <a href="https://github.com/antoyo/relm/blob/9b1b527e8b5bdabaa34e37103e6d93e05cb8a8b3/relm-state/src/macros.rs#L129">with one of the <code>connect_async!</code> macros</a>.
+The now working <a href="https://github.com/antoyo/relm/blob/master/examples/http/src/main.rs#L228-L303">http example</a> shows how to do that.
+In the next months, I&#8217;ll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
+The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with <code>tokio</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This new version is the first step in making relm simpler and (as you may have guessed by the quote at the top of this article) you should expect more breaking changes to come that will make this crate even easier to use.
+As always, your feedback is very much appreciated.
+Also, there are <a href="https://github.com/antoyo/relm/issues">issues</a> that could use some love and many of them are tagged as <a href="https://github.com/antoyo/relm/issues?q=is%3Aopen+is%3Aissue+label%3Aeasy">easy</a> if you wish to start with something simple.
+Don&#8217;t wait to make a difference in the Rust ecosystem!</p>
+</div>
+<div class="paragraph">
+<p>Please comment on <a href="https://www.reddit.com/r/rust/comments/88op3r/relm_drop_support_for_futures/">Reddit</a>.</p>
+</div>
+</div>
+</div>
 
         
             <div id="up-to-top" class="row">

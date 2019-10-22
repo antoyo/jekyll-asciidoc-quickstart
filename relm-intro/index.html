@@ -5,42 +5,575 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relm, a GUI library, based on GTK+ and futures, written in Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog/assets/css/styles_feeling_responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://antoyo.github.io/jekyll-relm-blog//assets/css/styles_feeling_responsive.css">
 
     <!-- Search Engine Optimization -->
-    <meta name="description" content="">
+    <meta name="description" content="Relm is a new crate (Rust library) to develop asynchronous GUI applications in Rust.
+
+
+
+
+Introduction
+
+
+Relm provides a way to combine futures/tokio with GTK+ in an elegant way, to easily write asynchronous GUI applications.
+This library is inspired by the elm programming language in that it uses The Elm Architecture, but adapted to both Rust and desktop applications.
+
+
+
+
+Pain points with using GTK+ in Rust
+
+
+I created relm because I had some recurrent issues when writing a somewhat complex GTK+ application in Rust.
+These pain points are detailed below.
+
+
+State mutation
+
+It is common practice to associate some data (called a model) with a widget and mutate it when the user does an action like clicking on a button.
+With gtk-rs, it is not possible to directly mutate a state in reaction to an event.
+To do so, one needs to use Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt;:
+
+
+
+let model = Rc::new(RefCell::new(Model { count: 0 }));
+button.connect_clicked(move |_| {
+  (*model.borrow_mut()).count += 1;
+  label.set_text(&amp;amp;format!(&amp;quot;{}&amp;quot;, (*model.borrow()).count));
+});
+
+
+
+Which is not ergonomic and error-prone because you can get an error at run-time instead of compile time.
+
+
+
+Asynchronous UI
+
+This issue is more related to GTK+ in general.
+Sometimes, one wants to be able to wait after an HTTP request to finish or a timeout to happen and then update the UI accordingly, without freezing the UI.
+GTK+ supports this feature.
+However, I believe that having an abstraction to simplify asynchronous programming can make it easier to write GUI that doesn&amp;#8217;t block the UI.
+
+
+
+Cannot easily create new widgets
+
+In Vala (and other object-oriented languages), it is easy to create a new widget. All you need is to create a new class inheriting from a widget:
+
+
+
+class MyWidget : DrawingArea {
+}
+
+
+
+and you can use this widget like any other:
+
+
+
+var widget = new MyWidget();
+window.add(widget);
+
+
+
+It is not as easy to do in Rust because it does not support subclassing.
+
+
+One workaround is to add a Deref implementation for your widget:
+
+
+
+struct MyWidget {
+    drawing_area: DrawingArea,
+}
+
+impl Deref for MyWidget {
+    type Target = DrawingArea;
+
+    fn deref(&amp;amp;self) -&amp;gt; &amp;amp;DrawingArea {
+        &amp;amp;self.drawing_area
+    }
+}
+
+
+
+but then, you need to manually dereference the variable to use the widget:
+
+
+
+window.add(&amp;amp;*widget);
+
+
+
+Once again, it is not ergonomic and, while other solutions are available, it is currently not the way to go in gtk-rs.
+
+
+For all these reasons, I decided to write relm, employing futures and tokio.
+This allows the users of relm to do an HTTP request with tokio without freezing the UI.
+
+
+
+
+
+Inspiration by Elm
+
+
+Relm took its inspiration from the Elm programming language.
+Having used this language a bit, I found out it provides a good solution to do MVC.
+To create a program in Elm, you only need to provide a model, an update function to transform the model when some event happens and a view function to create the view in a declarative way.
+The view communicate with the update function through message passing.
+In relm, it is very similar, but I adapted the pattern to Rust.
+For instance, update and view are methods of the Widget trait.
+Also, mutation is used when it makes sense (Elm being purely functional, mutation is not used in this language).
+
+
+
+
+Example using the #[widget] attribute
+
+
+Let&amp;#8217;s look at an example to see how to create a GUI application using relm:
+
+
+
+// Import statements ommited.
+
+// Define the structure of the model.
+#[derive(Clone)]
+struct Model {
+    counter: i32,
+}
+
+// The messages that can be sent to the update function.
+#[derive(Msg)]
+enum Msg {
+    Decrement,
+    Increment,
+    Quit,
+}
+
+#[widget]
+impl Widget&amp;lt;Msg&amp;gt; for Win {
+    // The initial model.
+    fn model() -&amp;gt; Model {
+        Model {
+            counter: 0,
+        }
+    }
+
+    // Update the model according to the message received.
+    fn update(&amp;amp;mut self, event: Msg, model: &amp;amp;mut Model) {
+        match event {
+            Decrement =&amp;gt; model.counter -= 1,
+            Increment =&amp;gt; model.counter += 1,
+            Quit =&amp;gt; gtk::main_quit(),
+        }
+    }
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                // Set the orientation property of the Box.
+                orientation: Vertical,
+                // Create a Button inside the Box.
+                gtk::Button {
+                    // Send the message Increment when the button is clicked.
+                    clicked =&amp;gt; Increment,
+                    label: &amp;quot;+&amp;quot;,
+                },
+                gtk::Label {
+                    // Bind the text property of the label to the counter attribute of the model.
+                    text: &amp;amp;model.counter.to_string(),
+                },
+                gtk::Button {
+                    clicked =&amp;gt; Decrement,
+                    label: &amp;quot;-&amp;quot;,
+                },
+            },
+            delete_event(_, _) =&amp;gt; (Quit, Inhibit(false)),
+        }
+    }
+}
+
+fn main() {
+    Relm::run::&amp;lt;Win&amp;gt;().unwrap();
+}
+
+
+
+(This example is truncated, look at the complete file here.)
+
+
+Those of you that used Elm can notice the similarity between it and relm.
+A lot of magic happens in the #[widget] attribute.[1]
+For example, this attribute generates the struct Win that contains the GTK+ and relm widgets.
+
+
+The view! macro allows to write the view in a declarative way.
+One can connect a GTK+ signal to send a message using the fat arrow syntax.
+For instance, the following:
+
+
+
+gtk::Button {
+    clicked =&amp;gt; Increment,
+}
+
+
+
+means that the message Increment will be sent to the update function when the button is clicked.
+
+
+The attribute also changes the update function to insert the calls to gtk::Label::set_text() when the counter field of the model is updated.
+
+
+
+
+Example without the attribute
+
+
+If it is not possible for you to depend on Rust nightly, it is possible to avoid using the #[widget] attribute.
+However, it requires a bit of boilerplate code.
+Here is the same example without the attribute:
+
+
+
+#[derive(Clone)]
+struct Model {
+    counter: i32,
+}
+
+#[derive(Msg)]
+enum Msg {
+    Decrement,
+    Increment,
+    Quit,
+}
+
+// Create the structure that holds the widgets used in the view.
+struct Win {
+    counter_label: Label,
+    window: Window,
+}
+
+impl Widget&amp;lt;Msg&amp;gt; for Win {
+    // Specify the type of the outer widget.
+    type Container = Window;
+    // Specify the model used for this widget.
+    type Model = Model;
+
+    // Return the outer widget.
+    fn container(&amp;amp;self) -&amp;gt; &amp;amp;Self::Container {
+        &amp;amp;self.window
+    }
+
+    fn model() -&amp;gt; Model {
+        Model {
+            counter: 0,
+        }
+    }
+
+    fn update(&amp;amp;mut self, event: Msg, model: &amp;amp;mut Model) {
+        let label = &amp;amp;self.counter_label;
+
+        match event {
+            Decrement =&amp;gt; {
+                model.counter -= 1;
+                // Manually update the view.
+                label.set_text(&amp;amp;model.counter.to_string());
+            },
+            Increment =&amp;gt; {
+                model.counter += 1;
+                label.set_text(&amp;amp;model.counter.to_string());
+            },
+            Quit =&amp;gt; gtk::main_quit(),
+        }
+    }
+
+    fn view(relm: RemoteRelm&amp;lt;Msg&amp;gt;, _model: &amp;amp;Self::Model) -&amp;gt; Self {
+        // Create the view using the normal GTK+ method calls.
+        let vbox = gtk::Box::new(Vertical, 0);
+
+        let plus_button = Button::new_with_label(&amp;quot;+&amp;quot;);
+        vbox.add(&amp;amp;plus_button);
+
+        let counter_label = Label::new(&amp;quot;0&amp;quot;);
+        vbox.add(&amp;amp;counter_label);
+
+        let minus_button = Button::new_with_label(&amp;quot;-&amp;quot;);
+        vbox.add(&amp;amp;minus_button);
+
+        let window = Window::new(WindowType::Toplevel);
+
+        window.add(&amp;amp;vbox);
+
+        window.show_all();
+
+        // Send the message Increment when the button is clicked.
+        connect!(relm, plus_button, connect_clicked(_), Increment);
+        connect!(relm, minus_button, connect_clicked(_), Decrement);
+        connect!(relm, window, connect_delete_event(_, _) (Some(Quit), Inhibit(false)));
+
+        Win {
+            counter_label: counter_label,
+            window: window,
+        }
+    }
+}
+
+fn main() {
+    Relm::run::&amp;lt;Win&amp;gt;().unwrap();
+}
+
+
+
+(This example is truncated, look at the complete file here.)
+
+
+You can see some similarity with the previous example, but you now need to create the widgets the same way you would do when using gtk-rs directly, i.e. by calling constructors like Button::new_with_label().
+Moreover, you need to update the view manually in the update method:
+
+
+
+label.set_text(&amp;amp;model.counter.to_string());
+
+
+
+You also need to create the container function, the types Container and Model and the struct Win that are automatically created by the #[widget] attribute.
+
+
+One difference with gtk-rs is how you connect signals:
+
+
+
+connect!(relm, plus_button, connect_clicked(_), Increment);
+
+
+
+This is the equivalent of:
+
+
+
+clicked =&amp;gt; Increment
+
+
+
+that was used in the previous example.
+
+
+
+
+Example using tokio
+
+
+That was a basic example.
+Now let&amp;#8217;s look at a more involved example actually using tokio to send messages to a websockets server:
+
+
+
+type WSService = ClientService&amp;lt;TcpStream, WebSocketProtocol&amp;gt;;
+
+#[derive(Clone)]
+struct Model {
+    // The message to be sent.
+    message: String,
+    service: Option&amp;lt;WSService&amp;gt;,
+    // This contains all the messages received from the websockets server.
+    text: String,
+}
+
+#[derive(Msg)]
+enum Msg {
+    // The user changed the message to be sent.
+    Change(String),
+    // Connection to the server successful.
+    Connected(WSService),
+    // A message received from the server.
+    Message(String),
+    // Send a message to the server.
+    Send,
+    Quit,
+}
+
+#[widget]
+impl Widget&amp;lt;Msg&amp;gt; for Win {
+    fn model() -&amp;gt; Model {
+        Model {
+            message: String::new(),
+            service: None,
+            text: String::new(),
+        }
+    }
+
+    fn subscriptions(relm: &amp;amp;Relm&amp;lt;Msg&amp;gt;) {
+        // Connect to the websocket server.
+        let handshake_future = ws_handshake(relm.handle());
+        let future = relm.connect_ignore_err(handshake_future, Connected);
+        relm.exec(future);
+    }
+
+    fn update(&amp;amp;mut self, event: Msg, model: &amp;amp;mut Model) {
+        match event {
+            Change(message) =&amp;gt; model.message = message,
+            Connected(service) =&amp;gt; model.service = Some(service),
+            Message(message) =&amp;gt; model.text += &amp;amp;format!(&amp;quot;{}\n&amp;quot;, message),
+            Send =&amp;gt; {
+                model.message = String::new();
+                self.entry.grab_focus();
+            },
+            Quit =&amp;gt; gtk::main_quit(),
+        }
+    }
+
+    fn update_command(relm: &amp;amp;Relm&amp;lt;Msg&amp;gt;, event: Msg, model: &amp;amp;mut Model) {
+        if let Send = event {
+            if let Some(ref service) = model.service {
+                // Send the message to the server.
+                let send_future = ws_send(service, &amp;amp;model.message);
+                relm.connect_exec_ignore_err(send_future, Message);
+            }
+        }
+    }
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                gtk::Label {
+                    text: &amp;amp;model.text,
+                },
+                // Give a name to this widget, so that we can use it in the update function.
+                #[name=&amp;quot;entry&amp;quot;]
+                gtk::Entry {
+                    activate =&amp;gt; Send,
+                    changed(entry) =&amp;gt; Change(entry.get_text().unwrap_or_else(String::new)),
+                    text: &amp;amp;model.message,
+                },
+                gtk::Button {
+                    clicked =&amp;gt; Send,
+                    label: &amp;quot;Send&amp;quot;,
+                },
+            },
+            delete_event(_, _) =&amp;gt; (Quit, Inhibit(false)),
+        }
+    }
+}
+
+
+
+(You can see the complete example here.)
+
+
+There are two new methods in this example: subscriptions and update_command.
+
+
+The former is to execute futures when the application starts.
+In this case, we initiate the websockets connection and connect the future to send the Connected message.
+This example ignores the possible errors, but it is also possible to handle the case where the future resolves to an error.
+
+
+The update_command method is used in relm to execute futures when a message is received.
+This example sends the message Message(message) where message is the response from the websockets server.
+Relm executes the update_command method in another thread, where the tokio event loop runs: this is why we cannot execute the futures in the update method.
+
+
+As you can see, events from GTK+ widgets and events from futures are managed in the same way.
+
+
+
+
+Warning about API instability
+
+
+It is to be noted that relm is under heavy development and has not been thoroughly tested.
+Moreover, the API is currently unstable and will be updated in the next releases.
+For instance, the update_command method will be removed (and merge with the update method) when this crate will switch to using futures-glib instead of using another thread to run the tokio event loop.
+
+
+
+
+Conclusion
+
+
+That was a short introduction to relm.
+Look at the examples if you want to learn more.
+The readme and the documentation also provide details about how to use this crate.
+
+
+Comment on Reddit.
+
+
+If you find any issue while using this library, please open an issue on GitHub.
+
+
+Future of relm
+
+Here are some improvements I&amp;#8217;ll do in the next weeks and months:
+
+
+
+
+Develop a GUI functional testing crate.
+
+
+Improve the #[widget] attribute.
+
+
+Add a more complex example.
+
+
+Improve tests and documentation.
+
+
+Switch to futures-glib.
+
+
+
+
+And, of course, I&amp;#8217;ll use relm for my own projects mg and titanium.
+
+
+
+
+
+
+
+1. Attributes currently requires a nightly compiler.">
     
-    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog/relm-intro">
+    <link rel="canonical" href="https://antoyo.github.io/jekyll-relm-blog//relm-intro/">
 
-    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog/css/asciidoc-pygments.css">
+    <link rel="stylesheet" href="https://antoyo.github.io/jekyll-relm-blog//css/asciidoc-pygments.css">
 
-    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog/humans.txt">
+    <link type="text/plain" rel="author" href="https://antoyo.github.io/jekyll-relm-blog//humans.txt">
 
     
 
-	
+	<link rel="icon" sizes="32x32" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-114x114-precomposed.png">
 
 	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-76x76-precomposed.png">
 
-	
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-72x72-precomposed.png">
 
-	
+	<link rel="apple-touch-icon-precomposed" href="https://antoyo.github.io/jekyll-relm-blog//assets/img/apple-touch-icon-precomposed.png">	
 
-	
+	<meta name="msapplication-TileImage" content="https://antoyo.github.io/jekyll-relm-blog//assets/img/msapplication_tileimage.png">
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
+	<meta name="msapplication-TileColor" content="#fabb00">
 
 
     
@@ -53,7 +586,7 @@
   <nav class="top-bar" role="navigation" data-topbar>
     <ul class="title-area">
       <li class="name">
-      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog" class="icon-tree"> Relm Blog</a></h1>
+      <h1 class="show-for-small-only"><a href="https://antoyo.github.io/jekyll-relm-blog/" class="icon-tree"> Relm Blog</a></h1>
     </li>
        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
       <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
@@ -99,7 +632,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/">Index</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//">Index</a></li>
               <li class="divider"></li>
 
             
@@ -114,7 +647,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/getting-started/">Getting Started</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//getting-started/">Getting Started</a></li>
               <li class="divider"></li>
 
             
@@ -129,7 +662,7 @@
 
             
             
-              <li><a  href="https://antoyo.github.io/jekyll-relm-blog/documentation/">Documentation</a></li>
+              <li><a  href="https://antoyo.github.io/jekyll-relm-blog//documentation/">Documentation</a></li>
               <li class="divider"></li>
 
             
@@ -146,14 +679,14 @@
             
 
               <li class="has-dropdown">
-                <a  href="https://antoyo.github.io/jekyll-relm-blog/blog/">Blog</a>
+                <a  href="https://antoyo.github.io/jekyll-relm-blog//blog/">Blog</a>
 
                   <ul class="dropdown">
                     
 
                       
 
-                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog/blog/archive/">Blog Archive</a></li>
+                      <li><a  href="https://antoyo.github.io/jekyll-relm-blog//blog/archive/">Blog Archive</a></li>
                     
                   </ul>
 
@@ -175,8 +708,8 @@
 <div id="masthead-no-image-header">
     <div class="row">
         <div class="small-12 columns">
-            <a id="logo" href="https://antoyo.github.io//jekyll-relm-blog/" title="Relm Blog – ">
-                <img src="https://antoyo.github.io/jekyll-relm-blog/assets/img/" alt="Relm Blog – ">
+            <a id="logo" href="https://antoyo.github.io/jekyll-relm-blog//" title="Relm Blog – An easy-to-use ORM from Rust">
+                <img src="https://antoyo.github.io/jekyll-relm-blog//assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
             </a>
         </div><!-- /.small-12.columns -->
     </div><!-- /.row -->
@@ -783,17 +1316,17 @@ The <a href="https://github.com/antoyo/relm#relm">readme</a> and the <a href="ht
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog"  title=""></a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//feed.xml"  title="Subscribe to RSS Feed">RSS</a>
                   </li>
               
                 
                   <li >
-                    <a href="https://antoyo.github.io/jekyll-relm-blog/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                    <a href="https://antoyo.github.io/jekyll-relm-blog//atom.xml"  title="Subscribe to Atom Feed">Atom</a>
                   </li>
               
               </ul>
@@ -815,7 +1348,7 @@ The <a href="https://github.com/antoyo/relm#relm">readme</a> and the <a href="ht
             
               
                 <li >
-                  <a href="https://antoyo.github.io/jekyll-relm-blog"  title=""></a>
+                  <a href="https://antoyo.github.io/jekyll-relm-blog/"  title=""></a>
                 </li>
             
               

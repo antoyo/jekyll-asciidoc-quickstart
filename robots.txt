@@ -1,1 +1,2 @@
-Sitemap: https://antoyo.github.io//jekyll-relm-blog/sitemap.xml
+User-agent: *
+Sitemap: https://antoyo.github.io/jekyll-relm-blog//sitemap.xml
