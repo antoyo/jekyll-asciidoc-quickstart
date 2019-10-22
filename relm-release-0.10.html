@@ -12,10 +12,10 @@ The journey has not been without pitfalls and some convenient features of relm w
 </div>
 </div>
 <div class="sect1">
-<h2 id="removed_features">Removed features</h2>
+<h2 id="removed-features">Removed features</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="shared_model">Shared model</h3>
+<h3 id="shared-model">Shared model</h3>
 <div class="paragraph">
 <p>The model is no longer a shared.
 In the previous versions of relm, it was a <code>Rc&lt;RefCell&lt;Model&gt;&gt;</code> for convenience:
@@ -26,7 +26,7 @@ if we want to update the model from another widget, we need to send a message to
 </div>
 </div>
 <div class="sect2">
-<h3 id="synchronous_callbacks">Synchronous callbacks</h3>
+<h3 id="synchronous-callbacks">Synchronous callbacks</h3>
 <div class="paragraph">
 <p>Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
 While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
@@ -36,7 +36,7 @@ That&#8217;s a pretty bad thing that Rust prevents us from doing.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="networking_examples">Networking examples</h3>
+<h3 id="networking-examples">Networking examples</h3>
 <div class="paragraph">
 <p>This release took a long time to be release.
 The reason is that I was waiting for tokio issues to be fixed.
@@ -50,7 +50,7 @@ In order to be able to use tokio-based crates with relm, they need to be updated
 </div>
 </div>
 <div class="sect1">
-<h2 id="switch_to_futures_glib">Switch to futures-glib</h2>
+<h2 id="switch-to-futures-glib">Switch to futures-glib</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>During the Rust+GNOME HackFest in Mexico, Alex Crichton and I worked on a way to spawn futures directly on the glib event loop:
@@ -60,7 +60,7 @@ Using that, relm now executes only in one thread, which simplify a lot of things
 </div>
 </div>
 <div class="sect1">
-<h2 id="is_relm_usable_on_stable_rust">Is relm usable on stable Rust?</h2>
+<h2 id="is-relm-usable-on-stable-rust">Is relm usable on stable Rust?</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Yes, it is!
@@ -69,7 +69,7 @@ And you can even benefit from the nice syntax by using the <a href="https://gith
 </div>
 </div>
 <div class="sect1">
-<h2 id="projects_using_relm">Projects using relm</h2>
+<h2 id="projects-using-relm">Projects using relm</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>There&#8217;s already a few <a href="https://github.com/antoyo/relm#projects-using-relm">projects using relm</a>.
@@ -78,7 +78,7 @@ If you use relm, consider posting the link to your project <a href="https://gith
 </div>
 </div>
 <div class="sect1">
-<h2 id="new_features">New features</h2>
+<h2 id="new-features">New features</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Here&#8217;s other new features of this release, in bulk:</p>
@@ -150,7 +150,7 @@ If you use relm, consider posting the link to your project <a href="https://gith
 </div>
 </div>
 <div class="sect1">
-<h2 id="need_help">Need help?</h2>
+<h2 id="need-help">Need help?</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you need help to use relm, there&#8217;s a <a href="https://gitter.im/relm-rs/Lobby">gitter</a> and I&#8217;m also usually on <code>#gtk-rs</code>, <code>#rust-fr</code> and the GNOME&#8217;s <code>#rust</code> channel.

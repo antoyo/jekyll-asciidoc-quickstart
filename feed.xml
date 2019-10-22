@@ -32,7 +32,7 @@ See the &lt;a href=&quot;https://antoyo.github.io/jekyll-relm-blog/relm-intro&qu
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;new_release&quot;&gt;New release&lt;/h2&gt;
+&lt;h2 id=&quot;new-release&quot;&gt;New release&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I&amp;#8217;ve just released relm version 0.14!&lt;/p&gt;
@@ -88,7 +88,7 @@ See the &lt;a href=&quot;https://antoyo.github.io/jekyll-relm-blog/relm-intro&qu
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;new_release&quot;&gt;New release&lt;/h2&gt;
+&lt;h2 id=&quot;new-release&quot;&gt;New release&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I&amp;#8217;ve just released relm version 0.12!&lt;/p&gt;
@@ -151,7 +151,7 @@ the bad error messages.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;other_fix&quot;&gt;Other fix&lt;/h2&gt;
+&lt;h2 id=&quot;other-fix&quot;&gt;Other fix&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This release also fixes another &lt;a href=&quot;https://github.com/antoyo/relm/commit/35c0f28a7647c4637fe33763f0f0a00aec3d54e0&quot;&gt;issue&lt;/a&gt; where it was impossible to set child properties in some cases.&lt;/p&gt;
@@ -193,10 +193,10 @@ The journey has not been without pitfalls and some convenient features of relm w
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;removed_features&quot;&gt;Removed features&lt;/h2&gt;
+&lt;h2 id=&quot;removed-features&quot;&gt;Removed features&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;shared_model&quot;&gt;Shared model&lt;/h3&gt;
+&lt;h3 id=&quot;shared-model&quot;&gt;Shared model&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The model is no longer a shared.
 In the previous versions of relm, it was a &lt;code&gt;Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt;&lt;/code&gt; for convenience:
@@ -207,7 +207,7 @@ if we want to update the model from another widget, we need to send a message to
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;synchronous_callbacks&quot;&gt;Synchronous callbacks&lt;/h3&gt;
+&lt;h3 id=&quot;synchronous-callbacks&quot;&gt;Synchronous callbacks&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Also, the feature allowing to use synchronous callbacks in an asynchronous way were removed because they do not fit well within the model of relm, where everything is asynchronous.
 While this feature was convenient because it allowed to return a value to a gtk+ callback from within a widget&amp;#8217;s update method, it was removed because it could cause slowdown if abused and mainly because it was unsound.
@@ -217,7 +217,7 @@ That&amp;#8217;s a pretty bad thing that Rust prevents us from doing.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;networking_examples&quot;&gt;Networking examples&lt;/h3&gt;
+&lt;h3 id=&quot;networking-examples&quot;&gt;Networking examples&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This release took a long time to be release.
 The reason is that I was waiting for tokio issues to be fixed.
@@ -231,7 +231,7 @@ In order to be able to use tokio-based crates with relm, they need to be updated
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;switch_to_futures_glib&quot;&gt;Switch to futures-glib&lt;/h2&gt;
+&lt;h2 id=&quot;switch-to-futures-glib&quot;&gt;Switch to futures-glib&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;During the Rust+GNOME HackFest in Mexico, Alex Crichton and I worked on a way to spawn futures directly on the glib event loop:
@@ -241,7 +241,7 @@ Using that, relm now executes only in one thread, which simplify a lot of things
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;is_relm_usable_on_stable_rust&quot;&gt;Is relm usable on stable Rust?&lt;/h2&gt;
+&lt;h2 id=&quot;is-relm-usable-on-stable-rust&quot;&gt;Is relm usable on stable Rust?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Yes, it is!
@@ -250,7 +250,7 @@ And you can even benefit from the nice syntax by using the &lt;a href=&quot;http
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;projects_using_relm&quot;&gt;Projects using relm&lt;/h2&gt;
+&lt;h2 id=&quot;projects-using-relm&quot;&gt;Projects using relm&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;There&amp;#8217;s already a few &lt;a href=&quot;https://github.com/antoyo/relm#projects-using-relm&quot;&gt;projects using relm&lt;/a&gt;.
@@ -259,7 +259,7 @@ If you use relm, consider posting the link to your project &lt;a href=&quot;http
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;new_features&quot;&gt;New features&lt;/h2&gt;
+&lt;h2 id=&quot;new-features&quot;&gt;New features&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Here&amp;#8217;s other new features of this release, in bulk:&lt;/p&gt;
@@ -331,7 +331,7 @@ If you use relm, consider posting the link to your project &lt;a href=&quot;http
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;need_help&quot;&gt;Need help?&lt;/h2&gt;
+&lt;h2 id=&quot;need-help&quot;&gt;Need help?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;If you need help to use relm, there&amp;#8217;s a &lt;a href=&quot;https://gitter.im/relm-rs/Lobby&quot;&gt;gitter&lt;/a&gt; and I&amp;#8217;m also usually on &lt;code&gt;#gtk-rs&lt;/code&gt;, &lt;code&gt;#rust-fr&lt;/code&gt; and the GNOME&amp;#8217;s &lt;code&gt;#rust&lt;/code&gt; channel.
@@ -377,14 +377,14 @@ This library is inspired by the &lt;a href=&quot;http://elm-lang.org/&quot;&gt;e
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;pain_points_with_using_gtk_in_rust&quot;&gt;Pain points with using GTK+ in Rust&lt;/h2&gt;
+&lt;h2 id=&quot;pain-points-with-using-gtk-in-rust&quot;&gt;Pain points with using GTK+ in Rust&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I created relm because I had some recurrent issues when writing a somewhat complex GTK+ application in Rust.
 These pain points are detailed below.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;state_mutation&quot;&gt;State mutation&lt;/h3&gt;
+&lt;h3 id=&quot;state-mutation&quot;&gt;State mutation&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;It is common practice to associate some data (called a model) with a widget and mutate it when the user does an action like clicking on a button.
 With &lt;code&gt;gtk-rs&lt;/code&gt;, it is not possible to directly mutate a state in reaction to an event.
@@ -404,7 +404,7 @@ To do so, one needs to use &lt;code&gt;Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&am
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;asynchronous_ui&quot;&gt;Asynchronous UI&lt;/h3&gt;
+&lt;h3 id=&quot;asynchronous-ui&quot;&gt;Asynchronous UI&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This issue is more related to GTK+ in general.
 Sometimes, one wants to be able to wait after an HTTP request to finish or a timeout to happen and then update the UI accordingly, without freezing the UI.
@@ -413,7 +413,7 @@ However, I believe that having an abstraction to simplify asynchronous programmi
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;cannot_easily_create_new_widgets&quot;&gt;Cannot easily create new widgets&lt;/h3&gt;
+&lt;h3 id=&quot;cannot-easily-create-new-widgets&quot;&gt;Cannot easily create new widgets&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;In Vala (and other object-oriented languages), it is easy to create a new widget. All you need is to create a new class inheriting from a widget:&lt;/p&gt;
 &lt;/div&gt;
@@ -472,7 +472,7 @@ This allows the users of &lt;code&gt;relm&lt;/code&gt; to do an &lt;a href=&quot
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;inspiration_by_elm&quot;&gt;Inspiration by Elm&lt;/h2&gt;
+&lt;h2 id=&quot;inspiration-by-elm&quot;&gt;Inspiration by Elm&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;code&gt;Relm&lt;/code&gt; took its inspiration from the Elm programming language.
@@ -486,7 +486,7 @@ Also, mutation is used when it makes sense (Elm being purely functional, mutatio
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;example_using_the_widget_attribute&quot;&gt;Example using the &lt;code&gt;#[widget]&lt;/code&gt; attribute&lt;/h2&gt;
+&lt;h2 id=&quot;example-using-the-widget-attribute&quot;&gt;Example using the &lt;code&gt;#[widget]&lt;/code&gt; attribute&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Let&amp;#8217;s look at an example to see how to create a GUI application using &lt;code&gt;relm&lt;/code&gt;:&lt;/p&gt;
@@ -586,7 +586,7 @@ For instance, the following:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;example_without_the_attribute&quot;&gt;Example without the attribute&lt;/h2&gt;
+&lt;h2 id=&quot;example-without-the-attribute&quot;&gt;Example without the attribute&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;If it is not possible for you to depend on Rust nightly, it is possible to avoid using the &lt;code&gt;#[widget]&lt;/code&gt; attribute.
@@ -720,7 +720,7 @@ Moreover, you need to update the view manually in the &lt;code&gt;update&lt;/cod
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;example_using_tokio&quot;&gt;Example using tokio&lt;/h2&gt;
+&lt;h2 id=&quot;example-using-tokio&quot;&gt;Example using tokio&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;That was a basic example.
@@ -839,7 +839,7 @@ Relm executes the &lt;code&gt;update_command&lt;/code&gt; method in another thre
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;warning_about_api_instability&quot;&gt;Warning about API instability&lt;/h2&gt;
+&lt;h2 id=&quot;warning-about-api-instability&quot;&gt;Warning about API instability&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;It is to be noted that &lt;code&gt;relm&lt;/code&gt; is under heavy development and has not been thoroughly tested.
@@ -863,7 +863,7 @@ The &lt;a href=&quot;https://github.com/antoyo/relm#relm&quot;&gt;readme&lt;/a&g
 &lt;p&gt;If you find any issue while using this library, please open an &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;issue on GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;future_of_relm&quot;&gt;Future of relm&lt;/h3&gt;
+&lt;h3 id=&quot;future-of-relm&quot;&gt;Future of relm&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Here are some improvements I&amp;#8217;ll do in the next weeks and months:&lt;/p&gt;
 &lt;/div&gt;
