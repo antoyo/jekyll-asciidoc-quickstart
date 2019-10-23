@@ -180,16 +180,16 @@
 
 
 <div class="row t30">
-	<div class="medium-12 columns">
-		<article>
-			<header>
-				
-				<h1>Getting Started</h1>
-			</header>
+    <div class="medium-12 columns">
+        <article>
+            <header>
+                
+                <h1>Getting Started</h1>
+            </header>
 
-			
+            
 
-			<div class="sect1">
+            <div class="sect1">
 <h2 id="installation-requirements">Installation Requirements</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -219,15 +219,23 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">prelude</span><span class="tok-o">::*</span><span class="tok-p">;</span><span class="tok-w"></span>
-<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Orientation</span><span class="tok-o">::</span><span class="tok-n">Vertical</span><span class="tok-p">};</span><span class="tok-w"></span>
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">ButtonExt</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">LabelExt</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">OrientableExt</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">WidgetExt</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Orientation</span><span class="tok-o">::</span><span class="tok-n">Vertical</span><span class="tok-p">;</span><span class="tok-w"></span>
 
 <span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Widget</span><span class="tok-p">;</span><span class="tok-w"></span>
 <span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm_derive</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">widget</span><span class="tok-p">};</span><span class="tok-w"></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then, create your model:</p>
+<p>Let&#8217;s create a window with a counter that you can increment and
+decrement by pressing buttons.
+To do so, we&#8217;ll need to store the counter in the model:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -386,11 +394,18 @@ clicking on buttons will change the counter you see in it.</p>
 </div>
 </div>
 </div>
-		</article>
-	</div><!-- /.medium-12.columns -->
+        </article>
+    </div><!-- /.medium-12.columns -->
 </div><!-- /.row -->
 
-
+<div class="row t30">
+    <div class="small-6 columns">
+        
+    </div>
+    <div class="small-6 columns text-right">
+        
+    </div>
+</div>
 
 
         
