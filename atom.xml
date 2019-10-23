@@ -4,7 +4,7 @@
  <title>Relm Blog</title>
  <link href="https://antoyo.github.io/jekyll-relm-blogatom.xml" rel="self"/>
  <id>https://antoyo.github.io/jekyll-relm-blog</id>
- <updated>2019-10-23T13:30:56+00:00</updated>
+ <updated>2019-10-23T13:38:31+00:00</updated>
  <author>
    <name></name>
    <uri></uri>
@@ -28,7 +28,7 @@
    <link href="https://antoyo.github.io/jekyll-relm-blog/relm-better-error-message/"/>
    <id>https://antoyo.github.io/jekyll-relm-blog/relm-better-error-message</id>
    <updated>2018-03-03T00:00:00+00:00</updated>
-   <content type="html">&lt;div id=&quot;preamble&quot;&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+. See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class=&quot;sect1&quot;&gt; &lt;h2 id=&quot;new-release&quot;&gt;New release&lt;/h2&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div...</content>
+   <content type="html">&lt;div id=&quot;preamble&quot;&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+. See the link:{{ site.baseurl }}/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div class=&quot;sect1&quot;&gt; &lt;h2 id=&quot;new-release&quot;&gt;New release&lt;/h2&gt; &lt;div class=&quot;sectionbody&quot;&gt;...</content>
  </entry>
 
  
@@ -38,7 +38,7 @@
    <link href="https://antoyo.github.io/jekyll-relm-blog/relm-release-0.10/"/>
    <id>https://antoyo.github.io/jekyll-relm-blog/relm-release-0.10</id>
    <updated>2017-08-14T00:00:00+00:00</updated>
-   <content type="html">&lt;div id=&quot;preamble&quot;&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio. See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt; &lt;/div&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;This new release is huge: a...</content>
+   <content type="html">&lt;div id=&quot;preamble&quot;&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio. See the link:{{ site.baseurl }}/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt; &lt;/div&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;This new release is huge:...</content>
  </entry>
 
  

@@ -189,15 +189,10 @@
 
 			
 
-			<div class="literalblock">
-<div class="content">
-<pre>    /documentation/tutorial/1-counter
-    &lt;p&gt;&lt;div class="paragraph"&gt;
-&lt;p&gt;In the &lt;a href="/jekyll-relm-blog/getting-started"&gt;Getting started&lt;/a&gt; page,
-we briefly saw how to create a counter application.
-Now, let&amp;#8217;s describe more in details what is going on under the hood.&lt;/p&gt;
-&lt;/div&gt;&lt;/p&gt;</pre>
-</div>
+			<div class="paragraph">
+<p>{% for page in site.tutorial %}
+    &lt;p&gt;&lt;a href="{{ page.url }}"&gt;{{ page.title }}&lt;/a&gt;&lt;/p&gt;
+{% endfor %}</p>
 </div>
 		</article>
 	</div><!-- /.medium-12.columns -->

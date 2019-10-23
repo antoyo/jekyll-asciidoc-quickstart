@@ -27,7 +27,7 @@
 &lt;hr&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
-See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+See the link:{{ site.baseurl }}/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -83,7 +83,7 @@ Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+.
-See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+See the link:{{ site.baseurl }}/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -183,7 +183,7 @@ Don&amp;#8217;t wait to make a difference in the Rust ecosystem!&lt;/p&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Relm is an attempt to do an idiomatic GUI library in Rust, based on gtk+ and tokio.
-See the &lt;a href=&quot;/jekyll-relm-blog/relm-intro&quot;&gt;introduction article&lt;/a&gt; for details about why this library was created and how to use it.&lt;/p&gt;
+See the link:{{ site.baseurl }}/relm-intro[introduction article] for details about why this library was created and how to use it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This new release is huge: a lot of changes happened under the hood, the API was changed and features that were unsound were removed.
@@ -201,7 +201,7 @@ The journey has not been without pitfalls and some convenient features of relm w
 &lt;p&gt;The model is no longer a shared.
 In the previous versions of relm, it was a &lt;code&gt;Rc&amp;lt;RefCell&amp;lt;Model&amp;gt;&amp;gt;&lt;/code&gt; for convenience:
 it was possible to share a model with a gtk+ callback for instance.
-However, when developing titanium, I&amp;#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely &lt;a href=&quot;/jekyll-relm-blog/relm-intro#state-mutation&quot;&gt;one issue&lt;/a&gt; relm tries to solve.
+However, when developing titanium, I&amp;#8217;ve again got bitten by the infamous borrow mut error at runtime, while this was precisely link:{{ site.baseurl }}/relm-intro#state-mutation[one issue] relm tries to solve.
 Now, there&amp;#8217;s a single owner to a widget&amp;#8217;s model and the only way to mutate the model is through its widget:
 if we want to update the model from another widget, we need to send a message to the other widget.&lt;/p&gt;
 &lt;/div&gt;
