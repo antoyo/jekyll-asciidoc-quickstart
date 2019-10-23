@@ -10,7 +10,263 @@
     <!-- Search Engine Optimization -->
     <meta name="description" content="In the Getting started page,
 we briefly saw how to create a counter application.
-Now, let&amp;#8217;s describe more in details what is going on under the hood.">
+Now, let&amp;#8217;s describe more in details what is going on under the hood.
+
+
+Let&amp;#8217;s look again at the view, since it is where the most magic
+happens:
+
+
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Increment,
+                    label: &amp;quot;+&amp;quot;,
+                },
+                gtk::Label {
+                    text: &amp;amp;self.model.counter.to_string(),
+                },
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Decrement,
+                    label: &amp;quot;-&amp;quot;,
+                },
+            },
+            delete_event(_, _) =&amp;gt; (Msg::Quit, Inhibit(false)),
+        }
+    }
+
+
+
+
+
+Event handling
+
+
+It was described that the following connects an event to a signal:
+
+
+
+gtk::Button {
+    clicked =&amp;gt; Msg::Increment,
+}
+
+
+
+But how does that work and what is clicked?
+
+
+This will actually be converted to the following:
+
+
+
+connect!(relm, plus_button, connect_clicked(_), Msg::Increment);
+
+
+
+where connect! is a macro defined by relm as well and will be
+converted to something like:
+
+
+
+let stream = relm.stream.clone();
+plus_button.connect_clicked(move |_| {
+    stream.emit(Msg::Increment);
+});
+
+
+
+which looks more like regular gtk-rs code, the library on which
+relm is based.
+So, connect_clicked actually comes from gtk-rs.
+relm will take the event mentioned in the macro (clicked) and
+precedes it by connect_.
+
+
+Later in the view, we have a more complicated example of event
+handling:
+
+
+
+gtk::Window {
+    // ...
+    delete_event(_, _) =&amp;gt; (Msg::Quit, Inhibit(false)),
+}
+
+
+
+Here, we are not only sending a message (Msg::Quit), but also
+returning a value (Inhibit(false)) from the callback.
+We return a value because it is what is required by the original
+connect_delete_event method.
+So, the syntax is:
+
+
+
+event_name =&amp;gt; (message_to_send, value_to_return)
+
+
+
+Another difference here is the (_, _) after the event name.
+This is because the connect_delete_event method takes a callback
+with two parameters.
+We don&amp;#8217;t need it here, but we could use the value from these
+parameters.
+We&amp;#8217;ll talk more about that later.
+
+
+The reason why we didn&amp;#8217;t have that for the other events is that relm
+will assume there&amp;#8217;s one parameter by default.
+So, the following:
+
+
+
+clicked =&amp;gt; Msg::Increment
+
+
+
+is the same as:
+
+
+
+clicked(_) =&amp;gt; Msg::Increment
+
+
+
+
+
+Bindings
+
+
+Like properties, a binding will generate an initial call to set_*.
+For instance, the following code:
+
+
+
+gtk::Label {
+    text: &amp;amp;self.model.counter.to_string(),
+}
+
+
+
+will first generate a call to:
+
+
+
+label.set_text(&amp;amp;self.model.counter.to_string());
+
+
+
+using a similar logic as before: relm will prepend set_ to the
+property specified by the user (here text).
+
+
+But since it is a binding, relm will also change the code of the
+update() method so that changes to the model field it is bound to
+(i.e. counter) update the view as well.
+
+
+So, the following method:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    match event {
+        Msg::Decrement =&amp;gt; self.model.counter -= 1,
+        Msg::Increment =&amp;gt; self.model.counter += 1,
+        Msg::Quit =&amp;gt; gtk::main_quit(),
+    }
+}
+
+
+
+will be converted to something like:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    match event {
+        Msg::Decrement =&amp;gt; {
+            self.model.counter -= 1;
+            label.set_text(&amp;amp;self.model.counter.to_string());
+        },
+        Msg::Increment =&amp;gt; {
+            self.model.counter += 1;
+            label.set_text(&amp;amp;self.model.counter.to_string());
+        },
+        Msg::Quit =&amp;gt; gtk::main_quit(),
+    }
+}
+
+
+
+
+
+Code generation
+
+
+This code generation is actually pretty dump.
+There are two cases to be aware of.
+
+
+The first one is that the call to the setter method is done right
+after the model field is updated, so the following code:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    for _ in 0..100 {
+        self.model.counter += 1;
+    }
+}
+
+
+
+will be converted to:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    for _ in 0..100 {
+        self.model.counter += 1;
+        self.label1.set_text(&amp;amp;self.model.counter.to_string());
+    }
+}
+
+
+
+So your code can be inefficient if used this way.
+
+
+Second, only assignment to a field of the model will update the view:
+calling a mutable method on a model field won&amp;#8217;t work as expected.
+
+
+So, instead of doing the following:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    self.model.text.push_str(&amp;quot;Text&amp;quot;);
+}
+
+
+
+you will need to do something else, like:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    self.model.text += &amp;quot;Text&amp;quot;;
+}
+
+
+
+It&amp;#8217;s all there is to know about this example. The next tutorial go
+into more details about the syntax of the view! macro and event
+parameters.">
     
     <link rel="canonical" href="/jekyll-relm-blog/documentation/tutorial/1-counter">
 
@@ -191,10 +447,270 @@ Now, let&amp;#8217;s describe more in details what is going on under the hood.">
 
 			
 
-			<div class="paragraph">
+			<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>In the <a href="/jekyll-relm-blog/getting-started">Getting started</a> page,
 we briefly saw how to create a counter application.
 Now, let&#8217;s describe more in details what is going on under the hood.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look again at the view, since it is where the most magic
+happens:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="event-handling">Event handling</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It was described that the following connects an event to a signal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But how does that work and what is <code>clicked</code>?</p>
+</div>
+<div class="paragraph">
+<p>This will actually be converted to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">plus_button</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>connect!</code> is a macro defined by <code>relm</code> as well and will be
+converted to something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">stream</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-p">.</span><span class="tok-n">stream</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-n">plus_button</span><span class="tok-p">.</span><span class="tok-n">connect_clicked</span><span class="tok-p">(</span><span class="tok-k">move</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-n">_</span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">stream</span><span class="tok-p">.</span><span class="tok-n">emit</span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">});</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which looks more like regular <code>gtk-rs</code> code, the library on which
+<code>relm</code> is based.
+So, <code>connect_clicked</code> actually comes from <a href="http://gtk-rs.org/docs/gtk/trait.ButtonExt.html#tymethod.connect_clicked">gtk-rs</a>.
+<code>relm</code> will take the event mentioned in the macro (<code>clicked</code>) and
+precedes it by <code>connect_</code>.</p>
+</div>
+<div class="paragraph">
+<p>Later in the view, we have a more complicated example of event
+handling:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// ...</span>
+<span class="tok-w">    </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we are not only sending a message (<code>Msg::Quit</code>), but also
+returning a value (<code>Inhibit(false)</code>) from the callback.
+We return a value because it is what is required by the original
+<a href="http://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.connect_delete_event"><code>connect_delete_event</code> method</a>.
+So, the syntax is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">event_name</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">message_to_send</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">value_to_return</span><span class="tok-p">)</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another difference here is the <code>(_, _)</code> after the event name.
+This is because the <code>connect_delete_event</code> method takes a callback
+with two parameters.
+We don&#8217;t need it here, but we could use the value from these
+parameters.
+We&#8217;ll talk more about that later.</p>
+</div>
+<div class="paragraph">
+<p>The reason why we didn&#8217;t have that for the other events is that <code>relm</code>
+will assume there&#8217;s one parameter by default.
+So, the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is the same as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">clicked</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bindings">Bindings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Like properties, a binding will generate an initial call to <code>set_*</code>.
+For instance, the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will first generate a call to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>using a similar logic as before: <code>relm</code> will prepend <code>set_</code> to the
+property specified by the user (here <code>text</code>).</p>
+</div>
+<div class="paragraph">
+<p>But since it is a binding, <code>relm</code> will also change the code of the
+<code>update()</code> method so that changes to the model field it is bound to
+(i.e. <code>counter</code>) update the view as well.</p>
+</div>
+<div class="paragraph">
+<p>So, the following method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Decrement</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will be converted to something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Decrement</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">label</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="code-generation">Code generation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This code generation is actually pretty dump.
+There are two cases to be aware of.</p>
+</div>
+<div class="paragraph">
+<p>The first one is that the call to the setter method is done right
+after the model field is updated, so the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-w"> </span><span class="tok-k">in</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">..</span><span class="tok-mi">100</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will be converted to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-w"> </span><span class="tok-k">in</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">..</span><span class="tok-mi">100</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">label1</span><span class="tok-p">.</span><span class="tok-n">set_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So your code can be inefficient if used this way.</p>
+</div>
+<div class="paragraph">
+<p>Second, only assignment to a field of the model will update the view:
+calling a mutable method on a model field won&#8217;t work as expected.</p>
+</div>
+<div class="paragraph">
+<p>So, instead of doing the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">text</span><span class="tok-p">.</span><span class="tok-n">push_str</span><span class="tok-p">(</span><span class="tok-s">&quot;Text&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>you will need to do something else, like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">text</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-s">&quot;Text&quot;</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s all there is to know about this example. The next tutorial go
+into more details about the syntax of the <code>view!</code> macro and event
+parameters.</p>
+</div>
+</div>
 </div>
 		</article>
 	</div><!-- /.medium-12.columns -->
