@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: http://relm.antoyo.xyz/jekyll-relm-blog/sitemap.xml
+Sitemap: http://relm.antoyo.xyz/sitemap.xml
