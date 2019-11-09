@@ -5,41 +5,9 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/404.html</loc>
+	<loc>https://relm.antoyo.xyz/404.html</loc>
 	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/404/</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/atom.xml</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -52,9 +20,9 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/atom.xml</loc>
+	<loc>https://relm.antoyo.xyz/404/</loc>
 	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -69,24 +37,9 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/documentation/</loc>
+	<loc>https://relm.antoyo.xyz/atom.xml</loc>
 	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/feed.xml</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -99,88 +52,9 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/humans.txt</loc>
+	<loc>https://relm.antoyo.xyz/atom.xml</loc>
 	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/blog/</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/documentation/reference/</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/robots.txt</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
-	
-	
-		<changefreq>monthly</changefreq>
-	
-	
-		<priority>0.3</priority>
-	
-	</url>
-	
-
-	
-
-	
-
-	
-	<url>
-	<loc>http://relm.antoyo.xyz/sitemap.xml</loc>
-	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -195,9 +69,135 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/documentation/tutorial/</loc>
+	<loc>https://relm.antoyo.xyz/documentation/</loc>
 	
-		<lastmod>2019-11-09T15:53:07+00:00</lastmod>
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/feed.xml</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/humans.txt</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/blog/</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/documentation/reference/</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/robots.txt</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/sitemap.xml</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+
+	
+	<url>
+	<loc>https://relm.antoyo.xyz/documentation/tutorial/</loc>
+	
+		<lastmod>2019-11-09T15:58:34+00:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -213,7 +213,7 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/relm-without-futures/</loc>
+	<loc>https://relm.antoyo.xyz/relm-without-futures/</loc>
 	
 		<lastmod>2018-04-01T00:00:00+00:00</lastmod>
 	
@@ -228,7 +228,7 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/relm-better-error-message/</loc>
+	<loc>https://relm.antoyo.xyz/relm-better-error-message/</loc>
 	
 		<lastmod>2018-03-03T00:00:00+00:00</lastmod>
 	
@@ -243,7 +243,7 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/relm-release-0.10/</loc>
+	<loc>https://relm.antoyo.xyz/relm-release-0.10/</loc>
 	
 		<lastmod>2017-08-14T00:00:00+00:00</lastmod>
 	
@@ -258,7 +258,7 @@
 
 	
 	<url>
-	<loc>http://relm.antoyo.xyz/relm-intro/</loc>
+	<loc>https://relm.antoyo.xyz/relm-intro/</loc>
 	
 		<lastmod>2017-04-09T00:00:00+00:00</lastmod>
 	

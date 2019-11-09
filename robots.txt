@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: http://relm.antoyo.xyz/sitemap.xml
+Sitemap: https://relm.antoyo.xyz/sitemap.xml
