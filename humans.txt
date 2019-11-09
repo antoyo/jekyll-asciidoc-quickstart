@@ -1,7 +1,7 @@
 /* TEAM */
 
 Name: Antoni
-Site: http://antoyo.ml
+Site: http://blog.antoyo.xyz
 
 
 /* THANKS */
