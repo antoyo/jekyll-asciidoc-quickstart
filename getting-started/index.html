@@ -8,7 +8,207 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/styles_feeling_responsive.css">
 
     <!-- Search Engine Optimization -->
-    <meta name="description" content="An idiomatic GUI Rust library, based on GTK+">
+    <meta name="description" content="Installation Requirements
+
+
+Since relm is based on GTK+, you need this library on your system in order to use it.
+
+
+See this page for information on how to install GTK+.
+
+
+
+
+Usage
+
+
+Create a new project with cargo new and add this to your
+Cargo.toml under the [dependencies] group:
+
+
+
+gtk = &amp;quot;0.7.0&amp;quot;
+relm = &amp;quot;0.18.0&amp;quot;
+relm-derive = &amp;quot;0.18.0&amp;quot;
+
+
+
+Next, add these imports to the file src/main.rs:
+
+
+
+use gtk::{
+    ButtonExt,
+    Inhibit,
+    LabelExt,
+    OrientableExt,
+    WidgetExt,
+};
+use gtk::Orientation::Vertical;
+
+use relm::Widget;
+use relm_derive::{Msg, widget};
+
+
+
+Let&amp;#8217;s create a window with a counter that you can increment and
+decrement by pressing buttons.
+To do so, we&amp;#8217;ll need to store the counter in the model:
+
+
+
+pub struct Model {
+    counter: i32,
+}
+
+
+
+The model contains the data related to a Widget. It may be updated by the Widget::update function.
+
+
+Now, create your message enum:
+
+
+
+#[derive(Msg)]
+pub enum Msg {
+    Decrement,
+    Increment,
+    Quit,
+}
+
+
+
+Messages are sent to Widget::update to indicate that an event happened. The model can be updated when an event is received.
+
+
+It is time to create the widget itself.
+We&amp;#8217;ll start by implementing the model() method which provides the
+initial value of the model:
+
+
+
+#[widget]
+impl Widget for Win {
+    fn model() -&amp;gt; Model {
+        Model {
+            counter: 0,
+        }
+    }
+
+
+
+Next, we&amp;#8217;ll create the view:
+
+
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Increment,
+                    label: &amp;quot;+&amp;quot;,
+                },
+                gtk::Label {
+                    text: &amp;amp;self.model.counter.to_string(),
+                },
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Decrement,
+                    label: &amp;quot;-&amp;quot;,
+                },
+            },
+            delete_event(_, _) =&amp;gt; (Msg::Quit, Inhibit(false)),
+        }
+    }
+
+
+
+This code describe the view.
+There&amp;#8217;s a lot going on here:
+the root widget is a gtk::Window and contains a gtk::Box, which
+contains gtk::Button and a gtk::Label.
+The most important for now is how we declare properties, connect
+events and create bindings.
+
+
+In the button, we set the value of a property to a static value:
+
+
+
+gtk::Button {
+    label: &amp;quot;+&amp;quot;,
+}
+
+
+
+This is equivalent to doing the following in plain gtk-rs:
+
+
+
+button.set_label(&amp;quot;+&amp;quot;);
+
+
+
+In the same button, we connect an event to send a message:
+
+
+
+gtk::Button {
+    clicked =&amp;gt; Msg::Increment,
+}
+
+
+
+This means that whenever the button is clicked, the message
+Msg::Increment will be sent to the update() method.
+
+
+Also, we create a binding between a property and a model field:
+
+
+
+gtk::Label {
+    text: &amp;amp;self.model.counter.to_string(),
+}
+
+
+
+This means that whenever the counter attribute is updated, the text
+of the label will be updated as well.
+
+
+Finally, we&amp;#8217;ll implement the update() method:
+
+
+
+    fn update(&amp;amp;mut self, event: Msg) {
+        match event {
+            Msg::Decrement =&amp;gt; self.model.counter -= 1,
+            Msg::Increment =&amp;gt; self.model.counter += 1,
+            Msg::Quit =&amp;gt; gtk::main_quit(),
+        }
+    }
+}
+
+
+
+The #[widget] attribute will change this code so that assignment to
+model fields will also update the view.
+
+
+We&amp;#8217;re now ready to launch this application:
+
+
+
+fn main() {
+    Win::run(()).unwrap();
+}
+
+
+
+Run this program with cargo run and you&amp;#8217;ll see a window where
+clicking on buttons will change the counter you see in it.">
     
     <link rel="canonical" href="/getting-started/">
 
@@ -403,6 +603,8 @@ clicking on buttons will change the counter you see in it.</p>
         
     </div>
     <div class="small-6 columns text-right">
+        
+            <a href="/documentation/tutorial/02-counter" class="previous-link">Next</a>
         
     </div>
 </div>
