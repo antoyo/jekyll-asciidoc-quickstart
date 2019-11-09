@@ -1,0 +1,20 @@
+- title: Index
+  url: "/"
+  side: left
+
+- title: Getting Started
+  url: "/getting-started/"
+  side: left
+
+- title: Documentation
+  url: "/documentation/"
+  side: left
+  dropdown:
+  - title: "Tutorial"
+    url: "/documentation/tutorial/"
+  - title: "Reference"
+    url: "/documentation/reference/"
+
+- title: Blog
+  url: "/blog/"
+  side: left

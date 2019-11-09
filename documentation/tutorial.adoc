@@ -1,0 +1,7 @@
+= Tutorial
+:page-permalink: /documentation/tutorial/
+
+{% assign pages = site.tutorial | sort: 'path' %}
+{% for page in pages %}
+. link:{{ site.baseurl }}{{ page.url }}[{{ page.title }}]
+{% endfor %}

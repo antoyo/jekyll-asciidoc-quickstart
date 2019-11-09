@@ -1,0 +1,4 @@
+- name: GitHub
+  url: http://github.com/antoyo/relm
+  class: icon-github
+  title: Relm

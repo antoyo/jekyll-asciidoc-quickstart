@@ -1,0 +1,6 @@
+= Documentation
+:page-permalink: /documentation/
+
+link:{{ site.baseurl }}/documentation/tutorial/[Tutorial]
+
+link:{{ site.baseurl }}/documentation/reference/[Reference]
