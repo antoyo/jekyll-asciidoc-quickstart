@@ -22,7 +22,7 @@ author: antoyo
 
 # This URL is the main address for absolute links. Don't include a slash at the end.
 #
-url: "https://antoyo.github.io"
+url: "http://relm.antoyo.xyz"
 baseurl: /jekyll-relm-blog
 
 # This URL points directly to the images directory making
