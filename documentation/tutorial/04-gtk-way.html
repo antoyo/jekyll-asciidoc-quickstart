@@ -1,0 +1,722 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The gtk-rs way</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/styles_feeling_responsive.css">
+
+    <!-- Search Engine Optimization -->
+    <meta name="description" content="Sometimes, it&amp;#8217;s not possible yet to do something in relm, for instance
+creating a menu or drawing a widget.
+This is because some features of GTK+ behaves differently than others
+and the assumptions made in relm does not support these features.
+However, it&amp;#8217;s always possible to mix the gtk-rs and the relm way
+and that&amp;#8217;s what we&amp;#8217;ll see in this tutorial.
+
+
+
+
+Creating a menu
+
+
+If we try to create a menu like we would create other widgets in relm,
+it won&amp;#8217;t work.
+For instance, this code:
+
+
+
+gtk::MenuBar {
+    gtk::MenuItem {
+        label: &amp;quot;File&amp;quot;,
+        gtk::Menu {
+            gtk::MenuItem {
+                label: &amp;quot;Quit&amp;quot;,
+            },
+        },
+    },
+}
+
+
+
+will not show the Quit menu and GTK+ will give this warning:
+
+
+
+Attempting to add a widget with type GtkMenu to a container of type GtkMenuItem, but the widget is already inside a container of type GtkWindow, please remove the widget from its existing container first.
+
+
+
+So instead of doing this, we&amp;#8217;ll write so gtk-rs code and integrate
+it into our relm widget.
+First, let&amp;#8217;s create our view with the MenuBar:
+
+
+
+view! {
+    gtk::Window {
+        gtk::Box {
+            orientation: Vertical,
+            #[name=&amp;quot;menubar&amp;quot;]
+            gtk::MenuBar {
+            },
+        },
+        delete_event(_, _) =&amp;gt; (Quit, Inhibit(false)),
+    }
+}
+
+
+
+As you can see here, we give a name to the menu bar which will allow
+us to access to it with self.menubar.
+
+
+Then, we&amp;#8217;ll implement the init_view() method which is called right
+after the view is created:
+
+
+
+#[widget]
+impl Widget for Win {
+    fn init_view(&amp;amp;mut self) {
+        let file_menu = gtk::Menu::new();
+        let file_item = gtk::MenuItem::new_with_label(&amp;quot;File&amp;quot;);
+        file_item.set_submenu(Some(&amp;amp;file_menu));
+        let quit_item = gtk::MenuItem::new_with_label(&amp;quot;Quit&amp;quot;);
+        self.menubar.append(&amp;amp;file_item);
+        file_menu.append(&amp;amp;quit_item);
+        self.menubar.show_all();
+
+        connect!(quit_item, connect_activate(_), self.model.relm, Quit);
+    }
+}
+
+
+
+Here, we have normal gtk-rs code to create the menu and append it to
+our menu bar that was created the relm way.
+And we connect the event with the connect! macro like we saw
+earlier.
+
+
+The complete code for this section is here.
+
+
+
+
+Drawing example
+
+
+We&amp;#8217;ll write another application that draw the letter pressed by the
+user.
+
+
+Our model will contain the letter pressed by the user:
+
+
+
+pub struct Model {
+    letter: Rc&amp;lt;Cell&amp;lt;char&amp;gt;&amp;gt;,
+}
+
+
+
+Here, we use a Rc&amp;lt;Cell&amp;lt;_&amp;gt;&amp;gt; as we would do in gtk-rs because we
+want to share it with an event callback.
+When relm will support drawing natively, that should not be required
+anymore.
+
+
+The initial value of the model will be:
+
+
+
+fn model() -&amp;gt; Model {
+    Model {
+        letter: Rc::new(Cell::new(&amp;#39; &amp;#39;)),
+    }
+}
+
+
+
+Our view will contain a drawing area:
+
+
+
+view! {
+    gtk::Window {
+        #[name=&amp;quot;drawing_area&amp;quot;]
+        gtk::DrawingArea {
+        },
+        delete_event(_, _) =&amp;gt; (Quit, Inhibit(false)),
+        key_press_event(_, event) =&amp;gt; (KeyPress(event.clone()), Inhibit(false)),
+    }
+}
+
+
+
+And we connected the key press event to get the key pressed by the
+user.
+
+
+We handle this message as such:
+
+
+
+fn update(&amp;amp;mut self, event: Msg) {
+    match event {
+        KeyPress(event) =&amp;gt; {
+            if let Some(letter) = keyval_to_unicode(event.get_keyval()) {
+                self.model.letter.set(letter);
+                self.drawing_area.queue_draw();
+            }
+        },
+        Quit =&amp;gt; gtk::main_quit(),
+    }
+}
+
+
+
+which converts the key to a Unicode character and assign it to our
+model while requesting to redraw the widget.
+
+
+Finally, in the init_view() method, we do the actual drawing:
+
+
+
+fn init_view(&amp;amp;mut self) {
+    let letter = self.model.letter.clone();
+    self.drawing_area.connect_draw(move |_, context| {
+        context.set_source_rgb(0.2, 0.4, 0.0);
+        context.paint();
+
+        context.set_font_size(60.0);
+        context.set_source_rgb(0.0, 0.0, 0.0);
+        context.move_to(100.0, 100.0);
+        context.show_text(&amp;amp;letter.get().to_string());
+        Inhibit(false)
+    });
+}
+
+
+
+We clone the reference-counted letter to have a copy of it in the draw
+event handler.
+In this handler, we draw the letter using cairo.
+
+
+The complete code for this section is here.">
+    
+    <link rel="canonical" href="/documentation/tutorial/04-gtk-way">
+
+    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+
+    <link type="text/plain" rel="author" href="/humans.txt">
+
+    
+
+	<link rel="icon" sizes="32x32" href="https://relm.antoyo.xyz/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://relm.antoyo.xyz/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://relm.antoyo.xyz/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+    
+
+    </head>
+    <body id="top-of-page" class="page-fullwidth">
+        
+        
+<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="/" class="icon-tree"> Relm Blog</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+        
+      </ul>
+
+      <ul class="left">
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/">Index</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/getting-started/">Getting Started</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="/documentation/">Documentation</a>
+
+                  <ul class="dropdown">
+                    
+
+                      <li><a  href="/documentation/tutorial/">Tutorial</a></li>
+                    
+
+                      <li><a  href="/documentation/reference/">Reference</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/blog/">Blog</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+        
+
+        
+
+<div id="masthead-no-image-header">
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An easy-to-use ORM from Rust">
+                <img src="/assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
+            </a>
+        </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+        
+
+
+<div class="row t30">
+    <div class="medium-12 columns">
+        <article>
+            <header>
+                
+                <h1>The gtk-rs way</h1>
+            </header>
+
+            
+
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sometimes, it&#8217;s not possible yet to do something in <code>relm</code>, for instance
+creating a menu or drawing a widget.
+This is because some features of GTK+ behaves differently than others
+and the assumptions made in <code>relm</code> does not support these features.
+However, it&#8217;s always possible to mix the <code>gtk-rs</code> and the <code>relm</code> way
+and that&#8217;s what we&#8217;ll see in this tutorial.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-menu">Creating a menu</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If we try to create a menu like we would create other widgets in relm,
+it won&#8217;t work.
+For instance, this code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuBar</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;File&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Menu</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;Quit&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will not show the Quit menu and GTK+ will give this warning:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>Attempting to add a widget with type GtkMenu to a container of type GtkMenuItem, but the widget is already inside a container of type GtkWindow, please remove the widget from its existing container first.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So instead of doing this, we&#8217;ll write so <code>gtk-rs</code> code and integrate
+it into our <code>relm</code> widget.
+First, let&#8217;s create our view with the <code>MenuBar</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;menubar&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuBar</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see here, we give a name to the menu bar which will allow
+us to access to it with <code>self.menubar</code>.</p>
+</div>
+<div class="paragraph">
+<p>Then, we&#8217;ll implement the <code>init_view()</code> method which is called right
+after the view is created:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">init_view</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">file_menu</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Menu</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">file_item</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-o">::</span><span class="tok-n">new_with_label</span><span class="tok-p">(</span><span class="tok-s">&quot;File&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">file_item</span><span class="tok-p">.</span><span class="tok-n">set_submenu</span><span class="tok-p">(</span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">file_menu</span><span class="tok-p">));</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">quit_item</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-o">::</span><span class="tok-n">new_with_label</span><span class="tok-p">(</span><span class="tok-s">&quot;Quit&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">menubar</span><span class="tok-p">.</span><span class="tok-n">append</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">file_item</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">file_menu</span><span class="tok-p">.</span><span class="tok-n">append</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">quit_item</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">menubar</span><span class="tok-p">.</span><span class="tok-n">show_all</span><span class="tok-p">();</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-n">connect</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-n">quit_item</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">connect_activate</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">relm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Quit</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we have normal <code>gtk-rs</code> code to create the menu and append it to
+our menu bar that was created the <code>relm</code> way.
+And we connect the event with the <code>connect!</code> macro like we saw
+earlier.</p>
+</div>
+<div class="paragraph">
+<p>The complete code for this section is <a href="https://github.com/antoyo/relm/blob/master/relm-examples/examples/menu.rs">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="drawing-example">Drawing example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll write another application that draw the letter pressed by the
+user.</p>
+</div>
+<div class="paragraph">
+<p>Our model will contain the letter pressed by the user:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">letter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Rc</span><span class="tok-o">&lt;</span><span class="tok-n">Cell</span><span class="tok-o">&lt;</span><span class="tok-n">char</span><span class="tok-o">&gt;&gt;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we use a <code>Rc&lt;Cell&lt;_&gt;&gt;</code> as we would do in <code>gtk-rs</code> because we
+want to share it with an event callback.
+When <code>relm</code> will support drawing natively, that should not be required
+anymore.</p>
+</div>
+<div class="paragraph">
+<p>The initial value of the model will be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">letter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Rc</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-n">Cell</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(</span><span class="tok-sc">&#39; &#39;</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our view will contain a drawing area:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;drawing_area&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">DrawingArea</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">key_press_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">KeyPress</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">()),</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And we connected the key press event to get the key pressed by the
+user.</p>
+</div>
+<div class="paragraph">
+<p>We handle this message as such:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">KeyPress</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-n">letter</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">keyval_to_unicode</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">.</span><span class="tok-n">get_keyval</span><span class="tok-p">())</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">letter</span><span class="tok-p">.</span><span class="tok-n">set</span><span class="tok-p">(</span><span class="tok-n">letter</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">drawing_area</span><span class="tok-p">.</span><span class="tok-n">queue_draw</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which converts the key to a Unicode character and assign it to our
+model while requesting to redraw the widget.</p>
+</div>
+<div class="paragraph">
+<p>Finally, in the <code>init_view()</code> method, we do the actual drawing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">init_view</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">letter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">letter</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">drawing_area</span><span class="tok-p">.</span><span class="tok-n">connect_draw</span><span class="tok-p">(</span><span class="tok-k">move</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">context</span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">set_source_rgb</span><span class="tok-p">(</span><span class="tok-mf">0.2</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.4</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.0</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">paint</span><span class="tok-p">();</span><span class="tok-w"></span>
+
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">set_font_size</span><span class="tok-p">(</span><span class="tok-mf">60.0</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">set_source_rgb</span><span class="tok-p">(</span><span class="tok-mf">0.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.0</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">move_to</span><span class="tok-p">(</span><span class="tok-mf">100.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">100.0</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">context</span><span class="tok-p">.</span><span class="tok-n">show_text</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-n">letter</span><span class="tok-p">.</span><span class="tok-n">get</span><span class="tok-p">().</span><span class="tok-n">to_string</span><span class="tok-p">());</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">});</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We clone the reference-counted letter to have a copy of it in the draw
+event handler.
+In this handler, we draw the letter using <code>cairo</code>.</p>
+</div>
+<div class="paragraph">
+<p>The complete code for this section is <a href="https://github.com/antoyo/relm/blob/master/relm-examples/examples/draw.rs">here</a>.</p>
+</div>
+</div>
+</div>
+        </article>
+    </div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+<div class="row t30">
+    <div class="small-6 columns">
+        
+            <a href="/documentation/tutorial/02-counter" class="next-link">Previous</a>
+        
+    </div>
+    <div class="small-6 columns text-right">
+        
+    </div>
+</div>
+
+
+        
+            <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">About This Site</h5>
+
+            <p class="shadow-black">
+              An idiomatic GUI Rust library, based on GTK+
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">News Feed</h5>
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href=""  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">Links</h5>
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href=""  title=""></a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://github.com/antoyo/relm" target="_blank"  title="">GitHub</a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://gitter.im/relm-rs/Lobby" target="_blank"  title="">Gitter</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 text-right columns credits">
+              Contribute on GitHub
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+            <ul class="inline-list social-icons">
+            
+              <li><a href="http://github.com/antoyo/relm" class="icon-github" title="Relm"></a></li>
+            
+            </ul>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+        
+
+        <script src="https://relm.antoyo.xyz/assets/js/javascript.min.js"></script>
+
+    </body>
+</html>
