@@ -5,7 +5,7 @@ Sometimes, it's not possible yet to do something in `relm`, for instance
 creating a menu or drawing a widget.
 This is because some features of GTK+ behaves differently than others
 and the assumptions made in `relm` does not support these features.
-However, it's always possible to mix the `gtk-rs` and the `relm` way
+However, it's always possible to mix the `gtk-rs` and the `relm` ways
 and that's what we'll see in this tutorial.
 
 == Creating a menu
@@ -35,7 +35,7 @@ will not show the Quit menu and GTK+ will give this warning:
 Attempting to add a widget with type GtkMenu to a container of type GtkMenuItem, but the widget is already inside a container of type GtkWindow, please remove the widget from its existing container first.
 ----
 
-So instead of doing this, we'll write so `gtk-rs` code and integrate
+So instead of doing this, we'll write some `gtk-rs` code and integrate
 it into our `relm` widget.
 First, let's create our view with the `MenuBar`:
 
@@ -140,7 +140,7 @@ We handle this message as such:
 fn update(&mut self, event: Msg) {
     match event {
         KeyPress(event) => {
-            if let Some(letter) = keyval_to_unicode(event.get_keyval()) {
+            if let Some(letter) = gdk::keyval_to_unicode(event.get_keyval()) {
                 self.model.letter.set(letter);
                 self.drawing_area.queue_draw();
             }
