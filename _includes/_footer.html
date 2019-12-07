@@ -63,13 +63,17 @@
           </section>
 
           <section id="subfooter-right" class="small-12 medium-6 columns">
-            <ul class="inline-list social-icons">
-            {% for social_item in site.data.socialmedia %}
-              <li><a href="{{ social_item.url }}" class="{{ social_item.class }}" title="{{ social_item.title }}"></a></li>
-            {% endfor %}
-            </ul>
+              <div class="row">
+                <ul class="inline-list social-icons columns small-12 medium-6">
+                {% for social_item in site.data.socialmedia %}
+                  <li><a href="{{ social_item.url }}" class="{{ social_item.class }}" title="{{ social_item.title }}"></a></li>
+                {% endfor %}
+                </ul>
 
-            <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+                <div class="columns small-12 medium-6">
+                  <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+                </div>
+              </div>
           </section>
         </nav>
       </div><!-- /#subfooter -->
