@@ -12,7 +12,7 @@
 creating a menu or drawing a widget.
 This is because some features of GTK+ behaves differently than others
 and the assumptions made in relm does not support these features.
-However, it&amp;#8217;s always possible to mix the gtk-rs and the relm way
+However, it&amp;#8217;s always possible to mix the gtk-rs and the relm ways
 and that&amp;#8217;s what we&amp;#8217;ll see in this tutorial.
 
 
@@ -48,7 +48,7 @@ Attempting to add a widget with type GtkMenu to a container of type GtkMenuItem,
 
 
 
-So instead of doing this, we&amp;#8217;ll write so gtk-rs code and integrate
+So instead of doing this, we&amp;#8217;ll write some gtk-rs code and integrate
 it into our relm widget.
 First, let&amp;#8217;s create our view with the MenuBar:
 
@@ -167,7 +167,7 @@ We handle this message as such:
 fn update(&amp;amp;mut self, event: Msg) {
     match event {
         KeyPress(event) =&amp;gt; {
-            if let Some(letter) = keyval_to_unicode(event.get_keyval()) {
+            if let Some(letter) = gdk::keyval_to_unicode(event.get_keyval()) {
                 self.model.letter.set(letter);
                 self.drawing_area.queue_draw();
             }
@@ -397,7 +397,7 @@ The complete code for this section is here.">
 creating a menu or drawing a widget.
 This is because some features of GTK+ behaves differently than others
 and the assumptions made in <code>relm</code> does not support these features.
-However, it&#8217;s always possible to mix the <code>gtk-rs</code> and the <code>relm</code> way
+However, it&#8217;s always possible to mix the <code>gtk-rs</code> and the <code>relm</code> ways
 and that&#8217;s what we&#8217;ll see in this tutorial.</p>
 </div>
 </div>
@@ -433,7 +433,7 @@ For instance, this code:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>So instead of doing this, we&#8217;ll write so <code>gtk-rs</code> code and integrate
+<p>So instead of doing this, we&#8217;ll write some <code>gtk-rs</code> code and integrate
 it into our <code>relm</code> widget.
 First, let&#8217;s create our view with the <code>MenuBar</code>:</p>
 </div>
@@ -552,7 +552,7 @@ user.</p>
 <pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">    </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">        </span><span class="tok-n">KeyPress</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
-<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-n">letter</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">keyval_to_unicode</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">.</span><span class="tok-n">get_keyval</span><span class="tok-p">())</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-n">letter</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gdk</span><span class="tok-o">::</span><span class="tok-n">keyval_to_unicode</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">.</span><span class="tok-n">get_keyval</span><span class="tok-p">())</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">letter</span><span class="tok-p">.</span><span class="tok-n">set</span><span class="tok-p">(</span><span class="tok-n">letter</span><span class="tok-p">);</span><span class="tok-w"></span>
 <span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">drawing_area</span><span class="tok-p">.</span><span class="tok-n">queue_draw</span><span class="tok-p">();</span><span class="tok-w"></span>
 <span class="tok-w">            </span><span class="tok-p">}</span><span class="tok-w"></span>
