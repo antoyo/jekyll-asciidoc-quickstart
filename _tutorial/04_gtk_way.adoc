@@ -83,6 +83,25 @@ our menu bar that was created the `relm` way.
 And we connect the event with the `connect!` macro like we saw
 earlier.
 
+We also access the `relm` object from the model, which we saved in the
+`model()` method:
+
+[source,rust]
+----
+    fn model(relm: &Relm<Self>, _: ()) -> Model {
+        Model {
+            relm: relm.clone(),
+        }
+    }
+----
+
+As you can see, the `model()` method can have multiple signatures
+(actually, the `#[widget]` attribute will add these two parameters if
+they are not provided).
+This one takes the `Relm` object as its first parameter. This object
+is used to connect events to send a message to a relm widget or to
+directly send a message to a relm widget.
+
 The complete code for this section is https://github.com/antoyo/relm/blob/master/relm-examples/examples/menu.rs[here].
 
 == Drawing example
