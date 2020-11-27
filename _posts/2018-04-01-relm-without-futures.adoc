@@ -1,5 +1,6 @@
 = Relm drop support for futures!
 :page-navtitle: Relm drop support for futures!
+:page-show-meta: true
 
 [quote, Antoine de Saint-Exupery]
 ____
@@ -27,7 +28,7 @@ Why is that? Simply because there's no way to debug issues like why isn't this f
 So, what's the alternative?
 If you don't need async IO, well, you don't need anything and you won't have this extra complexity anymore.
 If you need it, you can use the `gio` async methods https://github.com/antoyo/relm/blob/9b1b527e8b5bdabaa34e37103e6d93e05cb8a8b3/relm-state/src/macros.rs#L129[with one of the `connect_async!` macros].
-The now working https://github.com/antoyo/relm/blob/master/examples/http/src/main.rs#L228-L303[http example] shows how to do that.
+The now working https://github.com/antoyo/relm/blob/master/relm-examples/examples/http/src/main.rs#L240-L319[http example] shows how to do that.
 In the next months, I'll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
 The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with `tokio`.
 
