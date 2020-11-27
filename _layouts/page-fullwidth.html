@@ -35,6 +35,10 @@ format: page-fullwidth
     </div><!-- /.medium-12.columns -->
 </div><!-- /.row -->
 
+{% if page.show_meta == true %}
+{% include _meta_information.html %}
+{% endif %}
+
 <div class="row t30">
     <div class="small-6 columns">
         {% if page.next_in_category != nil %}
