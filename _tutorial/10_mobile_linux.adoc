@@ -39,13 +39,13 @@ Include = ./mirrorlist
 Server = http://nj.us.mirror.archlinuxarm.org/$arch/$repo
 ----
 
-== Install the ArchLinux ARM keyring
+== Install the ArchLinux ARM keyring and AArch64 gcc
 
-Using an AUR wrapper or otherwise:
+Using an AUR wrapper or otherwise for the keyring:
 
 [source,bash]
 ----
-yay -S archlinuxarm-keyring
+yay -S aarch64-linux-gnu-gcc archlinuxarm-keyring
 ----
 
 == Initialize the pacman database and install the ARM packages
