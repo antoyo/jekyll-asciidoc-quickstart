@@ -36,16 +36,3 @@ format: page-fullwidth
 </div><!-- /.row -->
 
 {% include _meta_information.html %}
-
-<div class="row t30">
-    <div class="small-6 columns">
-        {% if page.next_in_category != nil %}
-            <a href="{{ site.baseurl }}{{ page.next_in_category.url }}" class="next-link">Previous</a>
-        {% endif %}
-    </div>
-    <div class="small-6 columns text-right">
-        {% if page.previous_in_category != nil %}
-            <a href="{{ site.baseurl }}{{ page.previous_in_category.url }}" class="previous-link">Next</a>
-        {% endif %}
-    </div>
-</div>
