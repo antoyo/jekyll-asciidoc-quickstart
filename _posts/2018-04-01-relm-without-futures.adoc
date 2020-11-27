@@ -1,6 +1,5 @@
 = Relm drop support for futures!
 :page-navtitle: Relm drop support for futures!
-:page-show-meta: true
 
 [quote, Antoine de Saint-Exupery]
 ____
