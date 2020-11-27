@@ -1,6 +1,5 @@
 = Write a Relm application for your Linux phone
 :page-navtitle: Write a Relm application for your Linux phone
-:page-published: false
 
 **Warning:** This has not been thoroughly tested; use at your own
 risk. (This could mess up with your actual pacman config.)
