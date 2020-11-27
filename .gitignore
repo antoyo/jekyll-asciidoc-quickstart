@@ -3,6 +3,6 @@
 /.bundle/
 /tmp/
 *.bundle
-Gemfile.lock
 .sass-cache/
 .jekyll-cache
+vendor
