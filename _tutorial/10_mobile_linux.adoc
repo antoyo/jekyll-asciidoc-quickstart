@@ -1,0 +1,109 @@
+= Write a Relm application for your Linux phone
+:page-navtitle: Write a Relm application for your Linux phone
+:published: false
+
+**Warning:** This has not been thoroughly tested; use at your own
+risk. (This could mess up with your actual pacman config.)
+
+// It's exciting to see Linux coming to smartphones.
+
+== Create the directories to store the libraries and the pacman database
+
+[source,bash]
+----
+sudo mkdir -p /opt/ArchARM/var/lib/pacman/local
+sudo mkdir /opt/ArchARM/var/lib/pacman/sync
+----
+
+== Create pacman config for ARM
+
+cp /etc/pacman.conf arm_pacman.conf
+
+Edit the following options to this:
+
+[source,ini]
+----
+RootDir     = /opt/ArchARM
+DBPath      = /opt/ArchARM/var/lib/pacman/
+CacheDir    = /opt/ArchARM/var/cache/pacman/pkg/
+GPGDir      = /opt/ArchARM/etc/pacman.d/gnupg/
+HookDir     = /opt/ArchARM/etc/pacman.d/hooks/
+Architecture = aarch64
+----
+
+And change all the includes (for e.g. the core/extra/… repos) to:
+
+[source,ini]
+----
+Include = ./mirrorlist
+----
+
+== Create the mirrorlist file
+
+[source,ini]
+----
+Server = http://nj.us.mirror.archlinuxarm.org/$arch/$repo
+----
+
+== Import the GPG key for the ARM repo
+
+[source,bash]
+----
+gpg --recv 77193F152BDBE6A6
+gpg --export 77193F152BDBE6A6 > arm_pacman_key
+----
+
+== Initialize the pacman database
+
+[source,bash]
+----
+sudo pacman-key --init --config arm_pacman.conf
+sudo pacman-key --config arm_pacman.conf --add arm_pacman_key
+sudo pacman-db-upgrade --root /opt/ArchARM/ --dbpath /opt/ArchARM/var/lib/pacman/
+----
+
+// TODO: seems like we can do: sudo pacman-db-upgrade --config arm_pacman.conf
+
+== Trust the key
+
+[source,bash]
+----
+# Give ultimate trust to the key.
+sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D06777193F152BDBE6A6
+----
+
+== Install the ARM packages
+
+[source,bash]
+----
+sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy
+----
+
+(Ignore all the failed execv call errors.)
+
+== Add the rust target for AArch64
+
+[source,bash]
+----
+rustup target add aarch64-unknown-linux-gnu
+----
+
+== Configure the linker sysroot
+
+..cargo/config
+[source,toml]
+----
+[target.aarch64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=--sysroot=/opt/ArchARM"]
+----
+
+== Build your relm project
+
+[source,toml]
+----
+set -x PKG_CONFIG_SYSROOT_DIR /opt/ArchARM/
+set -x PKG_CONFIG_ALLOW_CROSS 1
+set -x PKG_CONFIG_PATH /opt/ArchARM/lib/pkgconfig/
+set -x CARGO_BUILD_TARGET aarch64-unknown-linux-gnu
+set -x CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER aarch64-linux-gnu-gcc
+----
