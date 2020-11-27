@@ -1,6 +1,6 @@
 = Write a Relm application for your Linux phone
 :page-navtitle: Write a Relm application for your Linux phone
-:published: false
+:page-published: false
 
 **Warning:** This has not been thoroughly tested; use at your own
 risk. (This could mess up with your actual pacman config.)
@@ -17,7 +17,10 @@ sudo mkdir /opt/ArchARM/var/lib/pacman/sync
 
 == Create pacman config for ARM
 
+[source,bash]
+----
 cp /etc/pacman.conf arm_pacman.conf
+----
 
 Edit the following options to this:
 
@@ -76,6 +79,7 @@ sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D0677719
 
 [source,bash]
 ----
+sudo pacman -Sy --config arm_pacman.conf
 sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy
 ----
 
