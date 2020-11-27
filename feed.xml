@@ -52,7 +52,7 @@ Why is that? Simply because there&amp;#8217;s no way to debug issues like why is
 &lt;p&gt;So, what&amp;#8217;s the alternative?
 If you don&amp;#8217;t need async IO, well, you don&amp;#8217;t need anything and you won&amp;#8217;t have this extra complexity anymore.
 If you need it, you can use the &lt;code&gt;gio&lt;/code&gt; async methods &lt;a href=&quot;https://github.com/antoyo/relm/blob/9b1b527e8b5bdabaa34e37103e6d93e05cb8a8b3/relm-state/src/macros.rs#L129&quot;&gt;with one of the &lt;code&gt;connect_async!&lt;/code&gt; macros&lt;/a&gt;.
-The now working &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/examples/http/src/main.rs#L228-L303&quot;&gt;http example&lt;/a&gt; shows how to do that.
+The now working &lt;a href=&quot;https://github.com/antoyo/relm/blob/master/relm-examples/examples/http/src/main.rs#L240-L319&quot;&gt;http example&lt;/a&gt; shows how to do that.
 In the next months, I&amp;#8217;ll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
 The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with &lt;code&gt;tokio&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;

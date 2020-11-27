@@ -214,8 +214,8 @@ Please comment on Reddit.">
 <div id="masthead-no-image-header">
     <div class="row">
         <div class="small-12 columns">
-            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An easy-to-use ORM from Rust">
-                <img src="/assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
+            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
+                <img src="/assets/img/logo.png" alt="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
             </a>
         </div><!-- /.small-12.columns -->
     </div><!-- /.row -->
@@ -282,7 +282,7 @@ Why is that? Simply because there&#8217;s no way to debug issues like why isn&#8
 <p>So, what&#8217;s the alternative?
 If you don&#8217;t need async IO, well, you don&#8217;t need anything and you won&#8217;t have this extra complexity anymore.
 If you need it, you can use the <code>gio</code> async methods <a href="https://github.com/antoyo/relm/blob/9b1b527e8b5bdabaa34e37103e6d93e05cb8a8b3/relm-state/src/macros.rs#L129">with one of the <code>connect_async!</code> macros</a>.
-The now working <a href="https://github.com/antoyo/relm/blob/master/examples/http/src/main.rs#L228-L303">http example</a> shows how to do that.
+The now working <a href="https://github.com/antoyo/relm/blob/master/relm-examples/examples/http/src/main.rs#L240-L319">http example</a> shows how to do that.
 In the next months, I&#8217;ll work on implementing a few abstractions, as needed, while working on one of my project that needs it.
 The goal is to build a very simple abstraction, that will work nicely with relm, and keep it as simple as possible to avoid the issues we got with <code>tokio</code>.</p>
 </div>
