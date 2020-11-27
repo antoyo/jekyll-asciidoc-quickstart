@@ -1,0 +1,599 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Relm application for your Linux phone</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/styles_feeling_responsive.css">
+
+    <!-- Search Engine Optimization -->
+    <meta name="description" content="Warning: This has not been thoroughly tested; use at your own
+risk. (This could mess up with your actual pacman config.)
+
+
+
+
+Create the directories to store the libraries and the pacman database
+
+
+
+sudo mkdir -p /opt/ArchARM/var/lib/pacman/local
+sudo mkdir /opt/ArchARM/var/lib/pacman/sync
+
+
+
+
+
+Create pacman config for ARM
+
+
+cp /etc/pacman.conf arm_pacman.conf
+
+
+Edit the following options to this:
+
+
+
+RootDir     = /opt/ArchARM
+DBPath      = /opt/ArchARM/var/lib/pacman/
+CacheDir    = /opt/ArchARM/var/cache/pacman/pkg/
+GPGDir      = /opt/ArchARM/etc/pacman.d/gnupg/
+HookDir     = /opt/ArchARM/etc/pacman.d/hooks/
+Architecture = aarch64
+
+
+
+And change all the includes (for e.g. the core/extra/… repos) to:
+
+
+
+Include = ./mirrorlist
+
+
+
+
+
+Create the mirrorlist file
+
+
+
+Server = http://nj.us.mirror.archlinuxarm.org/$arch/$repo
+
+
+
+
+
+Import the GPG key for the ARM repo
+
+
+
+gpg --recv 77193F152BDBE6A6
+gpg --export 77193F152BDBE6A6 &amp;gt; arm_pacman_key
+
+
+
+
+
+Initialize the pacman database
+
+
+
+sudo pacman-key --init --config arm_pacman.conf
+sudo pacman-key --config arm_pacman.conf --add arm_pacman_key
+sudo pacman-db-upgrade --root /opt/ArchARM/ --dbpath /opt/ArchARM/var/lib/pacman/
+
+
+
+
+
+Trust the key
+
+
+
+# Give ultimate trust to the key.
+sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D06777193F152BDBE6A6
+
+
+
+
+
+Install the ARM packages
+
+
+
+sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy
+
+
+
+(Ignore all the failed execv call errors.)
+
+
+
+
+Add the rust target for AArch64
+
+
+
+rustup target add aarch64-unknown-linux-gnu
+
+
+
+
+
+Configure the linker sysroot
+
+
+.cargo/config
+
+[target.aarch64-unknown-linux-gnu]
+rustflags = [&amp;quot;-C&amp;quot;, &amp;quot;link-arg=--sysroot=/opt/ArchARM&amp;quot;]
+
+
+
+
+
+Build your relm project
+
+
+
+set -x PKG_CONFIG_SYSROOT_DIR /opt/ArchARM/
+set -x PKG_CONFIG_ALLOW_CROSS 1
+set -x PKG_CONFIG_PATH /opt/ArchARM/lib/pkgconfig/
+set -x CARGO_BUILD_TARGET aarch64-unknown-linux-gnu
+set -x CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER aarch64-linux-gnu-gcc">
+    
+    <link rel="canonical" href="/documentation/tutorial/10-mobile-linux">
+
+    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+
+    <link type="text/plain" rel="author" href="/humans.txt">
+
+    
+
+	<link rel="icon" sizes="32x32" href="https://relm.antoyo.xyz/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://relm.antoyo.xyz/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://relm.antoyo.xyz/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+    
+
+    </head>
+    <body id="top-of-page" class="page-fullwidth">
+        
+        
+<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="/" class="icon-tree"> Relm Blog</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+        
+
+        <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+      </ul>
+
+      <ul class="left">
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/">Index</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/getting-started/">Getting Started</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="/documentation/">Documentation</a>
+
+                  <ul class="dropdown">
+                    
+
+                      <li><a  href="/documentation/tutorial/">Tutorial</a></li>
+                    
+
+                      <li><a  href="/documentation/reference/">Reference</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/blog/">Blog</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+        
+
+        
+
+<div id="masthead-no-image-header">
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An easy-to-use ORM from Rust">
+                <img src="/assets/img/logo.png" alt="Relm Blog – An easy-to-use ORM from Rust">
+            </a>
+        </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+        
+
+
+<div class="row t30">
+    <div class="medium-12 columns">
+        <article>
+            <header>
+                
+                <h1>Write a Relm application for your Linux phone</h1>
+            </header>
+
+            
+
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Warning:</strong> This has not been thoroughly tested; use at your own
+risk. (This could mess up with your actual pacman config.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-the-directories-to-store-the-libraries-and-the-pacman-database">Create the directories to store the libraries and the pacman database</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo mkdir -p /opt/ArchARM/var/lib/pacman/local
+sudo mkdir /opt/ArchARM/var/lib/pacman/sync</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-pacman-config-for-arm">Create pacman config for ARM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>cp /etc/pacman.conf arm_pacman.conf</p>
+</div>
+<div class="paragraph">
+<p>Edit the following options to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ini"><span></span><span class="tok-na">RootDir</span>     <span class="tok-o">=</span> <span class="tok-s">/opt/ArchARM</span>
+<span class="tok-na">DBPath</span>      <span class="tok-o">=</span> <span class="tok-s">/opt/ArchARM/var/lib/pacman/</span>
+<span class="tok-na">CacheDir</span>    <span class="tok-o">=</span> <span class="tok-s">/opt/ArchARM/var/cache/pacman/pkg/</span>
+<span class="tok-na">GPGDir</span>      <span class="tok-o">=</span> <span class="tok-s">/opt/ArchARM/etc/pacman.d/gnupg/</span>
+<span class="tok-na">HookDir</span>     <span class="tok-o">=</span> <span class="tok-s">/opt/ArchARM/etc/pacman.d/hooks/</span>
+<span class="tok-na">Architecture</span> <span class="tok-o">=</span> <span class="tok-s">aarch64</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And change all the includes (for e.g. the core/extra/… repos) to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ini"><span></span><span class="tok-na">Include</span> <span class="tok-o">=</span> <span class="tok-s">./mirrorlist</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-the-mirrorlist-file">Create the mirrorlist file</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ini"><span></span><span class="tok-na">Server</span> <span class="tok-o">=</span> <span class="tok-s">http://nj.us.mirror.archlinuxarm.org/$arch/$repo</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="import-the-gpg-key-for-the-arm-repo">Import the GPG key for the ARM repo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span>gpg --recv 77193F152BDBE6A6
+gpg --export 77193F152BDBE6A6 &gt; arm_pacman_key</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="initialize-the-pacman-database">Initialize the pacman database</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo pacman-key --init --config arm_pacman.conf
+sudo pacman-key --config arm_pacman.conf --add arm_pacman_key
+sudo pacman-db-upgrade --root /opt/ArchARM/ --dbpath /opt/ArchARM/var/lib/pacman/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trust-the-key">Trust the key</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span><span class="tok-c1"># Give ultimate trust to the key.</span>
+sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D06777193F152BDBE6A6</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="install-the-arm-packages">Install the ARM packages</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(Ignore all the failed execv call errors.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add-the-rust-target-for-aarch64">Add the rust target for AArch64</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span></span>rustup target add aarch64-unknown-linux-gnu</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configure-the-linker-sysroot">Configure the linker sysroot</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">.cargo/config</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">target</span><span class="tok-p">.</span><span class="tok-n">aarch64-unknown-linux-gnu</span><span class="tok-p">]</span>
+<span class="tok-n">rustflags</span> <span class="tok-o">=</span> <span class="tok-p">[</span><span class="tok-s">&quot;-C&quot;</span><span class="tok-p">,</span> <span class="tok-s">&quot;link-arg=--sysroot=/opt/ArchARM&quot;</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build-your-relm-project">Build your relm project</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-n">set</span> <span class="tok-err">-</span><span class="tok-n">x</span> <span class="tok-n">PKG_CONFIG_SYSROOT_DIR</span> <span class="tok-err">/</span><span class="tok-n">opt</span><span class="tok-err">/</span><span class="tok-n">ArchARM</span><span class="tok-err">/</span>
+<span class="tok-n">set</span> <span class="tok-err">-</span><span class="tok-n">x</span> <span class="tok-n">PKG_CONFIG_ALLOW_CROSS</span> <span class="tok-mi">1</span>
+<span class="tok-n">set</span> <span class="tok-err">-</span><span class="tok-n">x</span> <span class="tok-n">PKG_CONFIG_PATH</span> <span class="tok-err">/</span><span class="tok-n">opt</span><span class="tok-err">/</span><span class="tok-n">ArchARM</span><span class="tok-err">/</span><span class="tok-n">lib</span><span class="tok-err">/</span><span class="tok-n">pkgconfig</span><span class="tok-err">/</span>
+<span class="tok-n">set</span> <span class="tok-err">-</span><span class="tok-n">x</span> <span class="tok-n">CARGO_BUILD_TARGET</span> <span class="tok-n">aarch64-unknown-linux-gnu</span>
+<span class="tok-n">set</span> <span class="tok-err">-</span><span class="tok-n">x</span> <span class="tok-n">CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER</span> <span class="tok-n">aarch64-linux-gnu-gcc</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+        </article>
+    </div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+<div class="row t30">
+    <div class="small-6 columns">
+        
+            <a href="/documentation/tutorial/04-gtk-way" class="next-link">Previous</a>
+        
+    </div>
+    <div class="small-6 columns text-right">
+        
+    </div>
+</div>
+
+
+        
+            <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">About This Site</h5>
+
+            <p class="shadow-black">
+              An idiomatic GUI Rust library, based on GTK+
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">News Feed</h5>
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href=""  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">Links</h5>
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href=""  title=""></a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://github.com/antoyo/relm" target="_blank"  title="">GitHub</a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://gitter.im/relm-rs/Lobby" target="_blank"  title="">Gitter</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 text-right columns credits">
+              Contribute on GitHub
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+              <div class="row">
+                <ul class="inline-list social-icons columns small-12 medium-6">
+                
+                  <li><a href="http://github.com/antoyo/relm" class="icon-github" title="Relm"></a></li>
+                
+                </ul>
+
+                <div class="columns small-12 medium-6">
+                  <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+                </div>
+              </div>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+        
+
+        <script src="https://relm.antoyo.xyz/assets/js/javascript.min.js"></script>
+
+    </body>
+</html>
