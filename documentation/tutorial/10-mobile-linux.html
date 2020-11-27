@@ -14,17 +14,6 @@ risk. (This could mess up with your actual pacman config.)
 
 
 
-Create the directories to store the libraries and the pacman database
-
-
-
-sudo mkdir -p /opt/ArchARM/var/lib/pacman/local
-sudo mkdir /opt/ArchARM/var/lib/pacman/sync
-
-
-
-
-
 Create pacman config for ARM
 
 
@@ -66,46 +55,24 @@ Server = http://nj.us.mirror.archlinuxarm.org/$arch/$repo
 
 
 
-Import the GPG key for the ARM repo
+Install the ArchLinux ARM keyring
+
+
+Using an AUR wrapper or otherwise:
 
 
 
-gpg --recv 77193F152BDBE6A6
-gpg --export 77193F152BDBE6A6 &amp;gt; arm_pacman_key
-
-
-
-
-
-Initialize the pacman database
-
-
-
-sudo pacman-key --init --config arm_pacman.conf
-sudo pacman-key --config arm_pacman.conf --add arm_pacman_key
-sudo pacman-db-upgrade --root /opt/ArchARM/ --dbpath /opt/ArchARM/var/lib/pacman/
+yay -S archlinuxarm-keyring
 
 
 
 
 
-Trust the key
+Initialize the pacman database and install the ARM packages
 
 
 
-# Give ultimate trust to the key.
-sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D06777193F152BDBE6A6
-
-
-
-
-
-Install the ARM packages
-
-
-
-sudo pacman -Sy --config arm_pacman.conf
-sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy
+sudo pacstrap -M -C arm_pacman.conf /opt/ArchARM gtk3 libhandy
 
 
 
@@ -336,17 +303,6 @@ risk. (This could mess up with your actual pacman config.)</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="create-the-directories-to-store-the-libraries-and-the-pacman-database">Create the directories to store the libraries and the pacman database</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo mkdir -p /opt/ArchARM/var/lib/pacman/local
-sudo mkdir /opt/ArchARM/var/lib/pacman/sync</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="create-pacman-config-for-arm">Create pacman config for ARM</h2>
 <div class="sectionbody">
 <div class="listingblock">
@@ -388,46 +344,24 @@ sudo mkdir /opt/ArchARM/var/lib/pacman/sync</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="import-the-gpg-key-for-the-arm-repo">Import the GPG key for the ARM repo</h2>
+<h2 id="install-the-archlinux-arm-keyring">Install the ArchLinux ARM keyring</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Using an AUR wrapper or otherwise:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span></span>gpg --recv 77193F152BDBE6A6
-gpg --export 77193F152BDBE6A6 &gt; arm_pacman_key</code></pre>
+<pre class="pygments highlight"><code data-lang="bash"><span></span>yay -S archlinuxarm-keyring</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="initialize-the-pacman-database">Initialize the pacman database</h2>
+<h2 id="initialize-the-pacman-database-and-install-the-arm-packages">Initialize the pacman database and install the ARM packages</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo pacman-key --init --config arm_pacman.conf
-sudo pacman-key --config arm_pacman.conf --add arm_pacman_key
-sudo pacman-db-upgrade --root /opt/ArchARM/ --dbpath /opt/ArchARM/var/lib/pacman/</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="trust-the-key">Trust the key</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span></span><span class="tok-c1"># Give ultimate trust to the key.</span>
-sudo pacman-key --config arm_pacman.conf --edit-key 68B3537F39A313B3E574D06777193F152BDBE6A6</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="install-the-arm-packages">Install the ARM packages</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo pacman -Sy --config arm_pacman.conf
-sudo pacman -S --config arm_pacman.conf gtk3 pkgconf libhandy</code></pre>
+<pre class="pygments highlight"><code data-lang="bash"><span></span>sudo pacstrap -M -C arm_pacman.conf /opt/ArchARM gtk3 libhandy</code></pre>
 </div>
 </div>
 <div class="paragraph">
