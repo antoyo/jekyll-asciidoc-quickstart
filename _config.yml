@@ -112,7 +112,7 @@ defaults:
       path: '_posts'
       type: 'posts'
     values:
-      show_meta: true   # Show metadata for all posts
+      show_meta: false   # Show metadata for all posts
       # sidebar:        # Possible values › left, right › by default there will be no sidebar
       author: antoyo     # Default author for posts
 
