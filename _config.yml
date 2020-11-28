@@ -115,6 +115,14 @@ defaults:
       show_meta: true   # Show metadata for all posts
       # sidebar:        # Possible values › left, right › by default there will be no sidebar
       author: antoyo     # Default author for posts
+  -
+    scope:
+      path: '/documentation/'
+      type: 'tutorial'
+    values:
+      show_meta: false   # Show metadata for all posts
+      # sidebar:        # Possible values › left, right › by default there will be no sidebar
+      author: antoyo     # Default author for posts
 
 
 
