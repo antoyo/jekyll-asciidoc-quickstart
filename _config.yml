@@ -118,7 +118,7 @@ defaults:
   -
     scope:
       path: ''
-      type: 'tutorial'
+      type: 'documentation'
     values:
       show_meta: false   # Show metadata for all posts
       sidebar: 'left'    # Possible values › left, right › by default there will be no sidebar
