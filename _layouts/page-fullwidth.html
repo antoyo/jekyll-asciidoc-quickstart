@@ -42,12 +42,12 @@ format: page-fullwidth
 {% if page.collection == "tutorial" %}
 <div id="post-nav" class="row">
     {% if page.next.url %}
-    <div class="small-5 columns"><a class="button small radius next" href="{{ site.baseurl }}{{page.next.url}}">{{page.next.title}} &laquo;</a></div><!-- /.small-4.columns -->
+    <div class="small-5 columns"><a class="button small radius next" href="{{ site.baseurl }}{{page.next.url}}">&laquo; {{page.next.title}}</a></div><!-- /.small-4.columns -->
     {% else %}
     <div class="small-5 columns"></div><!-- /.small-4.columns -->
     {% endif %}
     {% if page.previous.url %}
-    <div class="small-5 columns text-right"><a class="button small radius prev" href="{{ site.baseurl }}{{page.previous.url}}">&raquo; {{page.previous.title}}</a></div><!-- /.small-4.columns -->
+    <div class="small-5 columns text-right"><a class="button small radius prev" href="{{ site.baseurl }}{{page.previous.url}}">{{page.previous.title}} &raquo;</a></div><!-- /.small-4.columns -->
     {% endif %}
 </div>
 {% endif %}
