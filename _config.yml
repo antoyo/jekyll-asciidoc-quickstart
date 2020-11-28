@@ -117,7 +117,7 @@ defaults:
       author: antoyo     # Default author for posts
   -
     scope:
-      path: '/documentation/'
+      path: ''
       type: 'tutorial'
     values:
       show_meta: false   # Show metadata for all posts
