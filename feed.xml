@@ -32,7 +32,7 @@ since the inception of this idiomatic GUI library for Rust.&lt;/p&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The biggest usability improvement of this release is the ability to
-use nested &lt;code&gt;view!&lt;/code&gt; macros that was added.
+use nested &lt;code&gt;view!&lt;/code&gt; macros.
 Previously, &lt;a href=&quot;https://github.com/antoyo/relm/issues/54&quot;&gt;we couldn&amp;#8217;t create &lt;code&gt;gtk::Menu&lt;/code&gt; with the declarative syntax&lt;/a&gt;
 because &lt;code&gt;gtk::Menu&lt;/code&gt; behaves differently than the other widgets.
 You have to call &lt;code&gt;set_submenu()&lt;/code&gt; to add items to a menu instead of
@@ -183,7 +183,7 @@ towards a &lt;a href=&quot;https://github.com/antoyo/relm/issues/102&quot;&gt;1.
 &lt;a href=&quot;https://relm.antoyo.xyz/documentation/tutorial/&quot;&gt;tutorial&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;As always, please report bugs you find and your feature request on &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As always, please report bugs you find and your feature requests on &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description>
