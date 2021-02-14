@@ -4,12 +4,22 @@
  <title>Relm Blog</title>
  <link href="https://relm.antoyo.xyzatom.xml" rel="self"/>
  <id>https://relm.antoyo.xyz</id>
- <updated>2020-11-28T13:04:44+00:00</updated>
+ <updated>2021-02-14T17:56:06+00:00</updated>
  <author>
    <name></name>
    <uri></uri>
    <email></email>
  </author>
+
+ 
+
+ <entry>
+   <title>A big release for relm</title>
+   <link href="https://relm.antoyo.xyz/big-release/"/>
+   <id>https://relm.antoyo.xyz/big-release</id>
+   <updated>2021-02-14T00:00:00+00:00</updated>
+   <content type="html">&lt;div id=&quot;preamble&quot;&gt; &lt;div class=&quot;sectionbody&quot;&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;It&amp;#8217;s been a while since I&amp;#8217;ve written in this blog, but the development continues!&lt;/p&gt; &lt;/div&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;I just released &lt;code&gt;relm&lt;/code&gt; 0.21 which is probably the biggest release since the inception of this idiomatic GUI library for Rust.&lt;/p&gt; &lt;/div&gt; &lt;div class=&quot;paragraph&quot;&gt; &lt;p&gt;So, what&amp;#8217;s new...</content>
+ </entry>
 
  
 

@@ -9,6 +9,188 @@
 		<atom:link href="https://relm.antoyo.xyz/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>A big release for relm</title>
+				<link>https://relm.antoyo.xyz/big-release/</link>
+				<pubDate>Sun, 14 Feb 2021 00:00:00 +0000</pubDate>
+				<description>&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s been a while since I&amp;#8217;ve written in this blog, but the development
+continues!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I just released &lt;code&gt;relm&lt;/code&gt; 0.21 which is probably the biggest release
+since the inception of this idiomatic GUI library for Rust.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So, what&amp;#8217;s new in this release?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;nested-view-macro&quot;&gt;Nested &lt;code&gt;view!&lt;/code&gt; macro&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The biggest usability improvement of this release is the ability to
+use nested &lt;code&gt;view!&lt;/code&gt; macros that was added.
+Previously, &lt;a href=&quot;https://github.com/antoyo/relm/issues/54&quot;&gt;we couldn&amp;#8217;t create &lt;code&gt;gtk::Menu&lt;/code&gt; with the declarative syntax&lt;/a&gt;
+because &lt;code&gt;gtk::Menu&lt;/code&gt; behaves differently than the other widgets.
+You have to call &lt;code&gt;set_submenu()&lt;/code&gt; to add items to a menu instead of
+just adding the items as children of the menu.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With nested &lt;code&gt;view!&lt;/code&gt; macros, we can now create a &lt;code&gt;gtk::Menu&lt;/code&gt; using the
+declarative syntax, like the following example shows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;MenuBar&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;MenuItem&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;File&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;submenu&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Menu&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;MenuItem&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;Quit&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This also works with other widgets, &lt;a href=&quot;https://github.com/antoyo/relm/issues/84&quot;&gt;like the title bar&lt;/a&gt; which makes it easier
+to write a responsive application using &lt;code&gt;libhandy&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;titlebar&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;handy&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;HeaderBar&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;show_close_button&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Some&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;handy title&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://relm.antoyo.xyz/documentation/tutorial/10-mobile-linux&quot;&gt;It&amp;#8217;s
+time to start using &lt;code&gt;relm&lt;/code&gt; on your PinePhone!&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;ability-to-create-multiple-objects-in-a-single-view-macro&quot;&gt;Ability to create multiple objects in a single &lt;code&gt;view!&lt;/code&gt; macro&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In &lt;code&gt;GTK+&lt;/code&gt;, there are objects that you would want to create that are
+not widgets.
+It would still be useful to create them using the &lt;code&gt;view!&lt;/code&gt; macro but
+where would they go in it?
+They cannot be add in another widget, since it&amp;#8217;s not a widget.
+&lt;a href=&quot;https://github.com/antoyo/relm/issues/42&quot;&gt;One example was
+&lt;code&gt;gtk::Gesture&lt;/code&gt;.&lt;/a&gt;
+Well, now it is possible to add objects after the main widget.
+Here&amp;#8217;s an example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;pygments highlight&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Window&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-nb&quot;&gt;Box&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;orientation&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Vertical&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;#[name=&lt;/span&gt;&lt;span class=&quot;tok-s&quot;&gt;&amp;quot;drawing_area&amp;quot;&lt;/span&gt;&lt;span class=&quot;tok-cp&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;DrawingArea&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;expand&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;                &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;delete_event&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Quit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Inhibit&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;gtk&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;GestureDrag&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;tok-bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drawing_area&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drag_begin&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Click&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drag_update&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;Move&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;drag_end&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tok-n&quot;&gt;End&lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;tok-p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;tok-w&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;fix-reference-cycle&quot;&gt;Fix reference cycle&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For a long time, there was an &lt;a href=&quot;https://github.com/antoyo/relm/issues/127&quot;&gt;issue&lt;/a&gt; in &lt;code&gt;relm&lt;/code&gt; that could cause
+reference cycles and thus, leak memory.
+This is now fixed by the introduction of a new type &lt;code&gt;StreamHandle&lt;/code&gt;
+which is a weak reference to an &lt;code&gt;EventStream&lt;/code&gt;.
+This new version of &lt;code&gt;relm&lt;/code&gt; might cause your application to stop
+working in case you were relying on this bug.
+The solution is to keep a reference to your components in order for
+them to not be dropped instantly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I used to be able to prevent breaking changes for the users of the
+&lt;code&gt;#[widget]&lt;/code&gt; attribute, but for this fix, I was unable to prevent it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are what changed:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The widgets now reside inside &lt;code&gt;self.widgets&lt;/code&gt; instead of &lt;code&gt;self&lt;/code&gt;
+directly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The component streams are avaible inside &lt;code&gt;self.streams&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The type &lt;code&gt;StreamHandle&lt;/code&gt; must be used instead of &lt;code&gt;EventStream&lt;/code&gt; or
+sometimes even instead of &lt;code&gt;ContainerComponent&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To have an example of how to do this update, you can look at the
+commit that updates to &lt;code&gt;relm&lt;/code&gt; 0.21 for two big projects using it:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/titanium/commit/c7d5ae8e00a6d52eecca284ec4477b61ceb8515d&quot;&gt;titanium&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/antoyo/mg/commit/c53c0d84cd510cd3318a11a7df774c94561ac57b&quot;&gt;mg&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the-road-ahead&quot;&gt;The road ahead&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With these new features and this big fix, the biggest road blockers
+towards a &lt;a href=&quot;https://github.com/antoyo/relm/issues/102&quot;&gt;1.0 version&lt;/a&gt; are done.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The biggest remaining thing is probably to finish writing the
+&lt;a href=&quot;https://relm.antoyo.xyz/documentation/tutorial/&quot;&gt;tutorial&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As always, please report bugs you find and your feature request on &lt;a href=&quot;https://github.com/antoyo/relm/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+				<guid isPermaLink="true">https://relm.antoyo.xyz/big-release/</guid>
+			</item>
+		
+			<item>
 				<title>Relm drop support for futures!</title>
 				<link>https://relm.antoyo.xyz/relm-without-futures/</link>
 				<pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>

@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A big release for relm</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/styles_feeling_responsive.css">
+
+    <!-- Search Engine Optimization -->
+    <meta name="description" content="It&amp;#8217;s been a while since I&amp;#8217;ve written in this blog, but the development
+continues!
+
+
+I just released relm 0.21 which is probably the biggest release
+since the inception of this idiomatic GUI library for Rust.
+
+
+So, what&amp;#8217;s new in this release?
+
+
+
+
+Nested view! macro
+
+
+The biggest usability improvement of this release is the ability to
+use nested view! macros that was added.
+Previously, we couldn&amp;#8217;t create gtk::Menu with the declarative syntax
+because gtk::Menu behaves differently than the other widgets.
+You have to call set_submenu() to add items to a menu instead of
+just adding the items as children of the menu.
+
+
+With nested view! macros, we can now create a gtk::Menu using the
+declarative syntax, like the following example shows:
+
+
+
+gtk::MenuBar {
+    gtk::MenuItem {
+        label: &amp;quot;File&amp;quot;,
+        submenu: view! {
+            gtk::Menu {
+                gtk::MenuItem {
+                    label: &amp;quot;Quit&amp;quot;,
+                },
+            },
+        }
+    },
+}
+
+
+
+This also works with other widgets, like the title bar which makes it easier
+to write a responsive application using libhandy:
+
+
+
+gtk::Window {
+    titlebar: view! {
+        handy::HeaderBar {
+            show_close_button: true,
+            title: Some(&amp;quot;handy title&amp;quot;),
+        },
+    }
+}
+
+
+
+It&amp;#8217;s
+time to start using relm on your PinePhone!
+
+
+
+
+Ability to create multiple objects in a single view! macro
+
+
+In GTK+, there are objects that you would want to create that are
+not widgets.
+It would still be useful to create them using the view! macro but
+where would they go in it?
+They cannot be add in another widget, since it&amp;#8217;s not a widget.
+One example was
+gtk::Gesture.
+Well, now it is possible to add objects after the main widget.
+Here&amp;#8217;s an example:
+
+
+
+view! {
+    gtk::Window {
+        gtk::Box {
+            orientation: Vertical,
+            #[name=&amp;quot;drawing_area&amp;quot;]
+            gtk::DrawingArea {
+                child: {
+                    expand: true,
+                }
+            },
+        },
+        delete_event(_, _) =&amp;gt; (Quit, Inhibit(false)),
+    }
+
+    gtk::GestureDrag(&amp;amp;self.drawing_area) {
+        drag_begin(_, x, y) =&amp;gt; Click(x, y),
+        drag_update(_, x, y) =&amp;gt; Move(x, y),
+        drag_end(_, _, _) =&amp;gt; End,
+    }
+}
+
+
+
+
+
+Fix reference cycle
+
+
+For a long time, there was an issue in relm that could cause
+reference cycles and thus, leak memory.
+This is now fixed by the introduction of a new type StreamHandle
+which is a weak reference to an EventStream.
+This new version of relm might cause your application to stop
+working in case you were relying on this bug.
+The solution is to keep a reference to your components in order for
+them to not be dropped instantly.
+
+
+I used to be able to prevent breaking changes for the users of the
+#[widget] attribute, but for this fix, I was unable to prevent it.
+
+
+Here are what changed:
+
+
+
+
+The widgets now reside inside self.widgets instead of self
+directly.
+
+
+The component streams are avaible inside self.streams.
+
+
+The type StreamHandle must be used instead of EventStream or
+sometimes even instead of ContainerComponent.
+
+
+
+
+To have an example of how to do this update, you can look at the
+commit that updates to relm 0.21 for two big projects using it:
+
+
+
+
+titanium
+
+
+mg
+
+
+
+
+
+
+The road ahead
+
+
+With these new features and this big fix, the biggest road blockers
+towards a 1.0 version are done.
+
+
+The biggest remaining thing is probably to finish writing the
+tutorial.
+
+
+As always, please report bugs you find and your feature request on GitHub.">
+    
+    <link rel="canonical" href="/big-release/">
+
+    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+
+    <link type="text/plain" rel="author" href="/humans.txt">
+
+    
+
+	<link rel="icon" sizes="32x32" href="https://relm.antoyo.xyz/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://relm.antoyo.xyz/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://relm.antoyo.xyz/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+    
+
+    </head>
+    <body id="top-of-page" class="page-fullwidth">
+        
+        
+<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="/" class="icon-tree"> Relm Blog</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+        
+
+        <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+      </ul>
+
+      <ul class="left">
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/">Index</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/getting-started/">Getting Started</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="/documentation/">Documentation</a>
+
+                  <ul class="dropdown">
+                    
+
+                      <li><a  href="/documentation/tutorial/">Tutorial</a></li>
+                    
+
+                      <li><a  href="/documentation/reference/">Reference</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/blog/">Blog</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+        
+
+        
+
+<div id="masthead-no-image-header">
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
+                <img src="/assets/img/logo.png" alt="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
+            </a>
+        </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+        
+
+
+<div class="row t30">
+    <div class="medium-12 columns">
+        <article>
+            <header>
+                
+                <h1>A big release for relm</h1>
+            </header>
+
+            
+
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s been a while since I&#8217;ve written in this blog, but the development
+continues!</p>
+</div>
+<div class="paragraph">
+<p>I just released <code>relm</code> 0.21 which is probably the biggest release
+since the inception of this idiomatic GUI library for Rust.</p>
+</div>
+<div class="paragraph">
+<p>So, what&#8217;s new in this release?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="nested-view-macro">Nested <code>view!</code> macro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The biggest usability improvement of this release is the ability to
+use nested <code>view!</code> macros that was added.
+Previously, <a href="https://github.com/antoyo/relm/issues/54">we couldn&#8217;t create <code>gtk::Menu</code> with the declarative syntax</a>
+because <code>gtk::Menu</code> behaves differently than the other widgets.
+You have to call <code>set_submenu()</code> to add items to a menu instead of
+just adding the items as children of the menu.</p>
+</div>
+<div class="paragraph">
+<p>With nested <code>view!</code> macros, we can now create a <code>gtk::Menu</code> using the
+declarative syntax, like the following example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuBar</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;File&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">submenu</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Menu</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">MenuItem</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;Quit&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This also works with other widgets, <a href="https://github.com/antoyo/relm/issues/84">like the title bar</a> which makes it easier
+to write a responsive application using <code>libhandy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">titlebar</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">handy</span><span class="tok-o">::</span><span class="tok-n">HeaderBar</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">show_close_button</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">title</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-s">&quot;handy title&quot;</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://relm.antoyo.xyz/documentation/tutorial/10-mobile-linux">It&#8217;s
+time to start using <code>relm</code> on your PinePhone!</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ability-to-create-multiple-objects-in-a-single-view-macro">Ability to create multiple objects in a single <code>view!</code> macro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In <code>GTK+</code>, there are objects that you would want to create that are
+not widgets.
+It would still be useful to create them using the <code>view!</code> macro but
+where would they go in it?
+They cannot be add in another widget, since it&#8217;s not a widget.
+<a href="https://github.com/antoyo/relm/issues/42">One example was
+<code>gtk::Gesture</code>.</a>
+Well, now it is possible to add objects after the main widget.
+Here&#8217;s an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;drawing_area&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">DrawingArea</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">child</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">expand</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">GestureDrag</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">drawing_area</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">drag_begin</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Click</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">drag_update</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Move</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">drag_end</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">End</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="fix-reference-cycle">Fix reference cycle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For a long time, there was an <a href="https://github.com/antoyo/relm/issues/127">issue</a> in <code>relm</code> that could cause
+reference cycles and thus, leak memory.
+This is now fixed by the introduction of a new type <code>StreamHandle</code>
+which is a weak reference to an <code>EventStream</code>.
+This new version of <code>relm</code> might cause your application to stop
+working in case you were relying on this bug.
+The solution is to keep a reference to your components in order for
+them to not be dropped instantly.</p>
+</div>
+<div class="paragraph">
+<p>I used to be able to prevent breaking changes for the users of the
+<code>#[widget]</code> attribute, but for this fix, I was unable to prevent it.</p>
+</div>
+<div class="paragraph">
+<p>Here are what changed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The widgets now reside inside <code>self.widgets</code> instead of <code>self</code>
+directly.</p>
+</li>
+<li>
+<p>The component streams are avaible inside <code>self.streams</code>.</p>
+</li>
+<li>
+<p>The type <code>StreamHandle</code> must be used instead of <code>EventStream</code> or
+sometimes even instead of <code>ContainerComponent</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To have an example of how to do this update, you can look at the
+commit that updates to <code>relm</code> 0.21 for two big projects using it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/antoyo/titanium/commit/c7d5ae8e00a6d52eecca284ec4477b61ceb8515d">titanium</a></p>
+</li>
+<li>
+<p><a href="https://github.com/antoyo/mg/commit/c53c0d84cd510cd3318a11a7df774c94561ac57b">mg</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-road-ahead">The road ahead</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With these new features and this big fix, the biggest road blockers
+towards a <a href="https://github.com/antoyo/relm/issues/102">1.0 version</a> are done.</p>
+</div>
+<div class="paragraph">
+<p>The biggest remaining thing is probably to finish writing the
+<a href="https://relm.antoyo.xyz/documentation/tutorial/">tutorial</a>.</p>
+</div>
+<div class="paragraph">
+<p>As always, please report bugs you find and your feature request on <a href="https://github.com/antoyo/relm/issues">GitHub</a>.</p>
+</div>
+</div>
+</div>
+        </article>
+    </div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+
+                <div id="page-meta" class="row">
+                <p>
+                    <!-- Look the author details up from the site config. -->
+                    
+                    <!-- Output author details if some exist. -->
+                    
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name" class="pr20 icon-edit"><a href="http://blog.antoyo.xyz" target="_blank"> Antoni</a></span>
+                </span>
+                
+
+                
+                <time class="icon-calendar pr20" datetime="2021-02-14T00:00:00+00:00" itemprop="datePublished"> 2021-02-14</time>
+                
+
+                </span>
+                <br />
+                <span class="pr20"></span>
+            </p>
+
+            
+            <div id="post-nav" class="row">
+                
+                <div class="small-5 columns text-right"></div><!-- /.small-4.columns -->
+                
+                
+                <div class="small-5 columns text-right"><a class="button small radius next" href="/relm-without-futures/">Relm drop support for futures! &raquo;</a></div><!-- /.small-4.columns -->
+                
+            </div>
+            
+            </div><!--  /.page-meta -->
+
+
+
+
+
+
+        
+            <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">About This Site</h5>
+
+            <p class="shadow-black">
+              An idiomatic GUI Rust library, based on GTK+
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">News Feed</h5>
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href=""  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">Links</h5>
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href=""  title=""></a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://github.com/antoyo/relm" target="_blank"  title="">GitHub</a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://gitter.im/relm-rs/Lobby" target="_blank"  title="">Gitter</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 text-right columns credits">
+              Contribute on GitHub
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+              <div class="row">
+                <ul class="inline-list social-icons columns small-12 medium-6">
+                
+                  <li><a href="http://github.com/antoyo/relm" class="icon-github" title="Relm"></a></li>
+                
+                </ul>
+
+                <div class="columns small-12 medium-6">
+                  <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+                </div>
+              </div>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+        
+
+        <script src="https://relm.antoyo.xyz/assets/js/javascript.min.js"></script>
+
+    </body>
+</html>
