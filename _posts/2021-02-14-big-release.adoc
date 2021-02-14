@@ -12,7 +12,7 @@ So, what's new in this release?
 == Nested `view!` macro
 
 The biggest usability improvement of this release is the ability to
-use nested `view!` macros that was added.
+use nested `view!` macros.
 Previously, https://github.com/antoyo/relm/issues/54[we couldn't create `gtk::Menu` with the declarative syntax]
 because `gtk::Menu` behaves differently than the other widgets.
 You have to call `set_submenu()` to add items to a menu instead of
@@ -127,4 +127,4 @@ towards a https://github.com/antoyo/relm/issues/102[1.0 version] are done.
 The biggest remaining thing is probably to finish writing the
 https://relm.antoyo.xyz/documentation/tutorial/[tutorial].
 
-As always, please report bugs you find and your feature request on https://github.com/antoyo/relm/issues[GitHub].
+As always, please report bugs you find and your feature requests on https://github.com/antoyo/relm/issues[GitHub].
