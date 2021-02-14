@@ -1,0 +1,130 @@
+= A big release for relm
+:page-navtitle: A big release for relm
+
+It's been a while since I've written in this blog, but the development
+continues!
+
+I just released `relm` 0.21 which is probably the biggest release
+since the inception of this idiomatic GUI library for Rust.
+
+So, what's new in this release?
+
+== Nested `view!` macro
+
+The biggest usability improvement of this release is the ability to
+use nested `view!` macros that was added.
+Previously, https://github.com/antoyo/relm/issues/54[we couldn't create `gtk::Menu` with the declarative syntax]
+because `gtk::Menu` behaves differently than the other widgets.
+You have to call `set_submenu()` to add items to a menu instead of
+just adding the items as children of the menu.
+
+With nested `view!` macros, we can now create a `gtk::Menu` using the
+declarative syntax, like the following example shows:
+
+[source,rust]
+----
+gtk::MenuBar {
+    gtk::MenuItem {
+        label: "File",
+        submenu: view! {
+            gtk::Menu {
+                gtk::MenuItem {
+                    label: "Quit",
+                },
+            },
+        }
+    },
+}
+----
+
+This also works with other widgets, https://github.com/antoyo/relm/issues/84[like the title bar] which makes it easier
+to write a responsive application using `libhandy`:
+
+[source,rust]
+----
+gtk::Window {
+    titlebar: view! {
+        handy::HeaderBar {
+            show_close_button: true,
+            title: Some("handy title"),
+        },
+    }
+}
+----
+
+https://relm.antoyo.xyz/documentation/tutorial/10-mobile-linux[It's
+time to start using `relm` on your PinePhone!]
+
+== Ability to create multiple objects in a single `view!` macro
+
+In `GTK+`, there are objects that you would want to create that are
+not widgets.
+It would still be useful to create them using the `view!` macro but
+where would they go in it?
+They cannot be add in another widget, since it's not a widget.
+https://github.com/antoyo/relm/issues/42[One example was
+`gtk::Gesture`.]
+Well, now it is possible to add objects after the main widget.
+Here's an example:
+
+[source,rust]
+----
+view! {
+    gtk::Window {
+        gtk::Box {
+            orientation: Vertical,
+            #[name="drawing_area"]
+            gtk::DrawingArea {
+                child: {
+                    expand: true,
+                }
+            },
+        },
+        delete_event(_, _) => (Quit, Inhibit(false)),
+    }
+
+    gtk::GestureDrag(&self.drawing_area) {
+        drag_begin(_, x, y) => Click(x, y),
+        drag_update(_, x, y) => Move(x, y),
+        drag_end(_, _, _) => End,
+    }
+}
+----
+
+== Fix reference cycle
+
+For a long time, there was an https://github.com/antoyo/relm/issues/127[issue] in `relm` that could cause
+reference cycles and thus, leak memory.
+This is now fixed by the introduction of a new type `StreamHandle`
+which is a weak reference to an `EventStream`.
+This new version of `relm` might cause your application to stop
+working in case you were relying on this bug.
+The solution is to keep a reference to your components in order for
+them to not be dropped instantly.
+
+I used to be able to prevent breaking changes for the users of the
+`#[widget]` attribute, but for this fix, I was unable to prevent it.
+
+Here are what changed:
+
+ * The widgets now reside inside `self.widgets` instead of `self`
+   directly.
+ * The component streams are avaible inside `self.streams`.
+ * The type `StreamHandle` must be used instead of `EventStream` or
+   sometimes even instead of `ContainerComponent`.
+
+To have an example of how to do this update, you can look at the
+commit that updates to `relm` 0.21 for two big projects using it:
+
+ * https://github.com/antoyo/titanium/commit/c7d5ae8e00a6d52eecca284ec4477b61ceb8515d[titanium]
+ * https://github.com/antoyo/mg/commit/c53c0d84cd510cd3318a11a7df774c94561ac57b[mg]
+
+== The road ahead
+
+With these new features and this big fix, the biggest road blockers
+towards a https://github.com/antoyo/relm/issues/102[1.0 version] are done.
+
+The biggest remaining thing is probably to finish writing the
+https://relm.antoyo.xyz/documentation/tutorial/[tutorial].
+
+As always, please report bugs you find and your feature request on https://github.com/antoyo/relm/issues[GitHub].
