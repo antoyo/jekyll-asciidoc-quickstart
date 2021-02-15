@@ -1,0 +1,13 @@
+#samples h2 {
+    margin: 0;
+}
+
+.code {
+    display: none;
+    height: 36em;
+    overflow: scroll;
+}
+
+#select-sample {
+    padding-top: 42px;
+}

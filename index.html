@@ -189,7 +189,7 @@
 
 
 
-<div class="row t60">
+<div class="row t15">
 	
 		<div class="medium-4 columns frontpage-widget">
     
@@ -237,7 +237,7 @@
 
 
 
-    <div class="row t60 b60">
+    <div class="row">
         <div class="small-12 text-center columns">
             <a class="button large radius info" href="/getting-started/">Start using Relm now ›</a>
         </div><!-- /.small-12.columns -->
@@ -245,6 +245,345 @@
 
 
 
+
+
+<div id="samples">
+    <div class="large-6 columns">
+        <h2>Sample Code</h2>
+        
+        <div class="code" data-id="/samples/01-buttons" style="display: block">
+        <div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">ButtonExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">LabelExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">OrientableExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WidgetExt</span><span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Orientation</span><span class="tok-o">::</span><span class="tok-n">Vertical</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Widget</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm_derive</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">widget</span><span class="tok-p">};</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;inc_button&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;label&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;dec_button&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Decrement</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Increment</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Win</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-p">(()).</span><span class="tok-n">expect</span><span class="tok-p">(</span><span class="tok-s">&quot;Win::run failed&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::*</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">counter</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kt">i32</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+        </div>
+        
+        <div class="code" data-id="/samples/02-text_field" >
+        <div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">EditableSignals</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">EntryExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">LabelExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">OrientableExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WidgetExt</span><span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Orientation</span><span class="tok-o">::</span><span class="tok-n">Vertical</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Widget</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm_derive</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">widget</span><span class="tok-p">};</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;entry&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Entry</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">changed</span><span class="tok-p">(</span><span class="tok-n">entry</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">text</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">entry</span><span class="tok-p">.</span><span class="tok-n">get_text</span><span class="tok-p">().</span><span class="tok-n">to_string</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-kd">let</span><span class="tok-w"> </span><span class="tok-n">len</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">text</span><span class="tok-p">.</span><span class="tok-n">len</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-n">text</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">len</span><span class="tok-p">)</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">placeholder_text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">Some</span><span class="tok-p">(</span><span class="tok-s">&quot;Text to reverse&quot;</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;label&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">content</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-n">text</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">len</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">content</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">text</span><span class="tok-p">.</span><span class="tok-n">chars</span><span class="tok-p">().</span><span class="tok-n">rev</span><span class="tok-p">().</span><span class="tok-n">collect</span><span class="tok-p">();</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">content</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">format</span><span class="tok-o">!</span><span class="tok-p">(</span><span class="tok-s">&quot; ({})&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">len</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">content</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-o">::</span><span class="tok-n">new</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Win</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-p">(()).</span><span class="tok-n">expect</span><span class="tok-p">(</span><span class="tok-s">&quot;Win::run failed&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::*</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">content</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-nb">String</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Change</span><span class="tok-p">(</span><span class="tok-nb">String</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">usize</span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+        </div>
+        
+        <div class="code" data-id="/samples/03-web-browser" >
+        <div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WidgetExt</span><span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm_derive</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">widget</span><span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Widget</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">webkit2gtk</span><span class="tok-o">::</span><span class="tok-n">WebViewExt</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;webview&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">webkit2gtk</span><span class="tok-o">::</span><span class="tok-n">WebView</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">init_view</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">widgets</span><span class="tok-p">.</span><span class="tok-n">webview</span><span class="tok-p">.</span><span class="tok-n">load_uri</span><span class="tok-p">(</span><span class="tok-s">&quot;https://crates.io/&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::*</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">struct</span> <span class="tok-nc">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Win</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-p">(()).</span><span class="tok-n">expect</span><span class="tok-p">(</span><span class="tok-s">&quot;Win::run failed&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+        </div>
+        
+        <div class="code" data-id="/samples/04-calc" >
+        <div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">ButtonExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">GridExt</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">WidgetExt</span><span class="tok-p">};</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Widget</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-n">relm_derive</span><span class="tok-o">::</span><span class="tok-p">{</span><span class="tok-n">Msg</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">widget</span><span class="tok-p">};</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[widget]</span><span class="tok-w"></span>
+<span class="tok-k">impl</span><span class="tok-w"> </span><span class="tok-n">Widget</span><span class="tok-w"> </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-n">Win</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Grid</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;7&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;8&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;9&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;4&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;5&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;6&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;1&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;2&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;3&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+/-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;0&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;.&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">cell</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">left_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                        </span><span class="tok-n">top_attach</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">))</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">update</span><span class="tok-p">(</span><span class="tok-o">&amp;</span><span class="tok-k">mut</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-k">match</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">Quit</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">main_quit</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::*</span><span class="tok-p">;</span><span class="tok-w"></span>
+
+<span class="tok-cp">#[derive(Msg)]</span><span class="tok-w"></span>
+<span class="tok-k">pub</span><span class="tok-w"> </span><span class="tok-k">enum</span> <span class="tok-nc">Msg</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span>
+
+<span class="tok-k">fn</span> <span class="tok-nf">main</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">Win</span><span class="tok-o">::</span><span class="tok-n">run</span><span class="tok-p">(()).</span><span class="tok-n">expect</span><span class="tok-p">(</span><span class="tok-s">&quot;Win::run failed&quot;</span><span class="tok-p">);</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+        </div>
+        
+    </div>
+    <div id="select-sample" class="large-6 left columns">
+        <select id="code_samples" class="center large-6">
+            
+            <option data-image="https://relm.antoyo.xyz/assets/samples/counter.png" data-id="/samples/01-buttons">Counter</option>
+            
+            <option data-image="https://relm.antoyo.xyz/assets/samples/text_field.png" data-id="/samples/02-text_field">Text field</option>
+            
+            <option data-image="https://relm.antoyo.xyz/assets/samples/webkit.png" data-id="/samples/03-web-browser">Web Browser</option>
+            
+            <option data-image="https://relm.antoyo.xyz/assets/samples/calc.png" data-id="/samples/04-calc">Calculator</option>
+            
+        </select>
+
+        <img class="center" id="sample_image" src="https://relm.antoyo.xyz/assets/samples/counter.png" alt="sample"/>
+    </div>
+</div>
+
+<script src="https://relm.antoyo.xyz/assets/js/samples.js"></script>
+<link rel="stylesheet" href="/assets/css/samples.css">
 
 
 
