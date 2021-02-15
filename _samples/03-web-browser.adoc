@@ -1,0 +1,51 @@
+= Web Browser
+:page-image: webkit.png
+
+[source,rust]
+----
+use gtk::{Inhibit, WidgetExt};
+use relm_derive::{Msg, widget};
+use relm::Widget;
+use webkit2gtk::WebViewExt;
+
+#[widget]
+impl Widget for Win {
+    view! {
+        gtk::Window {
+            #[name="webview"]
+            webkit2gtk::WebView {
+            },
+            delete_event(_, _) => (Quit, Inhibit(false)),
+        }
+    }
+
+    fn init_view(&mut self) {
+        self.widgets.webview.load_uri("https://crates.io/");
+    }
+
+    fn update(&mut self, event: Msg) {
+        match event {
+            Quit => gtk::main_quit(),
+        }
+    }
+
+    fn model() -> Model {
+        Model {
+        }
+    }
+}
+
+use self::Msg::*;
+
+pub struct Model {
+}
+
+#[derive(Msg)]
+pub enum Msg {
+    Quit,
+}
+
+fn main() {
+    Win::run(()).expect("Win::run failed");
+}
+----

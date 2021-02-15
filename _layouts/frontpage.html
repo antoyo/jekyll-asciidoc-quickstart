@@ -15,7 +15,7 @@ format: frontpage
 * First check, if widget is empty or not by checking if there is a title
 *
 {% endcomment %}
-<div class="row t60">
+<div class="row t15">
 	{% if page.widget1.title %}
 		{% include _frontpage-widget.html widget=page.widget1 %}
 	{% endif %}
@@ -44,14 +44,38 @@ format: frontpage
 {% capture url %}{{ site.baseurl }}{% endcapture %}
 {% endif %}
 {% if page.callforaction %}
-    <div class="row t60 b60">
+    <div class="row">
         <div class="small-12 text-center columns">
             <a class="button large radius {{ page.callforaction.style }}" href="{{ url }}{{ page.callforaction.url }}"{% if page.callforaction.url contains 'http' %} target="_blank" {% endif %}>{{ page.callforaction.text }}</a>
         </div><!-- /.small-12.columns -->
     </div><!-- /.row -->
 {% endif %}
 
+{% assign samples = site.samples | sort: 'path' %}
+{% assign first_sample = samples | first %}
 
+<div id="samples">
+    <div class="large-6 columns">
+        <h2>Sample Code</h2>
+        {% for sample in samples %}
+        <div class="code" data-id="{{ sample.id }}" {% if sample.id == first_sample.id %}style="display: block"{% endif %}>
+        {{ sample.content }}
+        </div>
+        {% endfor %}
+    </div>
+    <div id="select-sample" class="large-6 left columns">
+        <select id="code_samples" class="center large-6">
+            {% for sample in samples %}
+            <option data-image="{{ site.url }}{{site.baseurl }}/assets/samples/{{ sample.image }}" data-id="{{ sample.id }}">{{ sample.title }}</option>
+            {% endfor %}
+        </select>
+
+        <img class="center" id="sample_image" src="{{ site.url }}{{site.baseurl }}/assets/samples/{{ first_sample.image }}" alt="sample"/>
+    </div>
+</div>
+
+<script src="{{ site.url }}{{ site.baseurl }}/assets/js/samples.js"></script>
+<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/samples.css">
 
 {% comment %}
 *

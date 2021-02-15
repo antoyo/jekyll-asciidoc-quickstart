@@ -1,0 +1,67 @@
+= Counter
+:page-image: counter.png
+
+[source,rust]
+----
+use gtk::{ButtonExt, Inhibit, LabelExt, OrientableExt, WidgetExt};
+use gtk::Orientation::Vertical;
+use relm::Widget;
+use relm_derive::{Msg, widget};
+
+#[widget]
+impl Widget for Win {
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                #[name="inc_button"]
+                gtk::Button {
+                    clicked => Increment,
+                    label: "+",
+                },
+                #[name="label"]
+                gtk::Label {
+                    text: &self.model.counter.to_string(),
+                },
+                #[name="dec_button"]
+                gtk::Button {
+                    clicked => Decrement,
+                    label: "-",
+                },
+            },
+            delete_event(_, _) => (Quit, Inhibit(false)),
+        }
+    }
+
+    fn update(&mut self, event: Msg) {
+        match event {
+            Decrement => self.model.counter -= 1,
+            Increment => self.model.counter += 1,
+            Quit => gtk::main_quit(),
+        }
+    }
+
+    fn model() -> Model {
+        Model {
+            counter: 0,
+        }
+    }
+}
+
+fn main() {
+    Win::run(()).expect("Win::run failed");
+}
+
+use self::Msg::*;
+
+pub struct Model {
+    counter: i32,
+}
+
+#[derive(Msg)]
+pub enum Msg {
+    Decrement,
+    Increment,
+    Quit,
+}
+----

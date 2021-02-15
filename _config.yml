@@ -200,3 +200,5 @@ collections:
     tutorial:
         output: true
         permalink: /documentation/:collection/:name
+
+    samples:

@@ -1,0 +1,124 @@
+= Calculator
+:page-image: calc.png
+
+[source,rust]
+----
+use gtk::{ButtonExt, GridExt, Inhibit, WidgetExt};
+use relm::Widget;
+use relm_derive::{Msg, widget};
+
+#[widget]
+impl Widget for Win {
+    view! {
+        gtk::Window {
+            gtk::Grid {
+                gtk::Button {
+                    label: "7",
+                    cell: {
+                        left_attach: 0,
+                        top_attach: 0,
+                    },
+                },
+                gtk::Button {
+                    label: "8",
+                    cell: {
+                        left_attach: 1,
+                        top_attach: 0,
+                    },
+                },
+                gtk::Button {
+                    label: "9",
+                    cell: {
+                        left_attach: 2,
+                        top_attach: 0,
+                    },
+                },
+                gtk::Button {
+                    label: "4",
+                    cell: {
+                        left_attach: 0,
+                        top_attach: 1,
+                    },
+                },
+                gtk::Button {
+                    label: "5",
+                    cell: {
+                        left_attach: 1,
+                        top_attach: 1,
+                    },
+                },
+                gtk::Button {
+                    label: "6",
+                    cell: {
+                        left_attach: 2,
+                        top_attach: 1,
+                    },
+                },
+                gtk::Button {
+                    label: "1",
+                    cell: {
+                        left_attach: 0,
+                        top_attach: 2,
+                    },
+                },
+                gtk::Button {
+                    label: "2",
+                    cell: {
+                        left_attach: 1,
+                        top_attach: 2,
+                    },
+                },
+                gtk::Button {
+                    label: "3",
+                    cell: {
+                        left_attach: 2,
+                        top_attach: 2,
+                    },
+                },
+                gtk::Button {
+                    label: "+/-",
+                    cell: {
+                        left_attach: 0,
+                        top_attach: 3,
+                    },
+                },
+                gtk::Button {
+                    label: "0",
+                    cell: {
+                        left_attach: 1,
+                        top_attach: 3,
+                    },
+                },
+                gtk::Button {
+                    label: ".",
+                    cell: {
+                        left_attach: 2,
+                        top_attach: 3,
+                    },
+                }
+            },
+            delete_event(_, _) => (Quit, Inhibit(false))
+        }
+    }
+
+    fn update(&mut self, event: Msg) {
+        match event {
+            Quit => gtk::main_quit(),
+        }
+    }
+
+    fn model() {
+    }
+}
+
+use self::Msg::*;
+
+#[derive(Msg)]
+pub enum Msg {
+    Quit,
+}
+
+fn main() {
+    Win::run(()).expect("Win::run failed");
+}
+----

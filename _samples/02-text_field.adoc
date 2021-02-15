@@ -1,0 +1,67 @@
+= Text field
+:page-image: text_field.png
+
+[source,rust]
+----
+use gtk::{EditableSignals, EntryExt, Inhibit, LabelExt, OrientableExt, WidgetExt};
+use gtk::Orientation::Vertical;
+use relm::Widget;
+use relm_derive::{Msg, widget};
+
+#[widget]
+impl Widget for Win {
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                #[name="entry"]
+                gtk::Entry {
+                    changed(entry) => {
+                        let text = entry.get_text().to_string();
+                        let len = text.len();
+                        Change(text, len)
+                    },
+                    placeholder_text: Some("Text to reverse"),
+                },
+                #[name="label"]
+                gtk::Label {
+                    text: &self.model.content,
+                },
+            },
+            delete_event(_, _) => (Quit, Inhibit(false)),
+        }
+    }
+
+    fn update(&mut self, event: Msg) {
+        match event {
+            Change(text, len) => {
+                self.model.content = text.chars().rev().collect();
+                self.model.content += &format!(" ({})", len);
+            },
+            Quit => gtk::main_quit(),
+        }
+    }
+
+    fn model() -> Model {
+        Model {
+            content: String::new(),
+        }
+    }
+}
+
+fn main() {
+    Win::run(()).expect("Win::run failed");
+}
+
+use self::Msg::*;
+
+pub struct Model {
+    content: String,
+}
+
+#[derive(Msg)]
+pub enum Msg {
+    Change(String, usize),
+    Quit,
+}
+----
