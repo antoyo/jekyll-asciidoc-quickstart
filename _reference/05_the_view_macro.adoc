@@ -1,0 +1,234 @@
+= The view! macro
+:page-permalink: /the-view-macro/
+
+== Introduction
+
+The `view!` macro is used within the `#[widget]` implementation.
+It allows us to describe the widget hierarchy in a declarative manner.
+It's an alternative to a glade file.
+
+[source,rust]
+----
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                gtk::Button {
+                    clicked => Msg::Increment,
+                    label: "+",
+                },
+                gtk::Label {
+                    text: &self.model.counter.to_string(),
+                },
+                gtk::Button {
+                    clicked => Msg::Decrement,
+                    label: "-",
+                },
+            },
+            delete_event(_, _) => (Msg::Quit, Inhibit(false)),
+        }
+    }
+----
+
+Within the `view!`, we can declare:
+
+- <<Widgets and their hierarchy>>,
+- <<Set widget properties>>,
+- <<Bind events>>
+
+== Widgets and their hierarchy
+
+=== Declare widgets
+
+[source,rust]
+----
+    view! {
+        gtk::Window {
+            gtk::Box {
+                gtk::Button {
+                    label: "+",
+                },
+                gtk::Button {
+                    label: "-",
+                },
+            },
+        }
+    }
+----
+
+In this setup, we declared a gtk window, containing a gtk box, containing two gtk buttons.
+We also set the `label` property of each button.
+Everytime we nest a widget within the `{}` of another widget, we set up a hierarchical parent/child or container/child relationship.
+
+The widgets contained in the `view` can be gtk widgets as well as relm widgets.
+
+=== Relm widgets
+
+Here is an example of adding a relm widget in a view hierarchy:
+
+
+[source,rust]
+----
+    SearchView((None, SearchItemsType::All, OperationMode::ItemActions)) {
+    }
+----
+
+In this case, `SearchView` is the name of the relm component, and in the brackets we have all the component's model parameters.
+
+As a reminder, when we declare a relm component, we must define its `fn model()` function. That function takes as as second parameter the model parameters.
+For instance, in this case:
+
+[source,rust]
+----
+    fn model(
+        relm: &relm::Relm<Self>,
+        params: (
+            Option<String>,
+            SearchItemsType,
+            OperationMode,
+        ),
+    ) -> Model {
+----
+
+The component model parameter has three parameters, which we pass through a tuple when building the `view!` hierarchy.
+
+=== Widget attributes
+
+We can also attach attributes to widgets. For instance:
+
+[source,rust]
+----
+    view! {
+        #[name="toplevel"]
+        #[style_class="mainwin"]
+        gtk::Window {
+        }
+    }
+----
+
+Let's now review the possible widget attributes.
+
+- <<The 'name' widget attribute>>,
+- <<The 'style_class' widget attribute>>,
+
+==== The 'name' widget attribute
+The `name` widget attribute:
+
+[source,rust]
+----
+#[name="toplevel"]
+----
+
+Allows you to access the widget easily in your relm code.
+When you're in the `Widget` implementation, you can then access the widget through `self.toplevel`, or the name you've given.
+This is often useful to initialize the widget in your `init_view()` method, although generally speaking it's better if you can manage to do everything within the `view!` macro.
+It's not always possible though.
+
+==== The 'style_class' widget attribute
+
+[source,rust]
+----
+#[style_class="mainwin"]
+----
+
+Allows to add a gtk style class name to the widget. This is equivalent to running this code in your `init_view()`:
+
+[source,rust]
+----
+widget.get_style_context().add_class("mainwin");
+----
+
+Because it's possible to add multiple CSS classes to a single widget, you can add multiple `style_class` annotations to a single widget.
+In that case all the classes that you list will be added to the widget.
+
+=== Gtk child properties
+
+When declaring the widget hierarchy, we will sometimes have to specify link:https://developer.gnome.org/gtk3/stable/GtkContainer.html#id-1.3.20.3.10.8[gtk child properties].
+
+This can be done through a `child` subnode in the view hierarchy:
+
+
+[source,rust]
+----
+gtk::Stack {
+    child: {
+        fill: true,
+        expand: true,
+    },
+},
+----
+
+In this case, we set the `fill` and `expand` child properties.
+
+
+== Set widget properties
+
+We already saw an example of setting a gtk widget property earlier: the `label` property of a `gtk::Button`.
+For relm components, we don't need this feature, all the properties are passed through model parameters, but this feature is quite useful for gtk widgets.
+
+It is possible to "guess" the available widget properties from the gtk-rs API. For instance, for a gtk `Label``, here is an example with a few properties:
+
+[source,rust]
+----
+gtk::Label {
+    hexpand: true,
+    margin_start: 10,
+    margin_end: 10,
+    margin_top: 10,
+    xalign: 0.1,
+    yalign: 0.1,
+    line_wrap: true,
+    markup: "<big><b>Empty project</b></big>\n\n\"
+}
+----
+
+For instance, the `line_wrap` property comes from link:https://gtk-rs.org/docs/gtk/trait.LabelExt.html#tymethod.set_line_wrap[gtk::LabelExt::set_line_wrap].
+As you can see, we can just remove the `set_` from setter.
+But not only plain `gtk::LabelExt` functions are covered. For instance `hexpand` ties to link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.set_hexpand[gtk::WidgetExt::set_hexpand].
+
+== Bind events
+
+=== bind events for gtk widgets
+
+Again, same as with properties, you can help yourself with the gtk-rs API to find out to which gtk events you can tie to.
+
+In this example, we bind to three gtk events:
+
+[source,rust]
+----
+gtk::Window {
+    delete_event(_, _) => (Msg::Quit, Inhibit(false)),
+    key_press_event(_, event) => (Msg::KeyPress(event.clone()), Inhibit(false)),
+}
+----
+
+the first one is link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.connect_delete_event[connect_delete_event].
+In the same way that for setters we can remove the `set_`, for events, we can remove the `connect_`.
+And we see that the connect function gives two parameters for the callback: self and an event object.
+And that's also what we get in the callback here, although in this case we ignore both parameters.
+
+We can then "return" a tuple, the first parameter of which is a relm event that will be emitted on your widget when the gtk event is emitted.
+
+As you can see for link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.connect_key_press_event[key_press_event], we can also collect the event object and copy it in our relm event.
+
+And of course, same as with setters, we have access to events from the whole gtk hierarchy, from your concrete widget (Button, Window etc) up to Widget for instance.
+
+=== bind events for relm components
+
+[source,rust]
+----
+SearchView((None, SearchItemsType::All, OperationMode::ItemActions)) {
+    SearchViewSearchResultsModified => Msg::SearchResultsModified,
+    SearchViewShowInfoBar(ref msg) => Msg::ShowInfoBar(msg.clone()),
+}
+----
+
+Here we add a relm component, and list some of its relm events, and bind them to relm events on the current widget.
+Note that it's not supported to use `::` tokens when binding to relm events. We might have wanted to type `search_view::Msg::SearchResultsModified` instead of `SearchViewSearchResultsModified`, but this is not supported.
+Instead we must import the symbol and rename it use `use`, like so:
+
+[source,rust]
+----
+use super::search_view::Msg::SearchResultsModified as SearchViewSearchResultsModified;
+use super::search_view::Msg::ShowInfoBar as SearchViewShowInfoBar;
+----
