@@ -108,8 +108,8 @@ We can also attach attributes to widgets. For instance:
 
 Let's now review the possible widget attributes.
 
-- <<The 'name' widget attribute>>,
-- <<The 'style_class' widget attribute>>,
+- <<The `name` widget attribute>>,
+- <<The `style_class` widget attribute>>,
 
 ==== The `name` widget attribute
 
