@@ -1,5 +1,5 @@
 = The view! macro
-:page-permalink: /the-view-macro/
+:page-permalink: /view-macro/
 
 == Introduction
 
@@ -111,8 +111,7 @@ Let's now review the possible widget attributes.
 - <<The 'name' widget attribute>>,
 - <<The 'style_class' widget attribute>>,
 
-==== The 'name' widget attribute
-The `name` widget attribute:
+==== The `name` widget attribute
 
 [source,rust]
 ----
@@ -120,11 +119,12 @@ The `name` widget attribute:
 ----
 
 Allows you to access the widget easily in your relm code.
-When you're in the `Widget` implementation, you can then access the widget through `self.toplevel`, or the name you've given.
+When you're in the `Widget` implementation, you can then access the widget through `self.widgets.toplevel`, or the name you've given.
 This is often useful to initialize the widget in your `init_view()` method, although generally speaking it's better if you can manage to do everything within the `view!` macro.
+// TODO Add a section about the init_view() method
 It's not always possible though.
 
-==== The 'style_class' widget attribute
+==== The `style_class` widget attribute
 
 [source,rust]
 ----
@@ -159,12 +159,12 @@ gtk::Stack {
 ----
 
 In this case, we set the `fill` and `expand` child properties.
+Note that this is called on the parent -- in this example not on the `Stack` widget, but on its parent (since it affects the layout of that `Stack` in its parent).
 
 
-== Set widget properties
+== Set widget properties - gtk widgets
 
 We already saw an example of setting a gtk widget property earlier: the `label` property of a `gtk::Button`.
-For relm components, we don't need this feature, all the properties are passed through model parameters, but this feature is quite useful for gtk widgets.
 
 It is possible to "guess" the available widget properties from the gtk-rs API. For instance, for a gtk `Label``, here is an example with a few properties:
 
@@ -184,15 +184,33 @@ gtk::Label {
 
 For instance, the `line_wrap` property comes from link:https://gtk-rs.org/docs/gtk/trait.LabelExt.html#tymethod.set_line_wrap[gtk::LabelExt::set_line_wrap].
 As you can see, we can just remove the `set_` from setter.
-But not only plain `gtk::LabelExt` functions are covered. For instance `hexpand` ties to link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.set_hexpand[gtk::WidgetExt::set_hexpand].
+But not only plain `gtk::LabelExt` functions are covered.
+For instance `hexpand` ties to link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.set_hexpand[gtk::WidgetExt::set_hexpand].
 
-== Bind events
+We can also specify dynamic values through properties; for instance in the previous example, we could change the `markup` line to: `markup: self.model.label_contents`.
+If we do that, whenever the model field `label_contents` gets modified, the label contents will be automatically updated.
 
-=== bind events for gtk widgets
+== Set widget properties - relm widgets
+
+For relm components, we most often pass properties through model parameters, but they can also be specified in a similar way to gtk properties:
+
+[source,rust]
+----
+Text {
+    // Send the message SetText(self.model.text.clone()) at initialization and when
+    // the model attribute is updated.
+    SetText: self.model.text.clone(),
+},
+----
+
+
+== Connect events
+
+=== connect events for gtk widgets
 
 Again, same as with properties, you can help yourself with the gtk-rs API to find out to which gtk events you can tie to.
 
-In this example, we bind to three gtk events:
+In this example, we bind to two gtk events:
 
 [source,rust]
 ----
@@ -213,7 +231,7 @@ As you can see for link:https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymetho
 
 And of course, same as with setters, we have access to events from the whole gtk hierarchy, from your concrete widget (Button, Window etc) up to Widget for instance.
 
-=== bind events for relm components
+=== connect events for relm components
 
 [source,rust]
 ----
@@ -225,7 +243,7 @@ SearchView((None, SearchItemsType::All, OperationMode::ItemActions)) {
 
 Here we add a relm component, and list some of its relm events, and bind them to relm events on the current widget.
 Note that it's not supported to use `::` tokens when binding to relm events. We might have wanted to type `search_view::Msg::SearchResultsModified` instead of `SearchViewSearchResultsModified`, but this is not supported.
-Instead we must import the symbol and rename it use `use`, like so:
+Instead we must import the symbol and rename it using `use`, like so:
 
 [source,rust]
 ----
