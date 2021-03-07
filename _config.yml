@@ -200,5 +200,8 @@ collections:
     tutorial:
         output: true
         permalink: /documentation/:collection/:name
+    reference:
+        output: true
+        permalink: /documentation/:collection/:name
 
     samples:

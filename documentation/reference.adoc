@@ -1,5 +1,7 @@
 = Reference
 :page-permalink: /documentation/reference/
 
-To be done.
-For now, look at the https://github.com/antoyo/relm[readme].
+{% assign pages = site.reference | sort: 'path' %}
+{% for page in pages %}
+. link:{{ site.baseurl }}{{ page.url }}[{{ page.title }}]
+{% endfor %}
