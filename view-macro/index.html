@@ -1,0 +1,935 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The view! macro</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/styles_feeling_responsive.css">
+
+    <!-- Search Engine Optimization -->
+    <meta name="description" content="Introduction
+
+
+The view! macro is used within the #[widget] implementation.
+It allows us to describe the widget hierarchy in a declarative manner.
+It&amp;#8217;s an alternative to a glade file.
+
+
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                orientation: Vertical,
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Increment,
+                    label: &amp;quot;+&amp;quot;,
+                },
+                gtk::Label {
+                    text: &amp;amp;self.model.counter.to_string(),
+                },
+                gtk::Button {
+                    clicked =&amp;gt; Msg::Decrement,
+                    label: &amp;quot;-&amp;quot;,
+                },
+            },
+            delete_event(_, _) =&amp;gt; (Msg::Quit, Inhibit(false)),
+        }
+    }
+
+
+
+Within the view!, we can declare:
+
+
+
+
+Widgets and their hierarchy,
+
+
+[Set widget properties],
+
+
+[Bind events]
+
+
+
+
+
+
+Widgets and their hierarchy
+
+
+Declare widgets
+
+
+    view! {
+        gtk::Window {
+            gtk::Box {
+                gtk::Button {
+                    label: &amp;quot;+&amp;quot;,
+                },
+                gtk::Button {
+                    label: &amp;quot;-&amp;quot;,
+                },
+            },
+        }
+    }
+
+
+
+In this setup, we declared a gtk window, containing a gtk box, containing two gtk buttons.
+We also set the label property of each button.
+Everytime we nest a widget within the {} of another widget, we set up a hierarchical parent/child or container/child relationship.
+
+
+The widgets contained in the view can be gtk widgets as well as relm widgets.
+
+
+
+Relm widgets
+
+Here is an example of adding a relm widget in a view hierarchy:
+
+
+
+    SearchView((None, SearchItemsType::All, OperationMode::ItemActions)) {
+    }
+
+
+
+In this case, SearchView is the name of the relm component, and in the brackets we have all the component&amp;#8217;s model parameters.
+
+
+As a reminder, when we declare a relm component, we must define its fn model() function. That function takes as as second parameter the model parameters.
+For instance, in this case:
+
+
+
+    fn model(
+        relm: &amp;amp;relm::Relm&amp;lt;Self&amp;gt;,
+        params: (
+            Option&amp;lt;String&amp;gt;,
+            SearchItemsType,
+            OperationMode,
+        ),
+    ) -&amp;gt; Model {
+
+
+
+The component model parameter has three parameters, which we pass through a tuple when building the view! hierarchy.
+
+
+
+Widget attributes
+
+We can also attach attributes to widgets. For instance:
+
+
+
+    view! {
+        #[name=&amp;quot;toplevel&amp;quot;]
+        #[style_class=&amp;quot;mainwin&amp;quot;]
+        gtk::Window {
+        }
+    }
+
+
+
+Let&amp;#8217;s now review the possible widget attributes.
+
+
+
+
+The name widget attribute,
+
+
+The style_class widget attribute,
+
+
+
+
+The name widget attribute
+
+
+#[name=&amp;quot;toplevel&amp;quot;]
+
+
+
+Allows you to access the widget easily in your relm code.
+When you&amp;#8217;re in the Widget implementation, you can then access the widget through self.widgets.toplevel, or the name you&amp;#8217;ve given.
+This is often useful to initialize the widget in your init_view() method, although generally speaking it&amp;#8217;s better if you can manage to do everything within the view! macro.
+It&amp;#8217;s not always possible though.
+
+
+
+The style_class widget attribute
+
+
+#[style_class=&amp;quot;mainwin&amp;quot;]
+
+
+
+Allows to add a gtk style class name to the widget. This is equivalent to running this code in your init_view():
+
+
+
+widget.get_style_context().add_class(&amp;quot;mainwin&amp;quot;);
+
+
+
+Because it&amp;#8217;s possible to add multiple CSS classes to a single widget, you can add multiple style_class annotations to a single widget.
+In that case all the classes that you list will be added to the widget.
+
+
+
+
+Gtk child properties
+
+When declaring the widget hierarchy, we will sometimes have to specify gtk child properties.
+
+
+This can be done through a child subnode in the view hierarchy:
+
+
+
+gtk::Stack {
+    child: {
+        fill: true,
+        expand: true,
+    },
+},
+
+
+
+In this case, we set the fill and expand child properties.
+Note that this is called on the parent&amp;#8201;&amp;#8212;&amp;#8201;in this example not on the Stack widget, but on its parent (since it affects the layout of that Stack in its parent).
+
+
+
+
+
+Set widget properties - gtk widgets
+
+
+We already saw an example of setting a gtk widget property earlier: the label property of a gtk::Button.
+
+
+It is possible to &quot;guess&quot; the available widget properties from the gtk-rs API. For instance, for a gtk Label`, here is an example with a few properties:
+
+
+
+gtk::Label {
+    hexpand: true,
+    margin_start: 10,
+    margin_end: 10,
+    margin_top: 10,
+    xalign: 0.1,
+    yalign: 0.1,
+    line_wrap: true,
+    markup: &amp;quot;&amp;lt;big&amp;gt;&amp;lt;b&amp;gt;Empty project&amp;lt;/b&amp;gt;&amp;lt;/big&amp;gt;\n\n\&amp;quot;
+}
+
+
+
+For instance, the line_wrap property comes from gtk::LabelExt::set_line_wrap.
+As you can see, we can just remove the set_ from setter.
+But not only plain gtk::LabelExt functions are covered.
+For instance hexpand ties to gtk::WidgetExt::set_hexpand.
+
+
+We can also specify dynamic values through properties; for instance in the previous example, we could change the markup line to: markup: self.model.label_contents.
+If we do that, whenever the model field label_contents gets modified, the label contents will be automatically updated.
+
+
+
+
+Set widget properties - relm widgets
+
+
+For relm components, we most often pass properties through model parameters, but they can also be specified in a similar way to gtk properties:
+
+
+
+Text {
+    // Send the message SetText(self.model.text.clone()) at initialization and when
+    // the model attribute is updated.
+    SetText: self.model.text.clone(),
+},
+
+
+
+
+
+Connect events
+
+
+connect events for gtk widgets
+
+Again, same as with properties, you can help yourself with the gtk-rs API to find out to which gtk events you can tie to.
+
+
+In this example, we bind to two gtk events:
+
+
+
+gtk::Window {
+    delete_event(_, _) =&amp;gt; (Msg::Quit, Inhibit(false)),
+    key_press_event(_, event) =&amp;gt; (Msg::KeyPress(event.clone()), Inhibit(false)),
+}
+
+
+
+the first one is connect_delete_event.
+In the same way that for setters we can remove the set_, for events, we can remove the connect_.
+And we see that the connect function gives two parameters for the callback: self and an event object.
+And that&amp;#8217;s also what we get in the callback here, although in this case we ignore both parameters.
+
+
+We can then &quot;return&quot; a tuple, the first parameter of which is a relm event that will be emitted on your widget when the gtk event is emitted.
+
+
+As you can see for key_press_event, we can also collect the event object and copy it in our relm event.
+
+
+And of course, same as with setters, we have access to events from the whole gtk hierarchy, from your concrete widget (Button, Window etc) up to Widget for instance.
+
+
+
+connect events for relm components
+
+
+SearchView((None, SearchItemsType::All, OperationMode::ItemActions)) {
+    SearchViewSearchResultsModified =&amp;gt; Msg::SearchResultsModified,
+    SearchViewShowInfoBar(ref msg) =&amp;gt; Msg::ShowInfoBar(msg.clone()),
+}
+
+
+
+Here we add a relm component, and list some of its relm events, and bind them to relm events on the current widget.
+Note that it&amp;#8217;s not supported to use :: tokens when binding to relm events. We might have wanted to type search_view::Msg::SearchResultsModified instead of SearchViewSearchResultsModified, but this is not supported.
+Instead we must import the symbol and rename it using use, like so:
+
+
+
+use super::search_view::Msg::SearchResultsModified as SearchViewSearchResultsModified;
+use super::search_view::Msg::ShowInfoBar as SearchViewShowInfoBar;">
+    
+    <link rel="canonical" href="/view-macro/">
+
+    <link rel="stylesheet" href="/css/asciidoc-pygments.css">
+
+    <link type="text/plain" rel="author" href="/humans.txt">
+
+    
+
+	<link rel="icon" sizes="32x32" href="https://relm.antoyo.xyz/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://relm.antoyo.xyz/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://relm.antoyo.xyz/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://relm.antoyo.xyz/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+    
+
+    </head>
+    <body id="top-of-page" class="page-fullwidth">
+        
+        
+<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="/" class="icon-tree"> Relm Blog</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Nav</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+
+          
+          
+        
+        
+
+        <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+      </ul>
+
+      <ul class="left">
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/">Index</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/getting-started/">Getting Started</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="/documentation/">Documentation</a>
+
+                  <ul class="dropdown">
+                    
+
+                      <li><a  href="/documentation/tutorial/">Tutorial</a></li>
+                    
+
+                      <li><a  href="/documentation/reference/">Reference</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+          
+          
+
+            
+            
+              <li><a  href="/blog/">Blog</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+        
+
+        
+
+<div id="masthead-no-image-header">
+    <div class="row">
+        <div class="small-12 columns">
+            <a id="logo" href="https://relm.antoyo.xyz/" title="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
+                <img src="/assets/img/logo.png" alt="Relm Blog – An idiomatic GUI Rust library, based on GTK+">
+            </a>
+        </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+        
+
+
+<div class="row t30">
+    <div class="medium-12 columns">
+        <article>
+            <header>
+                
+                <h1>The view! macro</h1>
+            </header>
+
+            
+
+            <div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>view!</code> macro is used within the <code>#[widget]</code> implementation.
+It allows us to describe the widget hierarchy in a declarative manner.
+It&#8217;s an alternative to a glade file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">orientation</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">Vertical</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Increment</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">text</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">counter</span><span class="tok-p">.</span><span class="tok-n">to_string</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">clicked</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Decrement</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Within the <code>view!</code>, we can declare:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#widgets-and-their-hierarchy">Widgets and their hierarchy</a>,</p>
+</li>
+<li>
+<p><a href="#Set widget properties">[Set widget properties]</a>,</p>
+</li>
+<li>
+<p><a href="#Bind events">[Bind events]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="widgets-and-their-hierarchy">Widgets and their hierarchy</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="declare-widgets">Declare widgets</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-nb">Box</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;+&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Button</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">                    </span><span class="tok-n">label</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;-&quot;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">                </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this setup, we declared a gtk window, containing a gtk box, containing two gtk buttons.
+We also set the <code>label</code> property of each button.
+Everytime we nest a widget within the <code>{}</code> of another widget, we set up a hierarchical parent/child or container/child relationship.</p>
+</div>
+<div class="paragraph">
+<p>The widgets contained in the <code>view</code> can be gtk widgets as well as relm widgets.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="relm-widgets">Relm widgets</h3>
+<div class="paragraph">
+<p>Here is an example of adding a relm widget in a view hierarchy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-n">SearchView</span><span class="tok-p">((</span><span class="tok-nb">None</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">SearchItemsType</span><span class="tok-o">::</span><span class="tok-n">All</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">OperationMode</span><span class="tok-o">::</span><span class="tok-n">ItemActions</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, <code>SearchView</code> is the name of the relm component, and in the brackets we have all the component&#8217;s model parameters.</p>
+</div>
+<div class="paragraph">
+<p>As a reminder, when we declare a relm component, we must define its <code>fn model()</code> function. That function takes as as second parameter the model parameters.
+For instance, in this case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-k">fn</span> <span class="tok-nf">model</span><span class="tok-p">(</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">relm</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">relm</span><span class="tok-o">::</span><span class="tok-n">Relm</span><span class="tok-o">&lt;</span><span class="tok-n">Self</span><span class="tok-o">&gt;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">params</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-nb">Option</span><span class="tok-o">&lt;</span><span class="tok-nb">String</span><span class="tok-o">&gt;</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">SearchItemsType</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">            </span><span class="tok-n">OperationMode</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">-&gt;</span><span class="tok-w"> </span><span class="tok-n">Model</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The component model parameter has three parameters, which we pass through a tuple when building the <code>view!</code> hierarchy.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="widget-attributes">Widget attributes</h3>
+<div class="paragraph">
+<p>We can also attach attributes to widgets. For instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-w">    </span><span class="tok-n">view</span><span class="tok-o">!</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;toplevel&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-cp">#[style_class=</span><span class="tok-s">&quot;mainwin&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-p">}</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now review the possible widget attributes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#the-name-widget-attribute">The <code>name</code> widget attribute</a>,</p>
+</li>
+<li>
+<p><a href="#the-style_class-widget-attribute">The <code>style_class</code> widget attribute</a>,</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="the-name-widget-attribute">The <code>name</code> widget attribute</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-cp">#[name=</span><span class="tok-s">&quot;toplevel&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Allows you to access the widget easily in your relm code.
+When you&#8217;re in the <code>Widget</code> implementation, you can then access the widget through <code>self.widgets.toplevel</code>, or the name you&#8217;ve given.
+This is often useful to initialize the widget in your <code>init_view()</code> method, although generally speaking it&#8217;s better if you can manage to do everything within the <code>view!</code> macro.
+It&#8217;s not always possible though.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-style_class-widget-attribute">The <code>style_class</code> widget attribute</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-cp">#[style_class=</span><span class="tok-s">&quot;mainwin&quot;</span><span class="tok-cp">]</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Allows to add a gtk style class name to the widget. This is equivalent to running this code in your <code>init_view()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">widget</span><span class="tok-p">.</span><span class="tok-n">get_style_context</span><span class="tok-p">().</span><span class="tok-n">add_class</span><span class="tok-p">(</span><span class="tok-s">&quot;mainwin&quot;</span><span class="tok-p">);</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because it&#8217;s possible to add multiple CSS classes to a single widget, you can add multiple <code>style_class</code> annotations to a single widget.
+In that case all the classes that you list will be added to the widget.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gtk-child-properties">Gtk child properties</h3>
+<div class="paragraph">
+<p>When declaring the widget hierarchy, we will sometimes have to specify <a href="https://developer.gnome.org/gtk3/stable/GtkContainer.html#id-1.3.20.3.10.8">gtk child properties</a>.</p>
+</div>
+<div class="paragraph">
+<p>This can be done through a <code>child</code> subnode in the view hierarchy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Stack</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">child</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">fill</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">        </span><span class="tok-n">expand</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-p">},</span><span class="tok-w"></span>
+<span class="tok-p">},</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, we set the <code>fill</code> and <code>expand</code> child properties.
+Note that this is called on the parent&#8201;&#8212;&#8201;in this example not on the <code>Stack</code> widget, but on its parent (since it affects the layout of that <code>Stack</code> in its parent).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="set-widget-properties-gtk-widgets">Set widget properties - gtk widgets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We already saw an example of setting a gtk widget property earlier: the <code>label</code> property of a <code>gtk::Button</code>.</p>
+</div>
+<div class="paragraph">
+<p>It is possible to "guess" the available widget properties from the gtk-rs API. For instance, for a gtk <code>Label`</code>, here is an example with a few properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Label</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">hexpand</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">margin_start</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">10</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">margin_end</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">10</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">margin_top</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mi">10</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">xalign</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mf">0.1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">yalign</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-mf">0.1</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">line_wrap</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">markup</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s">&quot;&lt;big&gt;&lt;b&gt;Empty project&lt;/b&gt;&lt;/big&gt;</span><span class="tok-se">\n\n\&quot;</span><span class="tok-s"></span>
+<span class="tok-s">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For instance, the <code>line_wrap</code> property comes from <a href="https://gtk-rs.org/docs/gtk/trait.LabelExt.html#tymethod.set_line_wrap">gtk::LabelExt::set_line_wrap</a>.
+As you can see, we can just remove the <code>set_</code> from setter.
+But not only plain <code>gtk::LabelExt</code> functions are covered.
+For instance <code>hexpand</code> ties to <a href="https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.set_hexpand">gtk::WidgetExt::set_hexpand</a>.</p>
+</div>
+<div class="paragraph">
+<p>We can also specify dynamic values through properties; for instance in the previous example, we could change the <code>markup</code> line to: <code>markup: self.model.label_contents</code>.
+If we do that, whenever the model field <code>label_contents</code> gets modified, the label contents will be automatically updated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="set-widget-properties-relm-widgets">Set widget properties - relm widgets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For relm components, we most often pass properties through model parameters, but they can also be specified in a similar way to gtk properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">Text</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-c1">// Send the message SetText(self.model.text.clone()) at initialization and when</span>
+<span class="tok-w">    </span><span class="tok-c1">// the model attribute is updated.</span>
+<span class="tok-w">    </span><span class="tok-n">SetText</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-bp">self</span><span class="tok-p">.</span><span class="tok-n">model</span><span class="tok-p">.</span><span class="tok-n">text</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">(),</span><span class="tok-w"></span>
+<span class="tok-p">},</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="connect-events">Connect events</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="connect-events-for-gtk-widgets">connect events for gtk widgets</h3>
+<div class="paragraph">
+<p>Again, same as with properties, you can help yourself with the gtk-rs API to find out to which gtk events you can tie to.</p>
+</div>
+<div class="paragraph">
+<p>In this example, we bind to two gtk events:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">gtk</span><span class="tok-o">::</span><span class="tok-n">Window</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">delete_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">_</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">Quit</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">key_press_event</span><span class="tok-p">(</span><span class="tok-n">_</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">event</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">KeyPress</span><span class="tok-p">(</span><span class="tok-n">event</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">()),</span><span class="tok-w"> </span><span class="tok-n">Inhibit</span><span class="tok-p">(</span><span class="tok-kc">false</span><span class="tok-p">)),</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the first one is <a href="https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.connect_delete_event">connect_delete_event</a>.
+In the same way that for setters we can remove the <code>set_</code>, for events, we can remove the <code>connect_</code>.
+And we see that the connect function gives two parameters for the callback: self and an event object.
+And that&#8217;s also what we get in the callback here, although in this case we ignore both parameters.</p>
+</div>
+<div class="paragraph">
+<p>We can then "return" a tuple, the first parameter of which is a relm event that will be emitted on your widget when the gtk event is emitted.</p>
+</div>
+<div class="paragraph">
+<p>As you can see for <a href="https://gtk-rs.org/docs/gtk/trait.WidgetExt.html#tymethod.connect_key_press_event">key_press_event</a>, we can also collect the event object and copy it in our relm event.</p>
+</div>
+<div class="paragraph">
+<p>And of course, same as with setters, we have access to events from the whole gtk hierarchy, from your concrete widget (Button, Window etc) up to Widget for instance.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="connect-events-for-relm-components">connect events for relm components</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-n">SearchView</span><span class="tok-p">((</span><span class="tok-nb">None</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">SearchItemsType</span><span class="tok-o">::</span><span class="tok-n">All</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">OperationMode</span><span class="tok-o">::</span><span class="tok-n">ItemActions</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">SearchViewSearchResultsModified</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">SearchResultsModified</span><span class="tok-p">,</span><span class="tok-w"></span>
+<span class="tok-w">    </span><span class="tok-n">SearchViewShowInfoBar</span><span class="tok-p">(</span><span class="tok-k">ref</span><span class="tok-w"> </span><span class="tok-n">msg</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=&gt;</span><span class="tok-w"> </span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">ShowInfoBar</span><span class="tok-p">(</span><span class="tok-n">msg</span><span class="tok-p">.</span><span class="tok-n">clone</span><span class="tok-p">()),</span><span class="tok-w"></span>
+<span class="tok-p">}</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we add a relm component, and list some of its relm events, and bind them to relm events on the current widget.
+Note that it&#8217;s not supported to use <code>::</code> tokens when binding to relm events. We might have wanted to type <code>search_view::Msg::SearchResultsModified</code> instead of <code>SearchViewSearchResultsModified</code>, but this is not supported.
+Instead we must import the symbol and rename it using <code>use</code>, like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="rust"><span></span><span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-k">super</span><span class="tok-o">::</span><span class="tok-n">search_view</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">SearchResultsModified</span><span class="tok-w"> </span><span class="tok-k">as</span><span class="tok-w"> </span><span class="tok-n">SearchViewSearchResultsModified</span><span class="tok-p">;</span><span class="tok-w"></span>
+<span class="tok-k">use</span><span class="tok-w"> </span><span class="tok-k">super</span><span class="tok-o">::</span><span class="tok-n">search_view</span><span class="tok-o">::</span><span class="tok-n">Msg</span><span class="tok-o">::</span><span class="tok-n">ShowInfoBar</span><span class="tok-w"> </span><span class="tok-k">as</span><span class="tok-w"> </span><span class="tok-n">SearchViewShowInfoBar</span><span class="tok-p">;</span><span class="tok-w"></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+        </article>
+    </div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+
+
+
+
+
+        
+            <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">About This Site</h5>
+
+            <p class="shadow-black">
+              An idiomatic GUI Rust library, based on GTK+
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">News Feed</h5>
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href=""  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">Links</h5>
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href=""  title=""></a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://github.com/antoyo/relm" target="_blank"  title="">GitHub</a>
+                </li>
+            
+              
+                <li >
+                  <a href="https://gitter.im/relm-rs/Lobby" target="_blank"  title="">Gitter</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 text-right columns credits">
+              Contribute on GitHub
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+              <div class="row">
+                <ul class="inline-list social-icons columns small-12 medium-6">
+                
+                  <li><a href="http://github.com/antoyo/relm" class="icon-github" title="Relm"></a></li>
+                
+                </ul>
+
+                <div class="columns small-12 medium-6">
+                  <a href="https://www.patreon.com/antoyo"><img class="patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png"/></a>
+                </div>
+              </div>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+        
+
+        <script src="https://relm.antoyo.xyz/assets/js/javascript.min.js"></script>
+
+    </body>
+</html>
